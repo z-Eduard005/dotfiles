@@ -1,0 +1,11 @@
+[meta]
+version = 1
+name = "Adwaita Dark"
+description = "An Adwaita inspired theme for Vicinae"
+variant = "dark"
+inherits = "vicinae-dark"
+
+[colors.core]
+background = "#222226"
+foreground = "#fafafb"
+accent = "#6f8396"

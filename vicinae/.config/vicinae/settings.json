@@ -1,0 +1,329 @@
+// This configuration is merged with the default vicinae configuration file, which you can obtain by running the `vicinae config default` command.
+// Every item defined in this file takes precedence over the values defined in the default config or any other imported file.
+//
+// You can make manual edits to this file, however you should keep in mind that this file may be written to by vicinae when a configuration change is made through the GUI.
+// When that happens, any custom comments or formatting will be lost.
+//
+// If you want to maintain a configuration file with your own comments and formatting, you should create a separate file and add it to the 'imports' array.
+//
+// Learn more about configuration at https://docs.vicinae.com/config
+
+{
+   "$schema": "https://vicinae.com/schemas/config.json",
+   "close_on_focus_loss": false,
+   "pop_to_root_on_close": true,
+   "favicon_service": "twenty",
+   "search_files_in_root": false,
+   "font": {
+      "rendering": "native",
+      "normal": {
+         "family": "SF Pro Display",
+         "size": 18
+      }
+   },
+   "theme": {
+      "dark": {
+         "name": "adwaita-dark",
+         "icon_theme": "Adwaita-Slate"
+      }
+   },
+   "telemetry": {
+      "system_info": false
+   },
+   "launcher_window": {
+      "opacity": 0.98
+   },
+   "favorites": [],
+   "providers": {
+      "@EvanZhouDev/store.raycast.raycast-gemini": {
+         "preferences": {
+            "defaultModel": "gemini-2.5-flash-lite",
+            "safetyThreshold": "BLOCK_NONE"
+         },
+         "entrypoints": {
+            "aiChat": {
+               "enabled": false
+            },
+            "askAI": {
+               "alias": "ai"
+            },
+            "askAboutScreen": {
+               "enabled": false
+            },
+            "askAboutSelectedScreen": {
+               "enabled": false
+            },
+            "askAboutSelectedText": {
+               "enabled": false
+            },
+            "comment": {
+               "enabled": false
+            },
+            "explain": {
+               "enabled": false
+            },
+            "friendly": {
+               "enabled": false
+            },
+            "grammar": {
+               "enabled": false
+            },
+            "history": {
+               "enabled": false
+            },
+            "longer": {
+               "enabled": false
+            },
+            "professional": {
+               "enabled": false
+            },
+            "shorter": {
+               "enabled": false
+            },
+            "summarize": {
+               "enabled": false
+            },
+            "synonym": {
+               "enabled": false
+            },
+            "translate": {
+               "enabled": false
+            }
+         }
+      },
+      "@Gelei/store.vicinae.bluetooth": {
+         "preferences": {
+            "connectionToggleable": false
+         }
+      },
+      "@gebeto/store.raycast.translate": {
+         "preferences": {
+            "autoInput": false,
+            "lang1": "en",
+            "lang2": "ru"
+         },
+         "entrypoints": {
+            "instant-translate-copy": {
+               "enabled": false
+            },
+            "instant-translate-paste": {
+               "enabled": false
+            },
+            "instant-translate-view": {
+               "enabled": false
+            },
+            "quick-translate": {
+               "enabled": false
+            },
+            "translate": {
+               "alias": "tr"
+            }
+         }
+      },
+      "@maggie/store.raycast.todo-list": {
+         "enabled": true,
+         "preferences": {
+            "completed": "hide_all",
+            "nlpParsing": false,
+            "sortOrder": "creation_date_ascending"
+         },
+         "entrypoints": {
+            "index": {
+               "alias": "todo",
+               "enabled": true
+            }
+         }
+      },
+      "@mblode/store.raycast.google-search": {
+         "entrypoints": {
+            "index": {
+               "alias": "g"
+            },
+            "searchSelectText": {
+               "enabled": false
+            }
+         }
+      },
+      "@muhammetakay/store.raycast.youtube-search": {
+         "entrypoints": {
+            "index": {
+               "alias": "y"
+            },
+            "searchSelectText": {
+               "enabled": false
+            }
+         }
+      },
+      "applications": {
+         "preferences": {
+            "paths": [
+               "/home/eduard/.local/share/applications",
+               "/var/lib/flatpak/exports/share/applications",
+               "/usr/local/share/applications",
+               "/usr/share/applications",
+               "/var/lib/snapd/desktop/applications"
+            ]
+         },
+         "entrypoints": {
+            "vicinae-off-script": {
+               "alias": "off"
+            },
+            "vicinae-out-script": {
+               "alias": "out"
+            },
+            "vicinae-reboot-script": {
+               "alias": "reboot"
+            },
+            "vicinae-toogle-theme-script": {
+               "alias": "theme"
+            }
+         }
+      },
+      "calculator": {
+         "entrypoints": {
+            "refresh-rates": {
+               "enabled": false
+            }
+         }
+      },
+      "clipboard": {
+         "enabled": true,
+         "preferences": {
+            "ignorePasswords": false,
+            "monitoring": true
+         },
+         "entrypoints": {
+            "clear": {
+               "enabled": false
+            },
+            "clear-history": {
+               "enabled": false
+            }
+         }
+      },
+      "core": {
+         "enabled": true,
+         "entrypoints": {
+            "about": {
+               "enabled": false
+            },
+            "documentation": {
+               "enabled": false
+            },
+            "inspect-local-storage": {
+               "enabled": false
+            },
+            "keybind-settings": {
+               "enabled": false
+            },
+            "list-extensions": {
+               "enabled": true
+            },
+            "manage-fallback": {
+               "enabled": false
+            },
+            "oauth-token-store": {
+               "enabled": false
+            },
+            "open-config-file": {
+               "enabled": true
+            },
+            "prune-memory": {
+               "enabled": false
+            },
+            "refresh-apps": {
+               "enabled": false
+            },
+            "report-bug": {
+               "enabled": false
+            },
+            "search-emojis": {
+               "enabled": false
+            },
+            "settings": {
+               "enabled": false
+            },
+            "sponsor": {
+               "enabled": false
+            },
+            "store": {
+               "enabled": true
+            }
+         }
+      },
+      "developer": {
+         "enabled": false
+      },
+      "files": {
+         "enabled": true,
+         "preferences": {
+            "paths": "/home/eduard/*"
+         },
+         "entrypoints": {
+            "search": {
+               "alias": "f"
+            }
+         }
+      },
+      "font": {
+         "enabled": false
+      },
+      "manage-shortcuts": {
+         "enabled": false
+      },
+      "power": {
+         "enabled": false,
+         "entrypoints": {
+            "hibernate": {
+               "enabled": false
+            },
+            "lock": {
+               "enabled": false
+            },
+            "logout": {
+               "enabled": false
+            },
+            "power-off": {
+               "enabled": false
+            },
+            "reboot": {
+               "enabled": false
+            },
+            "sleep": {
+               "enabled": false
+            },
+            "soft-reboot": {
+               "enabled": false
+            },
+            "suspend": {
+               "enabled": false
+            }
+         }
+      },
+      "scripts": {
+         "preferences": {
+            "customDirs": []
+         }
+      },
+      "system": {
+         "enabled": false,
+         "entrypoints": {
+            "browse-apps": {
+               "enabled": true
+            },
+            "run": {
+               "enabled": true,
+               "preferences": {
+                  "default-action": "run"
+               }
+            }
+         }
+      },
+      "theme": {
+         "enabled": false
+      },
+      "wm": {
+         "enabled": false
+      }
+   }
+}

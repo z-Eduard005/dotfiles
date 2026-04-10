@@ -1,0 +1,110 @@
+{
+  "Print to console": {
+    "scope": "javascript, typescript, typescriptreact",
+    "prefix": "cl",
+    "body": "console.log(${1:\"testConsoleLog!\"});"
+  },
+  "resetCss": {
+    "scope": "css, scss, tailwindcss",
+    "prefix": "reset",
+    "body": [
+      ":root {",
+      "  --color-primary: #${1:fff};",
+      "}",
+      "",
+      "html {",
+      "  scroll-behavior: smooth;",
+      "}",
+      "",
+      "img,",
+      "nav a {",
+      "  user-select: none !important;",
+      "}",
+      "",
+      "a * {",
+      "  user-select: text;",
+      "}",
+      "",
+      "input[type=\"search\"]::-webkit-search-cancel-button {",
+      "  -webkit-appearance: none;",
+      "  appearance: none;",
+      "}"
+    ]
+  },
+  "mainTailwind": {
+    "scope": "css, scss, tailwindcss",
+    "prefix": "mainTailwind",
+    "body": [
+      "main {",
+      "  @apply bg-[${1:--bg-secondary}] overflow-hidden;",
+      "}",
+      "",
+      "main > * {",
+      "  @apply max-w-[1920px] mx-auto bg-white;",
+      "}",
+    ]
+  },
+  "screensTailwind": {
+    "scope": "typescript, javascript",
+    "prefix": "screens",
+    "body": [
+      "screens: {",
+      "  \"x-2xl\": { max: \"1440px\" },",
+      "  \"x-xl\": { max: \"1199.5px\" },",
+      "  \"x-lg\": { max: \"991.5px\" },",
+      "  \"x-md\": { max: \"767.5px\" },",
+      "  \"x-sm\": { max: \"575.5px\" },",
+      "  \"x-xs\": { max: \"431px\" },",
+      "  \"x-2xs\": { max: \"375px\" },",
+      "},"
+    ]
+  },
+  "clientFunctionalComponent": {
+    "scope": "javascript, typescript, typescriptreact",
+    "prefix": "cfc",
+    "body": [
+      "\"use client\";",
+      "",
+      "const ${TM_FILENAME_BASE} = () => {",
+      "  return (",
+      "    ${1:<div>Hello world!</div>}",
+      "  );",
+      "};",
+      "",
+      "export default ${TM_FILENAME_BASE};"
+    ]
+  },
+  "serverFunctionalComponent": {
+    "scope": "javascript, typescript, typescriptreact",
+    "prefix": "sfc",
+    "body": [
+      "export default function ${TM_FILENAME_BASE}() {",
+      "  return (",
+      "    ${1:<div>Hello world!</div>}",
+      "  );",
+      "};",
+    ]
+  },
+  "useState": {
+    "scope": "javascript, typescript, typescriptreact",
+    "prefix": "state",
+    "body": [
+      "const [${1}, set${1/(.*)/${1:/capitalize}/}] = useState(${2})"
+    ]
+  },
+  "desilvaFunctionalComponent": {
+    "scope": "javascript, typescript, typescriptreact",
+    "prefix": "dfc",
+    "body": [
+      "interface ${TM_FILENAME_BASE}Props {",
+      "  data?: any;",
+      "}",
+      "",
+      "export default function ${TM_FILENAME_BASE}({ data }: ${TM_FILENAME_BASE}Props) {",
+      "  return (",
+      "    ${1:<section id=\"${TM_FILENAME_BASE}\">Hello_world</section>}",
+      "  );",
+      "};",
+    ]
+  },
+}

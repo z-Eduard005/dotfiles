@@ -1,0 +1,239 @@
+{
+  // Theme tweak
+  "workbench.colorCustomizations": {
+    "[paddy-wolf]": {
+      // primary - #222226
+      // secondary - #2e2e32
+      // accent - #6f8396
+      "editor.background": "#222226",
+      "sideBar.background": "#222226",
+      "activityBar.background": "#222226",
+      "statusBar.background": "#222226",
+      "titleBar.activeBackground": "#222226",
+      "titleBar.inactiveBackground": "#222226",
+      "panel.background": "#222226",
+      "quickInput.background": "#222226",
+      "editorGroupHeader.tabsBackground": "#222226",
+      "tab.activeBackground": "#222226",
+      "tab.inactiveBackground": "#222226",
+      "terminal.background": "#222226",
+      // Use #2e2e32 for inputs, search section, and ai chat
+      "input.background": "#2e2e32",
+      "input.border": "#6f839610",
+      "inputOption.activeBorder": "#6f8396",
+      "inputOption.activeBackground": "#2e2e32",
+      "inputValidation.infoBackground": "#2e2e32",
+      "inputValidation.warningBackground": "#2e2e32",
+      "inputValidation.errorBackground": "#2e2e32",
+      "peekViewTitle.background": "#2e2e32",
+      "editorCursor.foreground": "#6f8396",
+      "terminalCursor.foreground": "#6f8396",
+      "sideBarSectionHeader.background": "#222226",
+      "icon.foreground": "#6f8396",
+
+      // Add highlight of text everywhere
+      "editor.selectionBackground": "#6f839650", // editor selection highlight
+      "tab.activeBorderTop": "#6f8396",
+      "editorBracketHighlight.foreground1": "#6f8396", // bracket colorizer
+      "editorBracketHighlight.unexpectedBracket.foreground": "#6f8396",
+      "activityBar.activeBorder": "#6f8396",
+      "editorBracketMatch.background": "#6f839630", // bracket match highlight
+      "editor.wordHighlightBackground": "#6f839620",
+      "editor.findMatchHighlightBackground": "#6f839620", // highlight for find matches
+      "editor.selectionHighlightBackground": "#6f839630", // selection highlight
+      "editor.lineHighlightBackground": "#6f839610",
+
+      // selection in hints (hover over definition)
+      "editorHoverWidget.highlightForeground": "#6f8396",
+      "editorHoverWidget.background": "#2e2e32",
+
+      // buttons in git page
+      "button.background": "#6f8396",
+      "button.foreground": "#222226",
+      "button.hoverBackground": "#91a3b8",
+      "editorLineNumber.activeForeground": "#6f8396",
+
+      // colors of icons in primary sidebar (explorer, search, git, extensions)
+      "activityBar.foreground": "#6f8396",
+      "activityBar.inactiveForeground": "#3a4250",
+      "activityBarBadge.background": "#6f8396",
+      "activityBarBadge.foreground": "#222226",
+      "sideBarTitle.foreground": "#6f8396",
+
+      // Context Menus & Dropdown Menus
+      "menu.background": "#2e2e32",
+      "menu.selectionBackground": "#6f839650", // semi-transparent accent for selection
+      "menu.selectionBorder": "#6f8396",
+      "menu.separatorBackground": "#3a4250",
+      "menubar.selectionBackground": "#6f839650",
+      "menubar.selectionBorder": "#6f8396",
+
+      // Quick pick and command palette dropdowns (for consistency)
+      "quickInputList.focusBackground": "#6f839630",
+      "dropdown.background": "#2e2e32",
+      "dropdown.border": "#6f839610",
+      "dropdown.listBackground": "#2e2e32",
+      "list.hoverBackground": "#6f839630",
+
+      "textLink.foreground": "#6f8396",
+      "focusBorder": "#6f8396",
+      "list.highlightForeground": "#6f8396",
+      "badge.background": "#6f8396",
+
+      // Autocomplete menu
+      "editorSuggestWidget.background": "#2e2e32",
+      "editorSuggestWidget.border": "#6f839610",
+      "editorSuggestWidget.highlightForeground": "#6f8396",
+      "editorSuggestWidget.selectedBackground": "#6f839650",
+      "editorSuggestWidget.focusHighlightForeground": "#6f8396",
+
+      // Terminal
+      "terminal.selectionBackground": "#6f8396",
+      "terminal.selectionForeground": "#111111",
+      "terminal.ansiBlue": "#96bddb",
+      "terminal.ansiCyan": "#6f8396",
+      "terminal.ansiBrightBlue": "#b1d7f6",
+
+      // Find widget (Ctrl+F) specific styling
+      "widget.border": "#6f839610",
+      "widget.shadow": "#00000040"
+    }
+  },
+
+  // AI
+  "cursor.cpp.disabledLanguages": ["markdown"],
+
+  // Editor
+  "editor.fontSize": 15,
+  "editor.formatOnSave": true,
+  "editor.mouseWheelScrollSensitivity": 2,
+  "editor.accessibilitySupport": "off",
+  "editor.smoothScrolling": false,
+  "editor.minimap.renderCharacters": false,
+  "editor.minimap.enabled": false,
+  "editor.fontLigatures": true,
+  "editor.fontFamily": "Liga SFMono Nerd Font",
+  "editor.fontWeight": "500",
+  "editor.wordWrap": "on",
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "editor.guides.bracketPairs": true,
+  "editor.guides.bracketPairsHorizontal": true,
+  "editor.glyphMargin": false,
+  "editor.lineHeight": 1.5,
+  "editor.letterSpacing": 0.2,
+  "editor.stickyScroll.enabled": false,
+  "editor.cursorBlinking": "expand",
+  "editor.quickSuggestionsDelay": 0,
+  "editor.linkedEditing": true,
+  "editor.tabCompletion": "on",
+  "editor.multiCursorModifier": "alt",
+  "[markdown]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": null
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[php]": {
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
+    "editor.tabSize": 4
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.unicodeHighlight.allowedCharacters": {
+    "і": true
+  },
+  "workbench.editor.enablePreview": false,
+  "workbench.list.smoothScrolling": false,
+  "workbench.iconTheme": "catppuccin-perfect-dark",
+  "workbench.productIconTheme": "fluent-icons",
+  "workbench.sideBar.location": "right",
+  "workbench.activityBar.location": "top",
+
+  // Terminal
+  "terminal.integrated.smoothScrolling": false,
+  "terminal.integrated.fontFamily": "Liga SFMono Nerd Font",
+  "terminal.integrated.fontWeightBold": "bold",
+  "terminal.integrated.fontWeight": "bold",
+  "terminal.integrated.fontSize": 15,
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+
+  // Explorer
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.compactFolders": false,
+  "explorer.decorations.badges": false,
+  "explorer.confirmPasteNative": false,
+  "window.zoomLevel": 2,
+  "window.density.editorTabHeight": "compact",
+
+  // Git
+  "git.path": "/usr/bin/git",
+  "git.autorefresh": true,
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+
+  // Compiler plugin
+  "compile-hero.scss-output-directory": "../css",
+  "compile-hero.generate-minified-css": true,
+  "compile-hero.generate-minified-css-only": true,
+  "compile-hero.disable-compile-files-on-did-save-code": true,
+
+  // Other
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
+  },
+  "liveServer.settings.donotShowInfoMsg": true,
+  "liveServer.settings.donotVerifyTags": true,
+  "eslint.validate": ["typescript"],
+  "eslint.enable": true,
+  "breadcrumbs.enabled": false,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "files.autoSave": "onFocusChange",
+  "security.workspace.trust.untrustedFiles": "open",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "path-autocomplete.extensionOnImport": true,
+  "scss.lint.unknownAtRules": "ignore",
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  "remote.SSH.remotePlatform": {
+    "devwebtools.com": "linux"
+  },
+  "workbench.navigationControl.enabled": false,
+  "workbench.colorTheme": "paddy-wolf",
+"json.schemaDownload.enable": true,
+  "window.controlsStyle": "hidden",
+  "diffEditor.ignoreTrimWhitespace": false,
+"compile-hero.less-output-toggle": false,
+  "workbench.preferredDarkColorTheme": "paddy-wolf",
+  "workbench.preferredLightColorTheme": "paddy-light",
+"window.autoDetectColorScheme": true,
+"window.menuBarVisibility": "compact",
+"workbench.layoutControl.enabled": false
+}
