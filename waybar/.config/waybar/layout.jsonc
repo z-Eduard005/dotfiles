@@ -1,0 +1,40 @@
+{
+  "layer": "top",
+  "position": "top",
+  "width": "100%",
+  "height": 40,
+  "margin": "8 8 0",
+
+  "group/left": {
+    "orientation": "horizontal",
+    "modules": ["hyprland/workspaces", "hyprland/window"],
+  },
+
+  "group/left-hidden-top": {
+    "orientation": "horizontal",
+    "modules": ["custom/start"],
+  },
+
+  "group/right": {
+    "orientation": "horizontal",
+    "modules": [
+      "temperature",
+      "bluetooth",
+      "group/group-volume",
+      "battery",
+      "network",
+      "hyprland/language",
+    ],
+  },
+
+  "group/right-hidden-top": {
+    "orientation": "horizontal",
+    "modules": ["tray"],
+  },
+
+  "modules-left": ["group/left-hidden-top", "group/left"],
+  "modules-center": ["clock"],
+  "modules-right": ["group/right", "group/right-hidden-top"],
+
+  "include": ["~/.config/waybar/modules.jsonc"],
+}

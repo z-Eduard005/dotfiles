@@ -1,0 +1,103 @@
+{
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "persistent-workspaces": { "*": 1 },
+    "cursor": true,
+    "format-icons": {
+      "1": "H",
+      "2": "J",
+      "3": "K",
+      "4": "L",
+      "5": ";",
+      "6": "'",
+
+      "persistent": "",
+      "empty": "",
+    },
+    "begin": "null",
+    "end": "null",
+  },
+
+  "hyprland/window": {
+    "max-length": 45,
+    "tooltip": false,
+  },
+
+  "tray": {
+    "icon-size": 20,
+    "spacing": 12,
+    "cursor": true,
+  },
+
+  "temperature": {
+    "interval": 10,
+    "format": "{icon} {temperatureC}°",
+    "critical-threshold": 90,
+    "format-icons": ["", "", "", "", ""],
+    "tooltip": false,
+  },
+
+  "pulseaudio": {
+    "format": "{icon}",
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "format-muted": "󰝟",
+    "scroll-step": 7,
+    "format-icons": {
+      "headphone": "🎧",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": ["󰕿", "󰖀", "󰕾"],
+    },
+  },
+
+  "network": {
+    "interval": 10,
+    "format-disabled": "",
+    "format-disconnected": "",
+    "format-icons": [" "],
+    "format-wifi": "{icon}",
+    "format-ethernet": "",
+    "tooltip-format": "{essid} {signalStrength}%",
+  },
+
+  "battery": {
+    "interval": 20,
+    "full-at": 100,
+    "format-full": "{icon}",
+    "format": "{icon}",
+    "format-time": "{H}:{M:02}",
+    "format-charging": " {capacity}% ({time})",
+    "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂂", "󰁹"],
+    "states": {
+      "warning": 30,
+      "critical": 15,
+    },
+    "tooltip": false,
+  },
+
+  "clock": {
+    "format": "{:%H:%M %d %B %Y}",
+    "tooltip": false,
+  },
+
+  "custom/start": {
+    "format": "",
+    "on-click": "kitty --directory ~ sh -c 'fastfetch; exec $SHELL'",
+    "tooltip": false,
+  },
+
+  "hyprland/language": {
+    "format": "{}",
+    "format-en": "EN",
+    "format-ru": "RU",
+    "format-uk": "UA",
+  },
+
+  "group/group-volume": {
+    "orientation": "horizontal",
+    "modules": ["pulseaudio", "pulseaudio/slider"],
+  },
+}

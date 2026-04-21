@@ -6,12 +6,12 @@ STATE="$2" # disable | high | low
 CONF="$HOME/.config/hypr/modules/monitors/overwrite.conf"
 
 # CONFIGS
-LAPTOP_HIGH='monitor=eDP-1,1920x1080@144,-1920x0,1'
-LAPTOP_LOW='monitor=eDP-1,1920x1080@60,-1920x0,1'
+LAPTOP_HIGH='monitor=eDP-1,1920x1080@144,-1920x0,1.0,bitdepth,10'
+LAPTOP_LOW='monitor=eDP-1,1920x1080@60,-1920x0,1.0,bitdepth,10'
 LAPTOP_DISABLE='monitor=eDP-1,disable'
 
-MONITOR_HIGH='monitor=HDMI-A-1,2560x1440@75,0x0,1'
-MONITOR_LOW='monitor=HDMI-A-1,1920x1080@75,0x0,1'
+MONITOR_HIGH='monitor=HDMI-A-1,2560x1440@75,0x0,1.0,bitdepth,10'
+MONITOR_LOW='monitor=HDMI-A-1,1920x1080@75,0x0,1.0,bitdepth,10'
 MONITOR_DISABLE='monitor=HDMI-A-1,disable'
 
 case "$MODE:$STATE" in

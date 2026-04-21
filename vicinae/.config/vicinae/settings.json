@@ -255,7 +255,12 @@
          }
       },
       "developer": {
-         "enabled": false
+         "enabled": true,
+         "entrypoints": {
+            "create": {
+               "enabled": true
+            }
+         }
       },
       "files": {
          "enabled": true,

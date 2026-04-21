@@ -1,7 +1,8 @@
 {
   // Theme tweak
   "workbench.colorCustomizations": {
-    "[paddy-wolf]": {
+    "[]": {
+      // paddy-wolf
       // primary - #222226
       // secondary - #2e2e32
       // accent - #6f8396
@@ -227,13 +228,13 @@
   },
   "workbench.navigationControl.enabled": false,
   "workbench.colorTheme": "paddy-wolf",
-"json.schemaDownload.enable": true,
+  "json.schemaDownload.enable": true,
   "window.controlsStyle": "hidden",
   "diffEditor.ignoreTrimWhitespace": false,
-"compile-hero.less-output-toggle": false,
-  "workbench.preferredDarkColorTheme": "paddy-wolf",
+  "compile-hero.less-output-toggle": false,
+  "workbench.preferredDarkColorTheme": "Flare Theme",
   "workbench.preferredLightColorTheme": "paddy-light",
-"window.autoDetectColorScheme": true,
-"window.menuBarVisibility": "compact",
-"workbench.layoutControl.enabled": false
+  "window.autoDetectColorScheme": true,
+  "window.menuBarVisibility": "compact",
+  "workbench.layoutControl.enabled": false
 }

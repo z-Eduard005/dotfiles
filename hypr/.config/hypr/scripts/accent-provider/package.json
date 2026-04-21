@@ -1,0 +1,11 @@
+{
+  "name": "accent-provider",
+  "version": "1.0.0",
+  "description": "",
+  "main": "accent-provider.js",
+  "author": "z-Eduard005",
+  "license": "ISC",
+  "dependencies": {
+    "dbus-native": "^0.4.0"
+  }
+}

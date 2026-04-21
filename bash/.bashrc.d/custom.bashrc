@@ -3,6 +3,7 @@ alias c=clear
 alias cu=cursor
 alias his="history | grep"
 alias in="sudo dnf install"
+alias remove="sudo dnf remove"
 alias search="sudo dnf search"
 alias update="sudo dnf upgrade"
 alias ch="git checkout"
