@@ -51,8 +51,8 @@
     "command": ""
   },
   {
-    "key": "ctrl+i",
-    "command": "composerMode.agent"
+    "key": "ctrl+shift+.",
+    "command": ""
   },
   {
     "key": "ctrl+alt+s",

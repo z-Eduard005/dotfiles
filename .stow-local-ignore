@@ -24,3 +24,5 @@ _darcs
 
 # Custom rules
 \.vscode
+\node_modules
+\install.sh

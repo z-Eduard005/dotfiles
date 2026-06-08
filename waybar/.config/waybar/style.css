@@ -11,6 +11,15 @@
   text-shadow: none;
 }
 
+#right,
+#left,
+#right-hidden-top,
+#left-hidden-top,
+#clock {
+  margin: 8px;
+  box-shadow: 0 1px 3px 2px rgba(0, 0, 0, 0.33);
+}
+
 #waybar {
   font-weight: 700;
   background: transparent;
@@ -19,7 +28,6 @@
   color: @fg;
 }
 
-/* global paddings */
 #temperature,
 #bluetooth,
 #battery,
@@ -32,28 +40,12 @@
 #tray,
 #backlight,
 #pulseaudio {
-  padding: 1px 8px;
-}
-
-#pulseaudio {
-  padding-left: 4px;
+  padding: 0 8px;
 }
 
 #backlight-slider,
 #pulseaudio-slider {
   padding: 0 7px 0 2px;
-}
-
-#workspaces,
-#bluetooth,
-#battery,
-#memory,
-#temperature,
-#cpu,
-#mpris,
-#window,
-#load {
-  margin: 0 3px;
 }
 
 #right,
@@ -67,22 +59,13 @@
 
 #right-hidden-top,
 #left-hidden-top {
-  padding: 0 12px;
-}
-
-#right,
-#left {
-  margin: 0 8px;
+  padding: 8px 12px;
 }
 
 #clock {
-  background: @module-bg;
-  padding: 1px 18px;
+  padding: 0 14px;
   border-radius: 15px;
-}
-
-#custom-ctlcenter {
-  margin-left: 7px;
+  background: @module-bg;
 }
 
 #power-profiles-daemon,
@@ -141,7 +124,6 @@
   color: @inactive;
 }
 
-/* ---<==== Misc ====>--- */
 tooltip {
   border-radius: 15px;
   background: @tooltip-bg;
@@ -166,13 +148,13 @@ menu {
   background: @tooltip-bg;
 }
 
-menu > *,
-menu > * {
+menu>*,
+menu>* {
   padding: 3px 0px;
 }
 
-menu > *:hover,
-menu > *:hover {
+menu>*:hover,
+menu>*:hover {
   border-radius: 10px;
   background-color: @inactive;
 }

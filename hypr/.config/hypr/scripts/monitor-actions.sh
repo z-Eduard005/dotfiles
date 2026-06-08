@@ -3,7 +3,7 @@
 MODE="$1" # laptop | monitor
 STATE="$2" # disable | high | low
 
-CONF="$HOME/.config/hypr/modules/monitors/overwrite.conf"
+CONF="$HOME/.config/hypr/modules/monitors.d/overwrite.conf"
 
 # CONFIGS
 LAPTOP_HIGH='monitor=eDP-1,1920x1080@144,-1920x0,1.0,bitdepth,10'

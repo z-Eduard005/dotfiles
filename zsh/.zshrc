@@ -106,3 +106,6 @@ source $ZSH/oh-my-zsh.sh
 
 # Source the .bashrc config
 [ -f ~/.bashrc ] && source ~/.bashrc
+
+# opencode
+export PATH=/home/eduard/.opencode/bin:$PATH

@@ -31,6 +31,7 @@
 
   "temperature": {
     "interval": 10,
+    "hwmon-path": "/sys/class/hwmon/hwmon5/temp3_input",
     "format": "{icon} {temperatureC}°",
     "critical-threshold": 90,
     "format-icons": ["", "", "", "", ""],
@@ -43,7 +44,7 @@
     "format-muted": "󰝟",
     "scroll-step": 7,
     "format-icons": {
-      "headphone": "🎧",
+      "headphone": "",
       "hands-free": "",
       "headset": "",
       "phone": "",
@@ -57,19 +58,25 @@
     "interval": 10,
     "format-disabled": "",
     "format-disconnected": "",
-    "format-icons": [" "],
+    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
     "format-wifi": "{icon}",
-    "format-ethernet": "",
+    "format-ethernet": "󰈁",
     "tooltip-format": "{essid} {signalStrength}%",
+  },
+
+  "bluetooth": {
+    "interval": 10,
+    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+    "format": "{icon}",
   },
 
   "battery": {
     "interval": 20,
     "full-at": 100,
     "format-full": "{icon}",
-    "format": "{icon}",
+    "format": "{icon} {capacity}%",
     "format-time": "{H}:{M:02}",
-    "format-charging": " {capacity}% ({time})",
+    "format-charging": " {capacity}%",
     "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂂", "󰁹"],
     "states": {
       "warning": 30,
