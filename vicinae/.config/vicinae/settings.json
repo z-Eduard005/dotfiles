@@ -23,7 +23,7 @@
    },
    "theme": {
       "dark": {
-         "name": "adwaita-dark",
+         "name": "dracula",
          "icon_theme": "Adwaita-Slate"
       }
    },
@@ -94,6 +94,11 @@
       "@Gelei/store.vicinae.bluetooth": {
          "preferences": {
             "connectionToggleable": false
+         }
+      },
+      "@dagimg-dot/store.vicinae.wifi-commander": {
+         "preferences": {
+            "network-cli-tool": "nmcli"
          }
       },
       "@gebeto/store.raycast.translate": {

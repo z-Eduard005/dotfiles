@@ -43,6 +43,13 @@
     "command": "workbench.action.previousEditor"
   },
 
+  // Terminal fast open
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "terminal.active"
+  },
+
   // Fixes for linux
   { "key": "ctrl+y", "command": "redo" },
   { "key": "ctrl+shift+up", "command": "" },
