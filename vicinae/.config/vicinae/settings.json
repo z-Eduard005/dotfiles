@@ -23,7 +23,7 @@
    },
    "theme": {
       "dark": {
-         "name": "dracula",
+         "name": "elementary-dark",
          "icon_theme": "Adwaita-Slate"
       }
    },
@@ -31,7 +31,10 @@
       "system_info": false
    },
    "launcher_window": {
-      "opacity": 0.98
+      "opacity": 0.98,
+      "client_side_decorations": {
+         "border_width": 2
+      }
    },
    "favorites": [],
    "providers": {
@@ -159,6 +162,24 @@
             }
          }
       },
+      "@skifli/store.vicinae.protonvpn": {
+         "entrypoints": {
+            "connect": {
+               "enabled": false
+            },
+            "settings": {
+               "enabled": false
+            },
+            "status": {
+               "alias": "vpn"
+            }
+         }
+      },
+      "@z-Eduard005/hyprpaper-switcher": {
+         "preferences": {
+            "wallpaperDir": ""
+         }
+      },
       "applications": {
          "preferences": {
             "paths": [
@@ -172,9 +193,6 @@
          "entrypoints": {
             "vicinae-off-script": {
                "alias": "off"
-            },
-            "vicinae-out-script": {
-               "alias": "out"
             },
             "vicinae-reboot-script": {
                "alias": "reboot"
@@ -285,22 +303,27 @@
          "enabled": false
       },
       "power": {
-         "enabled": false,
+         "enabled": true,
          "entrypoints": {
             "hibernate": {
                "enabled": false
             },
             "lock": {
-               "enabled": false
+               "enabled": true
             },
             "logout": {
-               "enabled": false
+               "alias": "out",
+               "enabled": true,
+               "preferences": {
+                  "confirm": true,
+                  "customProgram": "/bin/bash -lc \"/home/eduard/.config/hypr/scripts/power-actions.sh logout\""
+               }
             },
             "power-off": {
-               "enabled": false
+               "enabled": true
             },
             "reboot": {
-               "enabled": false
+               "enabled": true
             },
             "sleep": {
                "enabled": false

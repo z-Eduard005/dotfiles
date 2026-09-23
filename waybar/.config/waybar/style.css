@@ -102,23 +102,42 @@
 }
 
 #workspaces {
-  padding: 5px 0;
+  padding: 4px 0;
+}
+
+#workspaces button image {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+#workspaces button *:nth-child(n+2) image {
+  /* border: 1px solid red; */
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+#workspaces button image {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+#workspaces button *:not(:first-child) {
+  margin-left: -4px;
 }
 
 #workspaces button {
-  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   color: @workspace-fg;
   min-width: 24px;
   font-size: 18px;
   border-radius: 4px;
-  padding: 0 2px;
   margin: 0 3px;
-  transition: all 0.3s;
+  transition: none;
+  padding: 2px;
 }
 
 #workspaces button.active {
-  background: rgba(255, 255, 255, 0.1);
-  color: @accent;
+  background: rgba(111, 131, 150, 0.7);
 }
 
 #mpris.paused {
