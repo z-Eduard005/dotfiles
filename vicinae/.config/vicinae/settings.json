@@ -165,7 +165,7 @@
       "@skifli/store.vicinae.protonvpn": {
          "entrypoints": {
             "connect": {
-               "enabled": false
+               "enabled": true
             },
             "settings": {
                "enabled": false
