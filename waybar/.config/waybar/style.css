@@ -2,7 +2,7 @@
 
 * {
   /* font-family: "CaskaydiaCove Nerd Font Propo"; */
-  font-family: "SF Pro";
+  font-family: "SF Pro Rounded";
   border: none;
   border-radius: 0;
   min-height: 0;
@@ -24,7 +24,7 @@
   font-weight: 700;
   /* background: transparent; */
   background: @module-bg;
-  font-size: 19px;
+  font-size: 20px;
   letter-spacing: 0px;
   color: @fg;
 }
@@ -42,6 +42,22 @@
 #backlight,
 #pulseaudio {
   padding: 0 8px;
+}
+
+#right #language,
+#group-volume>*,
+#group-battery>*,
+#group-temperature>* {
+  padding: 0 6px;
+}
+
+#right #language,
+#right #group-volume,
+#right #image.wifi,
+#right #image.bluetooth,
+#right #group-battery,
+#right #group-temperature {
+  margin: 0 3px;
 }
 
 #backlight-slider,
@@ -129,7 +145,7 @@
   background: rgba(255, 255, 255, 0.08);
   color: @workspace-fg;
   min-width: 24px;
-  font-size: 18px;
+  /* font-size: 18px; */
   border-radius: 4px;
   margin: 0 3px;
   transition: none;
@@ -197,4 +213,8 @@ trough highlight {
   border-radius: 8px;
   background-color: @fg;
   background-image: none;
+}
+
+#group-volume #image.volume {
+  margin-right: 5px;
 }

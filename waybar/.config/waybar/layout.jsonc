@@ -20,11 +20,11 @@
     "orientation": "horizontal",
     "modules": [
       "hyprland/language",
+      "image#wifi",
+      "image#bluetooth",
       "group/group-volume",
-      "network",
-      "bluetooth",
-      "battery",
-      "temperature",
+      "group/group-battery",
+      "group/group-temperature",
     ],
   },
 

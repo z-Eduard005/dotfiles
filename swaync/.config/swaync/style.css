@@ -12,7 +12,7 @@
 .notification {
   padding: 0 5px;
   border-radius: 15px;
-  border: 2px solid @background;
+  border: 2px solid @accent;
   color: @text;
 }
 
@@ -173,6 +173,10 @@
 .widget-dnd switch slider {
   background: @text;
   border-radius: 8px;
+}
+
+.widget-dnd switch:checked {
+  background: @accent;
 }
 
 .widget-volume,

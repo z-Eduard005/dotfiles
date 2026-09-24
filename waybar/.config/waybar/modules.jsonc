@@ -38,61 +38,65 @@
 
   "temperature": {
     "interval": 10,
-    "hwmon-path": "/sys/class/hwmon/hwmon5/temp3_input",
-    "format": "{icon} {temperatureC}°",
+    "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:01.1/0000:01:00.0/0000:02:00.0/0000:03:00.0/hwmon",
+    "input-filename": "temp3_input",
+    "format": "{temperatureC}°",
     "critical-threshold": 90,
-    "format-icons": ["", "", "", "", ""],
     "tooltip": false,
-  },
-
-  "pulseaudio": {
-    "format": "{icon}",
-    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-    "format-muted": "󰝟",
-    "scroll-step": 15,
-    "format-icons": {
-      "headphone": "",
-      "hands-free": "",
-      "headset": "",
-      "phone": "",
-      "portable": "",
-      "car": "",
-      "default": ["󰕿", "󰖀", "󰕾"],
-    },
-  },
-
-  "network": {
-    "interval": 10,
-    "format-disabled": "",
-    "format-disconnected": "",
-    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
-    "format-wifi": "{icon}",
-    "format-ethernet": "󰈁",
-    "tooltip-format": "{essid} {signalStrength}%",
-  },
-
-  "bluetooth": {
-    "interval": 10,
-    "format": "{icon}",
-    "format-disabled": "\uf293",
-    "format-off": "\uf293",
-    "format-connected": "\uf00b1",
-    "on-click": "bluetoothctl show | grep -q 'Powered: yes' && bluetoothctl power off || bluetoothctl power on",
-    "on-click-right": "bluetoothctl power off",
   },
 
   "battery": {
     "interval": 20,
     "full-at": 100,
-    "format-full": "{icon}",
-    "format": "{icon} {capacity}%",
+    "format-full": "{capacity}%",
+    "format": "{capacity}%",
     "format-time": "{H}:{M:02}",
-    "format-charging": " {capacity}%",
-    "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂂", "󰁹"],
+    "format-charging": "{capacity}%",
     "states": {
       "warning": 30,
       "critical": 15,
     },
+    "tooltip": false,
+  },
+
+  "image#temperature": {
+    "size": 24,
+    "interval": 10,
+    "exec": "~/.config/waybar/scripts/icon-temperature.sh",
+    "tooltip": false,
+  },
+
+  "image#volume": {
+    "size": 24,
+    "interval": 2,
+    "signal": 8,
+    "exec": "~/.config/waybar/scripts/icon-volume.sh",
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -RTMIN+8 waybar",
+    "tooltip": false,
+  },
+
+  "image#wifi": {
+    "size": 24,
+    "interval": 10,
+    "signal": 9,
+    "exec": "~/.config/waybar/scripts/icon-wifi.sh",
+    "on-click": "vicinae 'vicinae://launch/@dagimg-dot/store.vicinae.wifi-commander/scan-wifi'",
+  },
+
+  "image#bluetooth": {
+    "size": 24,
+    "interval": 10,
+    "signal": 10,
+    "exec": "~/.config/waybar/scripts/icon-bluetooth.sh",
+    "on-click": "bluetoothctl show | grep -q 'Powered: yes' && bluetoothctl power off || bluetoothctl power on; pkill -RTMIN+10 waybar",
+    "on-click-right": "bluetoothctl power off; pkill -RTMIN+10 waybar",
+    "tooltip": false,
+  },
+
+  "image#battery": {
+    "size": 24,
+    "interval": 2,
+    "exec": "~/.config/waybar/scripts/icon-battery.sh",
     "tooltip": false,
   },
 
@@ -116,6 +120,16 @@
 
   "group/group-volume": {
     "orientation": "horizontal",
-    "modules": ["pulseaudio", "pulseaudio/slider"],
+    "modules": ["image#volume", "pulseaudio/slider"],
+  },
+
+  "group/group-battery": {
+    "orientation": "horizontal",
+    "modules": ["image#battery", "battery"],
+  },
+
+  "group/group-temperature": {
+    "orientation": "horizontal",
+    "modules": ["image#temperature", "temperature"],
   },
 }

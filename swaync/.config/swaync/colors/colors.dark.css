@@ -1,8 +1,9 @@
-@define-color center-bg       rgba(8, 8, 11, 0.9);
-@define-color background      #08080b;
-@define-color background-alt  #0e0e14;
-@define-color text            #acb0d0;
-@define-color text-alt        #787c99;
-@define-color selected        alpha(@text-alt, .4);
+@define-color center-bg       rgba(34, 34, 38, 0.9);
+@define-color background      #222226;
+@define-color background-alt  #2e2e32;
+@define-color text            #eeeeee;
+@define-color text-alt        #c8c8ce;
+@define-color selected        #6f8396;
 @define-color hover           alpha(@selected, .4);
-@define-color urgent          @text-alt;
+@define-color urgent          #f7768e;
+@define-color accent          #6f8396;
