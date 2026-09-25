@@ -2,22 +2,29 @@
 
 ICON_DIR="$HOME/.config/waybar/assets/icons"
 
-pactl get-sink-mute @DEFAULT_SINK@ 2>/dev/null | grep -q "yes" && {
+sink=$(pactl get-default-sink 2>/dev/null)
+{
+    read -r mute
+    read -r vol
+    read -r port
+} < <(pactl list sinks 2>/dev/null | awk -v sink="$sink" '
+    $1 == "Name:" { if ($2 == sink) found = 1; else if (found) exit; next }
+    !found { next }
+    $1 == "Mute:" { mute = $2; next }
+    $1 == "Volume:" && vol == "" { if (match($0, /[0-9]+%/)) vol = substr($0, RSTART, RLENGTH - 1); next }
+    $1 == "Active" && $2 == "Port:" { port = ""; for (i = 3; i <= NF; i++) port = port $i " " }
+    END { print mute; print vol; print tolower(port) }
+')
+
+[ "$mute" = "yes" ] && {
     echo "$ICON_DIR/volume-x.svg"
     exit 0
 }
-
-port=$(pactl list sinks 2>/dev/null | awk -v sink="$(pactl get-default-sink 2>/dev/null)" '
-    $1 == "Name:" && $2 == sink { found = 1 }
-    found && $1 == "Active" && $2 == "Port:" { for (i = 3; i <= NF; i++) printf "%s ", $i; exit }
-' | tr 'A-Z' 'a-z')
 
 case "$port" in
     *headphone*) echo "$ICON_DIR/headphones.svg"; exit 0 ;;
     *headset*|*handsfree*|*hfp*|*hsp*|*bluez*) echo "$ICON_DIR/headset.svg"; exit 0 ;;
 esac
-
-vol=$(pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -oE "[0-9]+%" | head -1 | tr -d "%")
 
 if [ "${vol:-0}" -le 33 ]; then
     echo "$ICON_DIR/volume.svg"

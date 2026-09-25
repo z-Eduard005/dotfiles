@@ -2,6 +2,13 @@
 NEW=0
 [[ "$1" == "--new" ]] && NEW=1 && shift
 
+[[ $# -eq 1 ]] && eval "set -- $1"
+LAUNCH_ENV=()
+while [[ "$1" =~ ^[A-Za-z_][A-Za-z0-9_]*= ]]; do
+    LAUNCH_ENV+=("$1")
+    shift
+done
+
 NAME="$1"
 DIRS=(
     "/usr/share/applications"
@@ -17,8 +24,8 @@ for dir in "${DIRS[@]}"; do
     if [[ -f "$FILE" ]]; then
         EXEC=$(grep -m1 '^Exec=' "$FILE" | cut -d= -f2-)
         EXEC=$(echo "$EXEC" | sed 's/%[a-zA-Z]//g')
-
-        BIN=$(basename "$(echo "$EXEC" | awk '{print $1}')")
+        BIN=$(echo "$EXEC" | awk '{ i=1; if ($i == "env") i++; while ($i ~ /^[A-Za-z_][A-Za-z0-9_]*=/) i++; print $i }')
+        BIN=$(basename "$BIN")
 
         CLASS=$(grep -m1 '^StartupWMClass=' "$FILE" | cut -d= -f2-)
         [[ -z "$CLASS" ]] && CLASS="$NAME"
@@ -35,6 +42,7 @@ for dir in "${DIRS[@]}"; do
             fi
         fi
 
+        [[ ${#LAUNCH_ENV[@]} -gt 0 ]] && export "${LAUNCH_ENV[@]}"
         eval "set -- $EXEC"
         exec uwsm app -- "$@"
     fi

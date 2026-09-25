@@ -1,7 +1,6 @@
 @import "colors/colors.css";
 
 * {
-  /* font-family: "CaskaydiaCove Nerd Font Propo"; */
   font-family: "SF Pro Rounded";
   border: none;
   border-radius: 0;
@@ -11,83 +10,33 @@
   text-shadow: none;
 }
 
-#right,
-#left,
-#right-hidden-top,
-#left-hidden-top,
-#clock {
-  /* margin: 8px; */
-  /* box-shadow: 0 1px 3px 2px rgba(0, 0, 0, 0.33); */
-}
-
 #waybar {
-  font-weight: 700;
-  /* background: transparent; */
+  font-weight: 600;
   background: @module-bg;
   font-size: 20px;
   letter-spacing: 0px;
   color: @fg;
 }
 
-#temperature,
-#bluetooth,
-#battery,
-#memory,
-#mpris,
-#window,
-#cpu,
-#load,
-#network,
-#tray,
-#backlight,
-#pulseaudio {
-  padding: 0 8px;
+.modules-left {
+  margin-left: 16px;
 }
 
-#right #language,
-#group-volume>*,
-#group-battery>*,
-#group-temperature>* {
-  padding: 0 6px;
-}
-
-#right #language,
-#right #group-volume,
-#right #image.wifi,
-#right #image.bluetooth,
-#right #group-battery,
-#right #group-temperature {
-  margin: 0 3px;
-}
-
-#backlight-slider,
-#pulseaudio-slider {
-  padding: 0 7px 0 2px;
+.modules-right {
+  margin-right: 16px;
 }
 
 #right,
 #left,
 #right-hidden-top,
 #left-hidden-top {
-  padding: 2px 10px;
   border-radius: 15px;
   background: @module-bg;
-}
-
-#right-hidden-top,
-#left-hidden-top {
-  padding: 8px 12px;
 }
 
 #clock {
-  padding: 0 14px;
   border-radius: 15px;
   background: @module-bg;
-}
-
-#power-profiles-daemon,
-#custom-start {
-  margin-right: 7px;
 }
 
 #cpu.critical,
@@ -117,39 +66,36 @@
   color: @accent;
 }
 
+#custom-cava {
+  font-family: "JetBrainsMono NFP";
+  color: @fg;
+}
+
 #workspaces {
   padding: 4px 0;
 }
 
-#workspaces button image {
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
+#workspaces button {
+  margin: 0 2px;
+  padding: 0 4px;
 }
 
-#workspaces button *:nth-child(n+2) image {
-  /* border: 1px solid red; */
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-}
-
-#workspaces button image {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-#workspaces button *:not(:first-child) {
+#workspaces button image,
+#workspaces button label {
+  margin: -4px 0;
   margin-left: -4px;
 }
 
+#workspaces button label {
+  padding: 4px;
+}
+
 #workspaces button {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.08);
   color: @workspace-fg;
-  min-width: 24px;
-  /* font-size: 18px; */
-  border-radius: 4px;
-  margin: 0 3px;
+  border-radius: 6px;
   transition: none;
-  padding: 2px;
 }
 
 #workspaces button.active {
@@ -161,12 +107,12 @@
 }
 
 tooltip {
-  border-radius: 15px;
+  border-radius: 8px;
   background: @tooltip-bg;
 }
 
 tooltip label {
-  padding: 3px 10px;
+  padding: 4px 10px;
   color: @fg;
   font-weight: 700;
 }
@@ -178,7 +124,7 @@ tooltip label {
 
 menu,
 menu {
-  border-radius: 10px;
+  border-radius: 8px;
   font-weight: 700;
   color: @fg;
   background: @tooltip-bg;
@@ -186,16 +132,14 @@ menu {
 
 menu>*,
 menu>* {
-  padding: 3px 0px;
+  padding: 4px 0px;
 }
 
 menu>*:hover,
 menu>*:hover {
-  border-radius: 10px;
-  background-color: @inactive;
+  border-radius: 8px;
+  background-color: @accent;
 }
-
-/* Sliders */
 
 slider {
   opacity: 0;
@@ -215,6 +159,34 @@ trough highlight {
   background-image: none;
 }
 
-#group-volume #image.volume {
-  margin-right: 5px;
+#custom-cava,
+#left,
+#language,
+#group-volume,
+#image.wifi,
+#image.bluetooth,
+#group-battery,
+#group-temperature {
+  margin: 0 10px;
+}
+
+#group-clock {
+  margin-right: 12px;
+}
+
+#right-hidden-top {
+  margin-left: 12px;
+}
+
+#tray {
+  margin-left: 12px;
+}
+
+#image {
+  margin-right: 4px;
+}
+
+#image.wifi,
+#image.bluetooth {
+  margin-right: 0px;
 }

@@ -68,16 +68,14 @@
 
   "image#volume": {
     "size": 24,
-    "interval": 2,
     "signal": 8,
     "exec": "~/.config/waybar/scripts/icon-volume.sh",
-    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -RTMIN+8 waybar",
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -x -RTMIN+8 waybar",
     "tooltip": false,
   },
 
   "image#wifi": {
     "size": 24,
-    "interval": 10,
     "signal": 9,
     "exec": "~/.config/waybar/scripts/icon-wifi.sh",
     "on-click": "vicinae 'vicinae://launch/@dagimg-dot/store.vicinae.wifi-commander/scan-wifi'",
@@ -85,11 +83,10 @@
 
   "image#bluetooth": {
     "size": 24,
-    "interval": 10,
     "signal": 10,
     "exec": "~/.config/waybar/scripts/icon-bluetooth.sh",
-    "on-click": "bluetoothctl show | grep -q 'Powered: yes' && bluetoothctl power off || bluetoothctl power on; pkill -RTMIN+10 waybar",
-    "on-click-right": "bluetoothctl power off; pkill -RTMIN+10 waybar",
+    "on-click": "bluetoothctl show | grep -q 'Powered: yes' && bluetoothctl power off || bluetoothctl power on; pkill -x -RTMIN+10 waybar",
+    "on-click-right": "bluetoothctl power off; pkill -x -RTMIN+10 waybar",
     "tooltip": false,
   },
 
@@ -109,6 +106,12 @@
     "format": "",
     "on-click": "kitty --directory ~ sh -c 'fastfetch; exec $SHELL'",
     "tooltip": false,
+  },
+  "custom/cava": {
+    "format": "{}",
+    "exec": "~/.config/waybar/scripts/cava-bars.sh",
+    "restart-interval": 5,
+    "hide-empty-text": true,
   },
 
   "hyprland/language": {
@@ -131,5 +134,16 @@
   "group/group-temperature": {
     "orientation": "horizontal",
     "modules": ["image#temperature", "temperature"],
+  },
+
+  "image#clock": {
+    "size": 24,
+    "path": "/home/eduard/.config/waybar/assets/icons/clock.svg",
+    "tooltip": false,
+  },
+
+  "group/group-clock": {
+    "orientation": "horizontal",
+    "modules": ["image#clock", "clock"],
   },
 }
