@@ -1,7 +1,7 @@
 .titlebar-container .left-action-toolbar-container,
 .titlebar-container .monaco-action-bar,
 .editor-actions .monaco-toolbar,
-.split-view-view .global-actions .monaco-toolba,
+.split-view-view .global-actions .monaco-toolbar,
 .split-view-view .title-actions .monaco-action-bar .action-item .monaco-dropdown .dropdown-label {
   display: none !important;
 }
