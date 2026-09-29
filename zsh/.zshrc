@@ -112,9 +112,6 @@ source $ZSH/oh-my-zsh.sh
 # opencode
 export PATH=/home/eduard/.opencode/bin:$PATH
 
-# OpenClaw Completion
-[ -f "/home/eduard/.openclaw/completions/openclaw.zsh" ] && source "/home/eduard/.openclaw/completions/openclaw.zsh"
-
 # Run-once startup hook (e.g. RUN_FASTFETCH=1 kitty)
 if [[ $RUN_FASTFETCH == 1 ]]; then
   unset RUN_FASTFETCH

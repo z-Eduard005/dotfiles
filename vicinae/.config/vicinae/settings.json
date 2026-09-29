@@ -34,7 +34,7 @@
    "launcher_window": {
       "opacity": 0.98,
       "client_side_decorations": {
-         "border_width": 2
+         "border_width": 1
       }
    },
    "favorites": [],

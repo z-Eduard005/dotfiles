@@ -86,21 +86,21 @@
   background: @hover;
 }
 
-.notification > *:last-child > * {
+.notification>*:last-child>* {
   min-height: 3.2em;
 }
 
-.notification > *:last-child > * .notification-action {
+.notification>*:last-child>* .notification-action {
   background: @hover;
   margin: 0 6px 9px 6px;
   border-radius: 8px;
 }
 
-.notification > *:last-child > * .notification-action:hover {
+.notification>*:last-child>* .notification-action:hover {
   background: @selected;
 }
 
-.notification > *:last-child > * .notification-action:active {
+.notification>*:last-child>* .notification-action:active {
   background: @selected;
 }
 
@@ -132,7 +132,7 @@
   color: @text;
 }
 
-.notification-group-headers > label {
+.notification-group-headers>label {
   margin: 0 3px;
   font-size: 1rem;
 }
@@ -159,7 +159,7 @@
   background: @background-alt;
 }
 
-.widget-dnd > label {
+.widget-dnd>label {
   font-size: 1rem;
 }
 
@@ -255,7 +255,7 @@
   margin: 0 2.5px;
 }
 
-.widget-mpris-player .mpris-overlay > box:last-child {
+.widget-mpris-player .mpris-overlay>box:last-child {
   border-radius: 16px;
   padding: 0 5px;
   background: alpha(@hover, 0.3);
@@ -294,7 +294,7 @@
   border-radius: 15px;
 }
 
-.widget-buttons-grid button > label {
+.widget-buttons-grid button>label {
   font-size: 16px;
   color: @text;
 }
@@ -307,7 +307,7 @@
   background-color: @text;
 }
 
-.widget-buttons-grid button:checked > label {
+.widget-buttons-grid button:checked>label {
   color: @background;
 }
 
