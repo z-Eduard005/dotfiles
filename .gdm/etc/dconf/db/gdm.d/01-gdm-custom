@@ -1,0 +1,17 @@
+# Run to take effect: `sudo dconf update`
+
+[org/gnome/desktop/interface]
+accent-color='slate'
+cursor-theme='macOS'
+cursor-size=28
+font-name='SF Pro Rounded weight=400 14 @opsz=17,wght=400'
+clock-show-date=false
+clock-show-seconds=false
+clock-show-weekday=false
+clock-format='24h'
+show-battery-percentage=true
+
+[org/gnome/desktop/background]
+picture-uri='file:///usr/share/backgrounds/gdm-wallpaper.jpg'
+picture-uri-dark='file:///usr/share/backgrounds/gdm-wallpaper.jpg'
+picture-options='zoom'
