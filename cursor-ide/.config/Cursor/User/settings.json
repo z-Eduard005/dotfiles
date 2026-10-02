@@ -127,6 +127,7 @@
   "editor.stickyScroll.enabled": false,
   "editor.cursorBlinking": "solid",
   "editor.cursorStyle": "block",
+  "editor.cursorSmoothCaretAnimation": "off",
   "editor.quickSuggestionsDelay": 0,
   "editor.linkedEditing": true,
   "editor.tabCompletion": "on",

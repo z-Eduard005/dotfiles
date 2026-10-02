@@ -163,19 +163,6 @@
             }
          }
       },
-      "@skifli/store.vicinae.protonvpn": {
-         "entrypoints": {
-            "connect": {
-               "enabled": true
-            },
-            "settings": {
-               "enabled": false
-            },
-            "status": {
-               "alias": "vpn"
-            }
-         }
-      },
       "@z-Eduard005/hyprpaper-switcher": {
          "preferences": {
             "wallpaperDir": ""

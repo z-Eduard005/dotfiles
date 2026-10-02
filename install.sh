@@ -3,7 +3,7 @@
 git clone --depth=1 https://github.com/z-Eduard005/dotfiles "/home/$USER"
 cd "/home/$USER/dotfiles"
 rm -rf .git README.md
-echo "" > ./hypr/.config/hypr/modules/monitors.d/overwrite.conf
+echo "" > ./hypr/.config/hypr/modules/monitors.d/override.conf
 
 if ! which stow &> /dev/null; then
     echo "stow could not be found, installing via dnf..."

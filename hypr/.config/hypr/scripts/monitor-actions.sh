@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONF="$HOME/.config/hypr/modules/monitors.d/overwrite.conf"
+CONF="$HOME/.config/hypr/modules/monitors.d/override.conf"
 
 LAPTOP_HIGH='monitor=eDP-1,1920x1080@144,-1920x0,1.0,bitdepth,10'
 LAPTOP_LOW='monitor=eDP-1,1920x1080@60,-1920x0,1.0,bitdepth,10'
