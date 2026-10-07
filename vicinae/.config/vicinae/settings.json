@@ -32,9 +32,10 @@
       "system_info": false
    },
    "launcher_window": {
-      "opacity": 0.98,
+      "opacity": 0.96,
       "client_side_decorations": {
-         "border_width": 1
+         "border_width": 1,
+         "shadow_size": 2
       }
    },
    "favorites": [],

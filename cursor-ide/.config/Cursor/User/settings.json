@@ -98,8 +98,8 @@
 
       // Find widget (Ctrl+F) specific styling
       "widget.border": "#6f839610",
-      "widget.shadow": "#00000040"
-    }
+      "widget.shadow": "#00000040",
+    },
   },
 
   // AI
@@ -134,38 +134,38 @@
   "editor.multiCursorModifier": "alt",
   "[markdown]": {
     "editor.formatOnSave": false,
-    "editor.defaultFormatter": null
+    "editor.defaultFormatter": null,
   },
   "[html]": {
-    "editor.defaultFormatter": "vscode.html-language-features"
+    "editor.defaultFormatter": "vscode.html-language-features",
   },
   "[css]": {
-    "editor.defaultFormatter": "vscode.css-language-features"
+    "editor.defaultFormatter": "vscode.css-language-features",
   },
   "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
+    "editor.defaultFormatter": "vscode.json-language-features",
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[typescript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "vscode.typescript-language-features",
   },
   "[php]": {
     "editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
-    "editor.tabSize": 4
+    "editor.tabSize": 4,
   },
   "[scss]": {
-    "editor.defaultFormatter": "vscode.css-language-features"
+    "editor.defaultFormatter": "vscode.css-language-features",
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "editor.unicodeHighlight.allowedCharacters": {
-    "і": true
+    "і": true,
   },
   "workbench.editor.enablePreview": false,
   "workbench.list.smoothScrolling": false,
@@ -207,7 +207,7 @@
   // Other
   "emmet.includeLanguages": {
     "javascript": "javascriptreact",
-    "typescript": "typescriptreact"
+    "typescript": "typescriptreact",
   },
   "liveServer.settings.donotShowInfoMsg": true,
   "liveServer.settings.donotVerifyTags": true,
@@ -215,7 +215,7 @@
   "eslint.enable": true,
   "breadcrumbs.enabled": false,
   "files.associations": {
-    "*.css": "css"
+    "*.css": "css",
   },
   "files.autoSave": "onFocusChange",
   "security.workspace.trust.untrustedFiles": "open",
@@ -237,12 +237,12 @@
   "update.mode": "none",
   "vscode_custom_css.imports": [
     "file:///home/eduard/.config/Cursor/User/custom.css",
-    "file:///home/eduard/.config/Cursor/User/custom.js"
+    "file:///home/eduard/.config/Cursor/User/custom.js",
   ],
   "vscode_custom_css.statusbar": false,
   "workbench.layoutControl.enabled": false,
   "workbench.agentsWindowButton.enabled": false,
   "installation-corrupt-remover.enabled": true,
   "window.menuBarVisibility": "compact",
-  "git.openRepositoryInParentFolders": "never"
+  "git.openRepositoryInParentFolders": "never",
 }

@@ -80,15 +80,15 @@
     "interval": 30,
     "exec": "~/.config/waybar/scripts/icon-wifi.sh",
     "on-click": "vicinae 'vicinae://launch/@dagimg-dot/store.vicinae.wifi-commander/scan-wifi'",
+    "on-click-right": "[ \"$(nmcli radio wifi)\" = enabled ] && nmcli radio wifi off || nmcli radio wifi on; pkill -x -RTMIN+9 waybar",
   },
 
   "image#bluetooth": {
     "size": 24,
     "signal": 10,
     "exec": "~/.config/waybar/scripts/icon-bluetooth.sh",
-    "on-click": "bluetoothctl show | grep -q 'Powered: yes' && bluetoothctl power off || bluetoothctl power on; pkill -x -RTMIN+10 waybar",
-    "on-click-right": "bluetoothctl power off; pkill -x -RTMIN+10 waybar",
-    "tooltip": false,
+    "on-click": "vicinae 'vicinae://launch/@Gelei/store.vicinae.bluetooth/scan'",
+    "on-click-right": "bluetoothctl show | grep -q 'Powered: yes' && bluetoothctl power off || bluetoothctl power on; pkill -x -RTMIN+10 waybar",
   },
 
   "image#battery": {

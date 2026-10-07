@@ -5,7 +5,7 @@ ICON_DIR="$HOME/.config/waybar/assets/icons"
 vpn_active() {
     nmcli -t -f TYPE,STATE con show --active 2>/dev/null | grep -qE ':(vpn|wireguard):(connected|activated)' && return 0
     # standalone tunnels (wg-quick, openvpn CLI, tailscale, protonvpn app, zerotier, ppp)
-    ip -o link show up 2>/dev/null | grep -qiE '^[0-9]+: (tun|tap|wg|tailscale|proton|zt|ppp|ipsec)[0-9]*:|vpn' && return 0
+    ip -o link show up 2>/dev/null | grep -qiE '^[0-9]+: (tun|wg|tailscale|proton|ppp|ipsec)[0-9]*:|vpn' && return 0
     return 1
 }
 

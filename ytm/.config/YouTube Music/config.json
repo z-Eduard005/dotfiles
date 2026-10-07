@@ -1,0 +1,102 @@
+{
+	"window-size": {
+		"width": 2544,
+		"height": 1384
+	},
+	"window-maximized": false,
+	"window-position": {
+		"x": 8,
+		"y": 48
+	},
+	"url": "https://music.youtube.com/watch?v=HwGoFqelkBY&list=RDAMVMg6ZiKKsFiuc&index=0",
+	"options": {
+		"tray": false,
+		"appVisible": true,
+		"autoUpdates": false,
+		"alwaysOnTop": false,
+		"hideMenu": false,
+		"hideMenuWarned": false,
+		"startAtLogin": false,
+		"disableHardwareAcceleration": false,
+		"removeUpgradeButton": false,
+		"restartOnConfigChanges": false,
+		"trayClickPlayPause": false,
+		"autoResetAppCache": false,
+		"resumeOnStart": true,
+		"likeButtons": "force",
+		"proxy": "",
+		"startingPage": "",
+		"overrideUserAgent": false,
+		"usePodcastParticipantAsArtist": false,
+		"themes": []
+	},
+	"plugins": {
+		"notifications": {},
+		"video-toggle": {
+			"mode": "custom"
+		},
+		"precise-volume": {
+			"globalShortcuts": {}
+		},
+		"discord": {
+			"listenAlong": true
+		},
+		"album-actions": {
+			"enabled": false
+		},
+		"album-color-theme": {
+			"enabled": true,
+			"ratio": 0.7
+		},
+		"blur-nav-bar": {
+			"enabled": false
+		},
+		"compact-sidebar": {
+			"enabled": false
+		},
+		"downloader": {
+			"enabled": true,
+			"downloadFolder": "~/Music/ytm",
+			"downloadOnFinish": {
+				"enabled": false,
+				"seconds": 20,
+				"percent": 10,
+				"mode": "seconds",
+				"folder": "~/Music/ytm"
+			},
+			"selectedPreset": "mp3 (256kbps)",
+			"customPresetSetting": {
+				"extension": "mp3",
+				"ffmpegArgs": [
+					"-b:a",
+					"256k"
+				]
+			},
+			"skipExisting": false
+		},
+		"in-app-menu": {
+			"enabled": true
+		},
+		"visualizer": {
+			"enabled": false
+		},
+		"ambient-mode": {
+			"enabled": false,
+			"quality": 1000,
+			"buffer": 30,
+			"interpolationTime": 1500,
+			"blur": 150,
+			"size": 300,
+			"opacity": 1,
+			"fullscreen": true
+		},
+		"amuse": {
+			"enabled": false
+		}
+	},
+	"__internal__": {
+		"migrations": {
+			"version": "3.11.0"
+		}
+	}
+}
