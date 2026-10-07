@@ -8,5 +8,5 @@ DST="$HOME/dotfiles/waybar/.config/waybar/assets/icons-black"
 [ -d "$SRC" ] || { echo "source missing: $SRC"; exit 1; }
 rm -rf "$DST"
 cp -r "$SRC" "$DST"
-sed -i 's/stroke="#eeeeee"/stroke="#000000"/g' "$DST"/*.svg
+sed -i 's/stroke="#eeeeee"/stroke="#2f2f34"/g' "$DST"/*.svg
 echo "OK: $(ls "$DST"/*.svg | wc -l) black icons generated"

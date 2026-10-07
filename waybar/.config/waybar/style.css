@@ -11,7 +11,7 @@
 }
 
 #waybar {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid @border-subtle;
   font-weight: 600;
   background: @module-bg;
   font-size: 20px;
@@ -96,15 +96,15 @@
 }
 
 #workspaces button {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid @button-border;
+  background: @button-bg;
   color: @workspace-fg;
   border-radius: 6px;
   /* transition: none; */
 }
 
 #workspaces button.active {
-  background: rgba(111, 131, 150, 0.7);
+  background: @button-active-bg;
 }
 
 #mpris.paused {
@@ -144,6 +144,7 @@ menu>*:hover,
 menu>*:hover {
   border-radius: 8px;
   background-color: @accent;
+  color: @menu-hover-fg;
 }
 
 slider {

@@ -9,3 +9,9 @@
 @define-color yellow #e0af68;
 @define-color green #41a6b5;
 @define-color accent #6f8396;
+
+@define-color border-subtle rgba(255, 255, 255, 0.3);
+@define-color button-border rgba(255, 255, 255, 0.2);
+@define-color button-bg rgba(255, 255, 255, 0.08);
+@define-color button-active-bg rgba(111, 131, 150, 0.7);
+@define-color menu-hover-fg #eeeeee;
