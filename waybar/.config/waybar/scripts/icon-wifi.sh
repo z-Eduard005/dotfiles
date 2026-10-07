@@ -26,7 +26,7 @@ if [ -z "$wifi_iface" ]; then
         echo "$ICON_DIR/wifi-off.svg"
         echo "Wi-Fi disabled"
     else
-        echo "$ICON_DIR/wifi-off.svg"
+        echo "$ICON_DIR/wifi-sync.svg"
         echo "Disconnected"
     fi
     exit 0
