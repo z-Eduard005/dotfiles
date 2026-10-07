@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ICON_DIR="$HOME/.config/waybar/assets/icons"
+ICON_DIR="$HOME/.config/waybar/assets/icons-active"
 
 vpn_active() {
     nmcli -t -f TYPE,STATE con show --active 2>/dev/null | grep -qE ':(vpn|wireguard):(connected|activated)' && return 0

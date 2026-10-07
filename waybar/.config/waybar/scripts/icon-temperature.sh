@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ICON_DIR="$HOME/.config/waybar/assets/icons"
+ICON_DIR="$HOME/.config/waybar/assets/icons-active"
 
 temp=$(($(cat /sys/class/hwmon/hwmon5/temp3_input 2>/dev/null || echo 0) / 1000))
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ICON_DIR="$HOME/.config/waybar/assets/icons"
+ICON_DIR="$HOME/.config/waybar/assets/icons-active"
 
 sink=$(pactl get-default-sink 2>/dev/null)
 {

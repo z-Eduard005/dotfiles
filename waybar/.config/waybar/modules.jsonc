@@ -139,7 +139,7 @@
 
   "image#clock": {
     "size": 24,
-    "path": "/home/eduard/.config/waybar/assets/icons/clock.svg",
+    "path": "/home/eduard/.config/waybar/assets/icons-active/clock.svg",
     "tooltip": false,
   },
 

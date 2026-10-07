@@ -12,5 +12,5 @@ alias l.="eza --icons -d .*"
 alias ls="eza --icons -l"
 alias l="eza --icons -lah"
 alias ff="fastfetch"
-alias c="clear && ff"
+alias c='clear && [ "$TERM" = "xterm-kitty" ] && ff; true'
 alias cc="cd ~ && c"

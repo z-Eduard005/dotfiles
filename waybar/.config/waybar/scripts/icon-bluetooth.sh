@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ICON_DIR="$HOME/.config/waybar/assets/icons"
+ICON_DIR="$HOME/.config/waybar/assets/icons-active"
 
 bluetoothctl show 2>/dev/null | grep -q "Powered: yes" || {
     echo "$ICON_DIR/bluetooth-off.svg"
