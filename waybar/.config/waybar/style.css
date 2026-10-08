@@ -107,10 +107,6 @@
   background: @button-active-bg;
 }
 
-#mpris.paused {
-  color: @inactive;
-}
-
 tooltip {
   border-radius: 8px;
   background: @tooltip-bg;

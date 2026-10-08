@@ -9,11 +9,13 @@ notify_auto() {
 
 dock() {
     "$ACTIONS" monitor high laptop disable
+    systemctl --user restart waybar.service
     notify_auto "monitor high, laptop disabled"
 }
 
 undock() {
     "$ACTIONS" monitor disable laptop high
+    systemctl --user restart waybar.service
     notify_auto "monitor disabled, laptop high"
 }
 

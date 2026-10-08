@@ -103,11 +103,6 @@
     "tooltip": false,
   },
 
-  "custom/start": {
-    "format": "",
-    "on-click": "kitty --directory ~ sh -c 'fastfetch; exec $SHELL'",
-    "tooltip": false,
-  },
   "custom/cava": {
     "format": "{}",
     "exec": "~/.config/waybar/scripts/cava-bars.sh",

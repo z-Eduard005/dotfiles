@@ -1,6 +1,6 @@
 @define-color module-bg #222226;
 @define-color tooltip-bg @module-bg;
-@define-color inactive #787c99;
+@define-color inactive #575757;
 @define-color fg #eeeeee;
 @define-color workspace-fg @fg;
 

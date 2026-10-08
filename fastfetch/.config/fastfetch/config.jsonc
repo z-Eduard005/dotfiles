@@ -16,118 +16,90 @@
 
   "display": {
     "separator": " ",
-    "color": {
-      "keys": "white",
-      "title": "bright_white",
-    },
-    "percent": {
-      "type": 5,
-      "colorGreen": "white",
-      "colorYellow": "bright_white",
-      "colorRed": "white",
-    },
   },
-
   "modules": [
-    "title",
-    "separator",
-
     {
+      "key": "╭───────────╮",
+      "type": "custom",
+    },
+    {
+      "key": "│ {#34} user    {#keys}│",
+      "type": "title",
+      "format": "{user-name}@{host-name}",
+    },
+    {
+      "condition": {
+        // Conditional module: only show on non-macOS
+        "!system": "macOS",
+      },
       "type": "command",
-      "text": "─── Hardware ───",
+      "keyIcon": "",
+      "key": "│{#34} {icon} os age {#keys} │",
+      "text": "b=$(stat -c %W /); n=$(date +%s); d=$(( (n - b) / 86400 )); y=$(( d / 365 )); printf '%s - %s days (%s years)' \"$(date -d \"@$b\" '+%d.%m.%Y')\" \"$d\" \"$y\"",
     },
-
     {
-      "type": "cpu",
-      "key": "󰍛 CPU",
-      "keyColor": "white",
-    },
-
-    {
-      "type": "gpu",
-      "key": "󰢮 GPU",
-      "keyColor": "white",
-    },
-
-    {
-      "type": "memory",
-      "key": "󰘚 RAM",
-      "keyColor": "white",
-    },
-
-    {
-      "type": "disk",
-      "key": "󰋊 Disk",
-      "keyColor": "white",
-    },
-
-    "break",
-
-    {
-      "type": "command",
-      "text": "─── Software ───",
-    },
-
-    {
-      "type": "os",
-      "key": "󰌢 OS",
-      "keyColor": "white",
-    },
-
-    {
-      "type": "kernel",
-      "key": "󰒋 Kernel",
-      "keyColor": "white",
-    },
-
-    {
-      "type": "shell",
-      "key": "󰆍 Shell",
-      "keyColor": "white",
-    },
-
-    {
-      "type": "de",
-      "key": "󰖲 DE",
-      "keyColor": "white",
-    },
-
-    {
-      "type": "wm",
-      "key": "󰖳 WM",
-      "keyColor": "white",
-    },
-
-    "break",
-
-    {
-      "type": "command",
-      "text": "─── Network ───",
-    },
-
-    {
-      "type": "localip",
-      "key": "󰩟 Local IP",
-      "showIpv6": false,
-      "keyColor": "white",
-    },
-
-    {
-      "type": "packages",
-      "key": "󰏖 Packages",
-      "keyColor": "white",
-    },
-
-    {
+      "key": "│ {#34}󰅐 uptime  {#keys}│",
       "type": "uptime",
-      "key": "󰔚 Uptime",
-      "keyColor": "white",
     },
-
-    "break",
     {
+      "key": "├───────────┤",
+      "type": "custom",
+    },
+    {
+      "key": "│ {#34}{icon} distro  {#keys}│",
+      "type": "os",
+    },
+    {
+      "key": "│ {#34} kernel  {#keys}│",
+      "type": "kernel",
+    },
+    {
+      "key": "│ {#34} wm      {#keys}│",
+      "type": "wm",
+    },
+    {
+      "key": "│ {#34}󰇄 desktop {#keys}│",
+      "type": "de",
+    },
+    {
+      "key": "│ {#34} term    {#keys}│",
+      "type": "command",
+      "text": "t=${TERM_PROGRAM:-$(basename \"$TERM\" | sed 's/^xterm-//')}; tv=$($t --version 2>/dev/null | awk '{print $2}'); s=$(basename \"$SHELL\"); sv=$($s --version 2>/dev/null | awk '{print $1, $2}'); echo \"$t $tv@$sv\"",
+    },
+    {
+      "key": "├───────────┤",
+      "type": "custom",
+    },
+    {
+      "key": "│ {#34}󰍛 cpu     {#keys}│",
+      "type": "cpu",
+      "showPeCoreCount": true,
+    },
+    {
+      "key": "│ {#34}󰢮 gpu     {#keys}│",
+      "type": "gpu",
+    },
+    {
+      "key": "│ {#34}󰉉 disk    {#keys}│",
+      "type": "disk",
+      "folders": "/",
+    },
+    {
+      "key": "│ {#34} memory  {#keys}│",
+      "type": "memory",
+    },
+    {
+      "key": "├───────────┤",
+      "type": "custom",
+    },
+    {
+      "key": "│ {#34} colors  {#keys}│",
       "type": "colors",
       "symbol": "circle",
+    },
+    {
+      "key": "╰───────────╯",
+      "type": "custom",
     },
   ],
 }
