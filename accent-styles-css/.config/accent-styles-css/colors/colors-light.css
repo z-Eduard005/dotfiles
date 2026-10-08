@@ -1,18 +1,24 @@
 @import "../accents/accent-active.css";
 
 @define-color module-bg #ebebed;
+@define-color center-bg #ebebed;
+@define-color background #ebebed;
+@define-color background-alt #d7d9de;
 @define-color tooltip-bg @module-bg;
-@define-color inactive #a7a6a6;
 @define-color fg #2f2f34;
+@define-color text #2f2f34;
 @define-color workspace-fg @fg;
-
+@define-color text-alt #707280;
+@define-color inactive #a7a6a6;
+@define-color selected alpha(@text-alt, .4);
+@define-color hover alpha(@selected, .4);
+@define-color urgent #ff355a;
 @define-color red #8c4351;
 @define-color blue #0f4b6e;
 @define-color yellow #8a6d3b;
 @define-color green #385f0d;
-
 @define-color border-subtle rgba(0, 0, 0, 0.3);
 @define-color button-border rgba(0, 0, 0, 0.2);
 @define-color button-bg rgba(0, 0, 0, 0.08);
-@define-color button-active-bg @accent-opacity-7;
+@define-color button-active-bg alpha(@accent, 0.7);
 @define-color menu-hover-fg @module-bg;
