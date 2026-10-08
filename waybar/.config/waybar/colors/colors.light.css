@@ -1,3 +1,5 @@
+@import "../accents/accent-active.css";
+
 @define-color module-bg #ebebed;
 @define-color tooltip-bg @module-bg;
 @define-color inactive #a7a6a6;
@@ -8,10 +10,9 @@
 @define-color blue #0f4b6e;
 @define-color yellow #8a6d3b;
 @define-color green #385f0d;
-@define-color accent #6f8396;
 
 @define-color border-subtle rgba(0, 0, 0, 0.3);
 @define-color button-border rgba(0, 0, 0, 0.2);
 @define-color button-bg rgba(0, 0, 0, 0.08);
-@define-color button-active-bg #959fa9;
+@define-color button-active-bg @accent-opacity-7;
 @define-color menu-hover-fg @module-bg;

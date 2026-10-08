@@ -132,14 +132,13 @@
     "modules": ["image#temperature", "temperature"],
   },
 
-  "image#clock": {
-    "size": 24,
-    "path": "/home/eduard/.config/waybar/assets/icons-active/clock.svg",
+  "custom/clock-icon": {
+    "format": "",
     "tooltip": false,
   },
 
   "group/group-clock": {
     "orientation": "horizontal",
-    "modules": ["image#clock", "clock"],
+    "modules": ["custom/clock-icon", "clock"],
   },
 }

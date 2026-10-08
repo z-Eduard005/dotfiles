@@ -192,3 +192,10 @@ trough highlight {
 #image.bluetooth {
   margin-right: 0px;
 }
+
+#custom-clock-icon {
+  font-family: "JetBrainsMono NFP";
+  font-size: 24px;
+  color: @accent;
+  margin-right: 4px;
+}
