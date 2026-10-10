@@ -13,6 +13,6 @@ fi
 stow */
 # change all paths from home/eduard to home/$USER
 # Comment all in `export AQ_DRM_DEVICES="/dev/dri/card1:/dev/dri/card2"` in uwsm
-# Comment monitor-watch.sh in autostart.conf
+# Comment hypr-watcher.sh in autostart.conf
 rm install.sh
 reboot

@@ -16,7 +16,29 @@ ACCENTS=(
 
 [ -n "$IMG" ] || { echo "no wallpaper found" >&2; echo slate; exit 0; }
 
-# --- candidates: whatever matugen extracts (2 or 4, both fine) ---
+MAP="$HOME/.config/wallpaper-accent-map.txt"
+[ -f "$MAP" ] || : > "$MAP" 2>/dev/null || true
+
+if [ -f "$MAP" ]; then
+  mapped=$(awk -v img="$IMG" '
+    substr($0, 1, 1) == "\"" && match($0, /^"[^"]*"/) {
+      if (substr($0, 2, RLENGTH - 2) == img) {
+        rest = substr($0, RLENGTH + 1)
+        sub(/^[ \t]+/, "", rest)
+        split(rest, a, /[ \t]+/)
+        print a[1]
+        exit
+      }
+    }' "$MAP")
+  case "$mapped" in
+    blue|teal|green|yellow|orange|red|pink|purple|slate)
+      if [ -t 2 ]; then echo "map override: $mapped" >&2; fi
+      echo "$mapped"
+      exit 0
+      ;;
+  esac
+fi
+
 CANDS=()
 while IFS= read -r c; do
   [ -n "$c" ] && CANDS+=("$c")
@@ -24,8 +46,7 @@ done < <(matugen image "$IMG" --dry-run --show-source-colors)
 
 WINNER=""
 if [ "${#CANDS[@]}" -gt 0 ]; then
-  # --- usage %: force every pixel onto its nearest candidate, count votes ---
-  # (left join so 0-vote candidates still appear as 0%)
+
   declare -A COV=()
   PAL=()
   for c in "${CANDS[@]}"; do PAL+=(-size 1x1 "xc:$c"); done
@@ -52,7 +73,7 @@ if [ "${#CANDS[@]}" -gt 0 ]; then
   #     chromaSim tolerance 0.20  (Oklab chroma units)
   #     lightSim  tolerance 0.60  (Oklab L units)
   #     POW      usage damping: 1 = raw multiplication, 0.5 = balanced.
-  #              override per run: ACCENT_USAGE_POW=1 ./extract-accent.sh
+  #              override per run: ACCENT_USAGE_POW=1 ./extract-wallpaper-accent.sh
   POW="${ACCENT_USAGE_POW:-0.5}"
   oklab() { magick "xc:$1" -colorspace Oklab -format '%[fx:r] %[fx:g] %[fx:b]' info: 2>/dev/null; }
 
@@ -96,4 +117,19 @@ if [ "${#CANDS[@]}" -gt 0 ]; then
   WINNER=$(printf '%s\n' "$SCORES" | head -1 | awk '$1 + 0 > 0 { print $2 }')
 fi
 
-echo "${WINNER:-slate}"
+if [ -n "$WINNER" ]; then
+  tmp="$MAP.$$.tmp"
+  if [ -f "$MAP" ] && awk -v img="$IMG" '
+      substr($0, 1, 1) == "\"" && match($0, /^"[^"]*"/) {
+        if (substr($0, 2, RLENGTH - 2) == img) next
+      }
+      { print }' "$MAP" > "$tmp" 2>/dev/null; then
+    printf '"%s" %s\n' "$IMG" "$WINNER" >> "$tmp" && mv -- "$tmp" "$MAP" 2>/dev/null
+  else
+    printf '"%s" %s\n' "$IMG" "$WINNER" >> "$MAP" 2>/dev/null
+  fi
+  rm -f -- "$tmp" 2>/dev/null
+  echo "$WINNER"
+else
+  echo slate
+fi
