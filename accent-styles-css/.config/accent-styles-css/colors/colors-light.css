@@ -20,5 +20,5 @@
 @define-color border-subtle rgba(0, 0, 0, 0.3);
 @define-color button-border rgba(0, 0, 0, 0.2);
 @define-color button-bg rgba(0, 0, 0, 0.08);
-@define-color button-active-bg alpha(@accent, 0.7);
+@define-color button-active-bg alpha(@accent, 0.6);
 @define-color menu-hover-fg @module-bg;

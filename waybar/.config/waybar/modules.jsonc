@@ -99,7 +99,7 @@
   },
 
   "clock": {
-    "format": "{:%H:%M - %d %B (%m)}",
+    "format": "{:%H:%M - %d.%m.%y %B}",
     "tooltip": false,
   },
 

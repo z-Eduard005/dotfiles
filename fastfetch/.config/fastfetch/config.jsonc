@@ -64,7 +64,7 @@
     {
       "key": "│ {#34} term    {#keys}│",
       "type": "command",
-      "text": "t=${TERM_PROGRAM:-$(basename \"$TERM\" | sed 's/^xterm-//')}; tv=$($t --version 2>/dev/null | awk '{print $2}'); s=$(basename \"$SHELL\"); sv=$($s --version 2>/dev/null | awk '{print $1, $2}'); echo \"$t $tv@$sv\"",
+      "text": "t=${TERM_PROGRAM:-$(basename \"$TERM\" | sed 's/^xterm-//')}; tv=$($t --version 2>/dev/null | awk '{print $2}'); s=$(basename \"$SHELL\"); sv=$($s --version 2>/dev/null | awk '{print $1, $2}'); echo \"$t $tv @ $sv\"",
     },
     {
       "key": "├───────────┤",
