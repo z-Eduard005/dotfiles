@@ -8,7 +8,7 @@
       "2": "bright_white",
     },
     "padding": {
-      "top": 1,
+      "top": 0,
       "left": 2,
       "right": 2,
     },
@@ -35,7 +35,7 @@
       "type": "command",
       "keyIcon": "",
       "key": "│{#34} {icon} os age {#keys} │",
-      "text": "b=$(stat -c %W /); n=$(date +%s); d=$(( (n - b) / 86400 )); y=$(( d / 365 )); printf '%s - %s days (%s years)' \"$(date -d \"@$b\" '+%d.%m.%Y')\" \"$d\" \"$y\"",
+      "text": "b=$(stat -c %W /); n=$(date +%s); d=$(( (n - b) / 86400 )); y=$(( d / 365 )); printf '%s - %s days (%s years)' \"$(date -d \"@$b\" '+%d.%m.%y')\" \"$d\" \"$y\"",
     },
     {
       "key": "│ {#34}󰅐 uptime  {#keys}│",
@@ -87,15 +87,6 @@
     {
       "key": "│ {#34} memory  {#keys}│",
       "type": "memory",
-    },
-    {
-      "key": "├───────────┤",
-      "type": "custom",
-    },
-    {
-      "key": "│ {#34} colors  {#keys}│",
-      "type": "colors",
-      "symbol": "circle",
     },
     {
       "key": "╰───────────╯",

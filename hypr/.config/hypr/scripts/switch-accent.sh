@@ -32,12 +32,23 @@ for a in "${ACCENTS[@]}"; do
   fi
 done
 
-ln -sfn "accent-$ACCENT.css" "$THEME_DIR/accents/accent-active.css"
+# gsettings
 gsettings set org.gnome.desktop.interface accent-color "$ACCENT"
+
+# waybar & swaync
+ln -sfn "accent-$ACCENT.css" "$THEME_DIR/accents/accent-active.css"
 systemctl --user restart waybar.service
 swaync-client --reload-css >/dev/null
 
+# hyprland window border
 border="${HEX#\#}"
 if [ -n "$border" ]; then
   printf 'general {\n  col.active_border = rgb(%s)\n}\n' "$border" > "$HYPR_THEME" 2>/dev/null || true
+fi
+
+# gdm
+GDM_DCONF="$HOME/dotfiles/.gdm/etc/dconf/db/gdm.d/01-gdm-custom"
+if [ -f "$GDM_DCONF" ] && grep -q "^accent-color='" "$GDM_DCONF"; then
+  sed -i "s/^\(accent-color='\)[a-z]*\('\)/\1${ACCENT}\2/" "$GDM_DCONF" 2>/dev/null || true
+  sudo -n dconf update 2>/dev/null || true
 fi
