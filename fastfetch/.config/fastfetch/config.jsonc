@@ -4,7 +4,7 @@
   "logo": {
     "source": "~/.config/fastfetch/fedora.txt",
     "color": {
-      "1": "blue",
+      "1": "#3a944a",
       "2": "bright_white",
     },
     "padding": {
@@ -20,10 +20,12 @@
   "modules": [
     {
       "key": "╭───────────╮",
+      "keyColor": "#3a944a",
       "type": "custom",
     },
     {
-      "key": "│ {#34} user    {#keys}│",
+      "key": "│  user    │{#keys}",
+      "keyColor": "#3a944a",
       "type": "title",
       "format": "{user-name}@{host-name}",
     },
@@ -34,62 +36,76 @@
       },
       "type": "command",
       "keyIcon": "",
-      "key": "│{#34} {icon} os age {#keys} │",
+      "key": "│ {icon} os age  │{#keys}",
+      "keyColor": "#3a944a",
       "text": "b=$(stat -c %W /); n=$(date +%s); d=$(( (n - b) / 86400 )); y=$(( d / 365 )); printf '%s - %s days (%s years)' \"$(date -d \"@$b\" '+%d.%m.%y')\" \"$d\" \"$y\"",
     },
     {
-      "key": "│ {#34}󰅐 uptime  {#keys}│",
+      "key": "│ 󰅐 uptime  │{#keys}",
+      "keyColor": "#3a944a",
       "type": "uptime",
     },
     {
       "key": "├───────────┤",
+      "keyColor": "#3a944a",
       "type": "custom",
     },
     {
-      "key": "│ {#34}{icon} distro  {#keys}│",
+      "key": "│ {icon} distro  │{#keys}",
+      "keyColor": "#3a944a",
       "type": "os",
     },
     {
-      "key": "│ {#34} kernel  {#keys}│",
+      "key": "│  kernel  │{#keys}",
+      "keyColor": "#3a944a",
       "type": "kernel",
     },
     {
-      "key": "│ {#34} wm      {#keys}│",
+      "key": "│  wm      │{#keys}",
+      "keyColor": "#3a944a",
       "type": "wm",
     },
     {
-      "key": "│ {#34}󰇄 desktop {#keys}│",
+      "key": "│ 󰇄 desktop │{#keys}",
+      "keyColor": "#3a944a",
       "type": "de",
     },
     {
-      "key": "│ {#34} term    {#keys}│",
+      "key": "│  term    │{#keys}",
+      "keyColor": "#3a944a",
       "type": "command",
       "text": "t=${TERM_PROGRAM:-$(basename \"$TERM\" | sed 's/^xterm-//')}; tv=$($t --version 2>/dev/null | awk '{print $2}'); s=$(basename \"$SHELL\"); sv=$($s --version 2>/dev/null | awk '{print $1, $2}'); echo \"$t $tv @ $sv\"",
     },
     {
       "key": "├───────────┤",
+      "keyColor": "#3a944a",
       "type": "custom",
     },
     {
-      "key": "│ {#34}󰍛 cpu     {#keys}│",
+      "key": "│ 󰍛 cpu     │{#keys}",
+      "keyColor": "#3a944a",
       "type": "cpu",
       "showPeCoreCount": true,
     },
     {
-      "key": "│ {#34}󰢮 gpu     {#keys}│",
+      "key": "│ 󰢮 gpu     │{#keys}",
+      "keyColor": "#3a944a",
       "type": "gpu",
     },
     {
-      "key": "│ {#34}󰉉 disk    {#keys}│",
+      "key": "│ 󰉉 disk    │{#keys}",
+      "keyColor": "#3a944a",
       "type": "disk",
       "folders": "/",
     },
     {
-      "key": "│ {#34} memory  {#keys}│",
+      "key": "│  memory  │{#keys}",
+      "keyColor": "#3a944a",
       "type": "memory",
     },
     {
       "key": "╰───────────╯",
+      "keyColor": "#3a944a",
       "type": "custom",
     },
   ],

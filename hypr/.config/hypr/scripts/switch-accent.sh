@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 THEME_DIR="$HOME/dotfiles/accent-styles-css/.config/accent-styles-css"
-HYPR_THEME="$HOME/.config/hypr/modules/theme.d/override.conf"
+HYPR_THEME="$HOME/dotfiles/hypr/.config/hypr/modules/theme.d/override.conf"
 ACCENTS=(
   blue:#3584e4
   teal:#2190a4
@@ -51,4 +51,11 @@ GDM_DCONF="$HOME/dotfiles/.gdm/etc/dconf/db/gdm.d/01-gdm-custom"
 if [ -f "$GDM_DCONF" ] && grep -q "^accent-color='" "$GDM_DCONF"; then
   sed -i "s/^\(accent-color='\)[a-z]*\('\)/\1${ACCENT}\2/" "$GDM_DCONF" 2>/dev/null || true
   sudo -n dconf update 2>/dev/null || true
+fi
+
+# fastfetch
+FFCONF="$HOME/dotfiles/fastfetch/.config/fastfetch/config.jsonc"
+if [ -n "$HEX" ] && [ -f "$FFCONF" ]; then
+  sed -i "/\"logo\": {/,/^  },\?$/ s/^\( *\"1\": *\).*/\1\"${HEX}\",/" "$FFCONF" 2>/dev/null || true
+  sed -i "s/\"keyColor\": \".*\"/\"keyColor\": \"${HEX}\"/" "$FFCONF" 2>/dev/null || true
 fi
