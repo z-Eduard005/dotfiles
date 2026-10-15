@@ -106,6 +106,9 @@ if [ -n "$HEX" ]; then
   toml_set "$VICINAE_THEME" "colors.core" "accent" "$HEX"
 
   if [ -f "$VICINAE_SETTINGS" ] && [ -w "$VICINAE_SETTINGS" ] && command -v jq >/dev/null 2>&1; then
+
+    "$HOME/.config/hypr/scripts/vicinae-stow-adopt.sh" 2>/dev/null || true
+
     JQ_D="$(mktemp -d 2>/dev/null)" || JQ_D=""
     if [ -n "$JQ_D" ]; then
       FIRST="$(grep -n -m1 '^{' "$VICINAE_SETTINGS" 2>/dev/null | cut -d: -f1)"
@@ -123,3 +126,17 @@ if [ -n "$HEX" ]; then
   fi
 fi
 vicinae theme set adwaita-dynamic 2>/dev/null || true
+
+# hyprlock
+LOCK_CONF="$HOME/dotfiles/hypr/.config/hypr/hyprlock.conf"
+if [ -n "$border" ] && [ -f "$LOCK_CONF" ]; then
+  if grep -q '^input-field {' "$LOCK_CONF" 2>/dev/null; then
+    if sed -n '/^input-field {/,/^}/p' "$LOCK_CONF" 2>/dev/null | grep -q '^ *outer_color *= *rgb('; then
+      sed -i "/^input-field {/,/^}/ s/^\( *outer_color *= *rgb(\)[^)]*/\1${border}/" "$LOCK_CONF" 2>/dev/null || true
+    else
+      sed -i "/^input-field {$/a \    outer_color = rgb(${border})" "$LOCK_CONF" 2>/dev/null || true
+    fi
+  else
+    printf '\ninput-field {\n    outer_color = rgb(%s)\n}\n' "$border" >> "$LOCK_CONF" 2>/dev/null || true
+  fi
+fi
