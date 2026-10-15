@@ -13,6 +13,7 @@
   "close_on_focus_loss": false,
   "pop_to_root_on_close": true,
   "wrap_navigation": true,
+  "escape_key_behavior": "close_window",
   "favicon_service": "twenty",
   "search_files_in_root": false,
   "font": {
