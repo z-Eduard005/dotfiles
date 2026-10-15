@@ -23,9 +23,13 @@
     }
   },
   "theme": {
+    "light": {
+      "name": "adwaita-dynamic",
+      "icon_theme": "Adwaita-green"
+    },
     "dark": {
-      "name": "adwaita-dark",
-      "icon_theme": "Adwaita-Slate"
+      "name": "adwaita-dynamic",
+      "icon_theme": "Adwaita-green"
     }
   },
   "telemetry": {
@@ -35,7 +39,10 @@
     "opacity": 0.96,
     "client_side_decorations": {
       "border_width": 1,
-      "shadow_size": 2
+      "shadow_size": 0
+    },
+    "compact_mode": {
+      "enabled": true
     }
   },
   "favorites": [],
