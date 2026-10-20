@@ -1,0 +1,2 @@
+#!/bin/bash
+hyprctl dispatch exec "[float true; size monitor_w*0.75 monitor_h*0.75; workspace 5] kitty --class update-system -o font_size=16 /bin/bash -lc 'sudo dnf upgrade --refresh && sudo flatpak update -y && fwupdmgr refresh --force >/dev/null 2>&1; fwupdmgr update -y; printf \"\n\033[33mPress Enter to close...\033[0m\"; read'"

@@ -1,4 +1,5 @@
 #!/bin/bash
+exec >/dev/null 2>&1 </dev/null
 ACTION="${1:-}"
 
 is_hyprland() {

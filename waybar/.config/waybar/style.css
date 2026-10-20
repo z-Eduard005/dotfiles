@@ -109,6 +109,7 @@
 
 tooltip {
   border-radius: 8px;
+  border: 1px solid @border-subtle;
   background: @tooltip-bg;
 }
 
@@ -129,6 +130,7 @@ menu {
   font-weight: 700;
   color: @fg;
   background: @tooltip-bg;
+  border: 1px solid @border-subtle;
 }
 
 menu>*,

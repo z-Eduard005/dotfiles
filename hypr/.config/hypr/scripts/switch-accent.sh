@@ -106,9 +106,6 @@ if [ -n "$HEX" ]; then
   toml_set "$VICINAE_THEME" "colors.core" "accent" "$HEX"
 
   if [ -f "$VICINAE_SETTINGS" ] && [ -w "$VICINAE_SETTINGS" ] && command -v jq >/dev/null 2>&1; then
-
-    "$HOME/.config/hypr/scripts/vicinae-stow-adopt.sh" 2>/dev/null || true
-
     JQ_D="$(mktemp -d 2>/dev/null)" || JQ_D=""
     if [ -n "$JQ_D" ]; then
       FIRST="$(grep -n -m1 '^{' "$VICINAE_SETTINGS" 2>/dev/null | cut -d: -f1)"
@@ -140,3 +137,9 @@ if [ -n "$border" ] && [ -f "$LOCK_CONF" ]; then
     printf '\ninput-field {\n    outer_color = rgb(%s)\n}\n' "$border" >> "$LOCK_CONF" 2>/dev/null || true
   fi
 fi
+
+# telegram workaround: reload to take effect
+flatpak kill org.telegram.desktop
+hyprctl dispatch exec "[workspace 4 silent] ~/.config/hypr/scripts/entry-launch.sh org.telegram.desktop"
+
+# hyprtoolkit

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Update System
+Exec=/bin/bash -lc "~/.config/hypr/scripts/update-system.sh"
+Type=Application
+Terminal=false
+StartupWMClass=update-system
+Icon=update-system
+Categories=Application;

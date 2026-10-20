@@ -16,6 +16,9 @@
   "escape_key_behavior": "close_window",
   "favicon_service": "twenty",
   "search_files_in_root": false,
+  "tray": {
+    "enabled": false
+  },
   "font": {
     "rendering": "native",
     "normal": {
@@ -26,11 +29,11 @@
   "theme": {
     "light": {
       "name": "adwaita-dynamic",
-      "icon_theme": "Adwaita-green"
+      "icon_theme": "Adwaita-red"
     },
     "dark": {
       "name": "adwaita-dynamic",
-      "icon_theme": "Adwaita-green"
+      "icon_theme": "Adwaita-red"
     }
   },
   "telemetry": {
@@ -172,6 +175,16 @@
         }
       }
     },
+    "@vimtor/store.raycast.video-downloader": {
+      "preferences": {
+        "downloadPath": "~/Downloads",
+        "homebrewPath": "/opt/homebrew/bin/brew",
+        "autoLoadUrlFromClipboard": false,
+        "autoLoadUrlFromSelectedText": false,
+        "enableBrowserExtensionSupport": false,
+        "forceIpv4": false
+      }
+    },
     "@z-Eduard005/hyprpaper-switcher": {
       "preferences": {
         "wallpaperDir": ""
@@ -188,6 +201,15 @@
         ]
       },
       "entrypoints": {
+        "proton.vpn.app.gtk": {
+          "alias": "vpn"
+        },
+        "toogle-theme-script": {
+          "alias": "theme"
+        },
+        "update-system": {
+          "alias": "update"
+        },
         "vicinae-off-script": {
           "alias": "off"
         },
@@ -213,7 +235,11 @@
       "enabled": true,
       "preferences": {
         "ignorePasswords": false,
-        "monitoring": true
+        "monitoring": true,
+        "preserveTagged": true,
+        "ignoredApps": [],
+        "evictionThreshold": "2592000",
+        "eraseOnStartup": false
       },
       "entrypoints": {
         "clear": {
@@ -299,28 +325,46 @@
     "manage-shortcuts": {
       "enabled": false
     },
+    "media": {
+      "enabled": false
+    },
     "power": {
-      "enabled": false,
+      "enabled": true,
       "entrypoints": {
         "hibernate": {
           "enabled": false
         },
         "lock": {
-          "enabled": true
+          "alias": "lock",
+          "enabled": true,
+          "preferences": {
+            "confirm": false,
+            "customProgram": "hyprlock"
+          }
         },
         "logout": {
           "alias": "out",
           "enabled": true,
           "preferences": {
-            "confirm": true,
-            "customProgram": ""
+            "confirm": false,
+            "customProgram": "~/.config/hypr/scripts/power-actions.sh logout"
           }
         },
         "power-off": {
-          "enabled": true
+          "alias": "off",
+          "enabled": true,
+          "preferences": {
+            "confirm": false,
+            "customProgram": "~/.config/hypr/scripts/power-actions.sh shutdown"
+          }
         },
         "reboot": {
-          "enabled": true
+          "alias": "reboot",
+          "enabled": true,
+          "preferences": {
+            "confirm": false,
+            "customProgram": "~/.config/hypr/scripts/power-actions.sh reboot"
+          }
         },
         "sleep": {
           "enabled": false
@@ -336,6 +380,15 @@
     "scripts": {
       "preferences": {
         "customDirs": []
+      }
+    },
+    "snippets": {
+      "preferences": {
+        "enabled": true,
+        "undo": true,
+        "layout": "",
+        "prePasteDelay": "0",
+        "keyDelay": "2"
       }
     },
     "system": {

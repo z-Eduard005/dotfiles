@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Toggle Theme
+Exec=/bin/bash -lc "~/.config/hypr/scripts/toggle-theme.sh"
+Type=Application
+Terminal=false
+Icon=/home/eduard/.local/share/icons/toggle-theme.png
+Categories=Application;

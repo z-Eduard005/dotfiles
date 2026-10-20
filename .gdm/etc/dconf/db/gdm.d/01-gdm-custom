@@ -1,7 +1,7 @@
 # Run to take effect: `sudo dconf update`
 
 [org/gnome/desktop/interface]
-accent-color='green'
+accent-color='red'
 cursor-theme='macOS'
 cursor-size=28
 font-name='SF Pro Rounded weight=400 14 @opsz=17,wght=400'
