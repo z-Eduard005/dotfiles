@@ -54,13 +54,6 @@ if [ -f "$GDM_DCONF" ] && grep -q "^accent-color='" "$GDM_DCONF"; then
   sudo -n dconf update 2>/dev/null || true
 fi
 
-# fastfetch
-FFCONF="$HOME/dotfiles/fastfetch/.config/fastfetch/config.jsonc"
-if [ -n "$HEX" ] && [ -f "$FFCONF" ]; then
-  sed -i "/\"logo\": {/,/^  },\?$/ s/^\( *\"1\": *\).*/\1\"${HEX}\",/" "$FFCONF" 2>/dev/null || true
-  sed -i "s/\"keyColor\": \".*\"/\"keyColor\": \"${HEX}\"/" "$FFCONF" 2>/dev/null || true
-fi
-
 # kitty
 set_kitty_keys() {
   local f="$1" v="$2" k
@@ -139,7 +132,7 @@ if [ -n "$border" ] && [ -f "$LOCK_CONF" ]; then
 fi
 
 # telegram workaround: reload to take effect
-flatpak kill org.telegram.desktop
-hyprctl dispatch exec "[workspace 4 silent] ~/.config/hypr/scripts/entry-launch.sh org.telegram.desktop"
+flatpak kill org.telegram.desktop 2>/dev/null || true
+hyprctl dispatch exec "[workspace 4 silent] ~/.config/hypr/scripts/entry-launch.sh org.telegram.desktop" 2>/dev/null || true
 
 # hyprtoolkit

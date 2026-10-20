@@ -4,7 +4,7 @@
   "logo": {
     "source": "~/.config/fastfetch/fedora.txt",
     "color": {
-      "1": "#e62d42",
+      "1": "cyan",
       "2": "bright_white",
     },
     "padding": {
@@ -16,16 +16,17 @@
 
   "display": {
     "separator": " ",
+    "color": {
+      "keys": "cyan",
+    },
   },
   "modules": [
     {
       "key": "╭───────────╮",
-      "keyColor": "#e62d42",
       "type": "custom",
     },
     {
       "key": "│  user    │{#keys}",
-      "keyColor": "#e62d42",
       "type": "title",
       "format": "{user-name}@{host-name}",
     },
@@ -37,75 +38,61 @@
       "type": "command",
       "keyIcon": "",
       "key": "│ {icon} os age  │{#keys}",
-      "keyColor": "#e62d42",
       "text": "b=$(stat -c %W /); n=$(date +%s); d=$(( (n - b) / 86400 )); y=$(( d / 365 )); printf '%s - %s days (%s years)' \"$(date -d \"@$b\" '+%d.%m.%y')\" \"$d\" \"$y\"",
     },
     {
       "key": "│ 󰅐 uptime  │{#keys}",
-      "keyColor": "#e62d42",
       "type": "uptime",
     },
     {
       "key": "├───────────┤",
-      "keyColor": "#e62d42",
       "type": "custom",
     },
     {
       "key": "│ {icon} distro  │{#keys}",
-      "keyColor": "#e62d42",
       "type": "os",
     },
     {
       "key": "│  kernel  │{#keys}",
-      "keyColor": "#e62d42",
       "type": "kernel",
     },
     {
       "key": "│  wm      │{#keys}",
-      "keyColor": "#e62d42",
       "type": "wm",
     },
     {
       "key": "│ 󰇄 desktop │{#keys}",
-      "keyColor": "#e62d42",
       "type": "de",
     },
     {
       "key": "│  term    │{#keys}",
-      "keyColor": "#e62d42",
       "type": "command",
       "text": "t=${TERM_PROGRAM:-$(basename \"$TERM\" | sed 's/^xterm-//')}; tv=$($t --version 2>/dev/null | awk '{print $2}'); s=$(basename \"$SHELL\"); sv=$($s --version 2>/dev/null | awk '{print $1, $2}'); echo \"$t $tv @ $sv\"",
     },
     {
       "key": "├───────────┤",
-      "keyColor": "#e62d42",
       "type": "custom",
     },
     {
       "key": "│ 󰍛 cpu     │{#keys}",
-      "keyColor": "#e62d42",
       "type": "cpu",
       "showPeCoreCount": true,
     },
     {
       "key": "│ 󰢮 gpu     │{#keys}",
-      "keyColor": "#e62d42",
       "type": "gpu",
     },
     {
       "key": "│ 󰉉 disk    │{#keys}",
-      "keyColor": "#e62d42",
       "type": "disk",
       "folders": "/",
     },
     {
       "key": "│  memory  │{#keys}",
-      "keyColor": "#e62d42",
       "type": "memory",
     },
     {
       "key": "╰───────────╯",
-      "keyColor": "#e62d42",
       "type": "custom",
     },
   ],
