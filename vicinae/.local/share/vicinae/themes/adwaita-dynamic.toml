@@ -6,6 +6,6 @@ description = "An Adwaita inspired theme for Vicinae"
 inherits = "vicinae-dark"
 
 [colors.core]
-accent = "#e62d42"
+accent = "#3a944a"
 background = "#222226"
 foreground = "#ebebed"

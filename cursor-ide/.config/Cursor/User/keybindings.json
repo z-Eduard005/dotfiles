@@ -65,4 +65,9 @@
     "key": "ctrl+alt+s",
     "command": "workbench.action.files.saveWithoutFormatting"
   }
+  // {
+  //   "key": "ctrl+alt+s",
+  //   "command": "workbench.action.toggleUnifiedSidebarFromKeyboard",
+  //   "when": "!isAuxiliaryWindowFocusedContext"
+  // }
 ]

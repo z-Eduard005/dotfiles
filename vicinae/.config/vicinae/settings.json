@@ -29,11 +29,11 @@
   "theme": {
     "light": {
       "name": "adwaita-dynamic",
-      "icon_theme": "Adwaita-red"
+      "icon_theme": "Adwaita-green"
     },
     "dark": {
       "name": "adwaita-dynamic",
-      "icon_theme": "Adwaita-red"
+      "icon_theme": "Adwaita-green"
     }
   },
   "telemetry": {
@@ -42,7 +42,7 @@
   "launcher_window": {
     "opacity": 0.96,
     "client_side_decorations": {
-      "border_width": 1,
+      "border_width": 0,
       "shadow_size": 0
     },
     "compact_mode": {
