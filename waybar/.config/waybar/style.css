@@ -31,19 +31,6 @@
   margin-right: 16px;
 }
 
-#right,
-#left,
-#right-hidden-top,
-#left-hidden-top {
-  border-radius: 15px;
-  background: @module-bg;
-}
-
-#clock {
-  border-radius: 15px;
-  background: @module-bg;
-}
-
 #cpu.critical,
 #memory.critical,
 #battery.critical,
@@ -100,7 +87,6 @@
   background: @button-bg;
   color: @workspace-fg;
   border-radius: 6px;
-  /* transition: none; */
 }
 
 #workspaces button.active {
@@ -178,10 +164,7 @@ trough highlight {
   margin-right: 12px;
 }
 
-#right-hidden-top {
-  margin-left: 12px;
-}
-
+#right-hidden-top,
 #tray {
   margin-left: 12px;
 }
@@ -201,3 +184,5 @@ trough highlight {
   color: @accent;
   margin-right: 4px;
 }
+
+/* @import "zen-mode.css"; */

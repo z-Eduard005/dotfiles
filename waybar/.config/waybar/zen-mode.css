@@ -1,0 +1,63 @@
+#waybar {
+  font-weight: 500;
+  font-size: 18px;
+}
+
+#waybar>* {
+  margin: 0;
+}
+
+.modules-left {
+  margin-left: 8px;
+}
+
+.modules-right {
+  margin-right: 8px;
+}
+
+#custom-clock-icon {
+  margin-right: -24px;
+  opacity: 0;
+}
+
+#custom-cava {
+  opacity: 0;
+}
+
+trough {
+  min-width: 40px;
+}
+
+tooltip {
+  border-radius: 4px;
+}
+
+tooltip label {
+  padding: 0;
+  font-weight: 400;
+}
+
+#custom-cava,
+#left,
+#language,
+#group-volume,
+#image.wifi,
+#image.bluetooth,
+#group-battery,
+#group-temperature {
+  margin: 0 6px;
+}
+
+#group-clock {
+  margin-right: 8px;
+}
+
+#right-hidden-top,
+#tray {
+  margin-left: 8px;
+}
+
+#workspaces button {
+  border-radius: 4px;
+  transition: none;
+}

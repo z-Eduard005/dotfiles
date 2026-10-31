@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Toggle Zen-Mode
+Exec=/bin/bash -lc "~/.config/hypr/scripts/toggle-zen-mode.sh"
+Type=Application
+Terminal=false
+Icon=/home/eduard/.local/share/icons/toggle-zen-mode.png
+Categories=Application;

@@ -44,7 +44,13 @@ swaync-client --reload-css >/dev/null
 # hyprland window border
 border="${HEX#\#}"
 if [ -n "$border" ]; then
-  printf 'general {\n  col.active_border = rgb(%s)\n}\n' "$border" > "$HYPR_THEME" 2>/dev/null || true
+  if ! grep -q '^general {' "$HYPR_THEME" 2>/dev/null; then
+    printf 'general {\n  col.active_border = rgb(%s)\n}\n' "$border" >> "$HYPR_THEME" 2>/dev/null || true
+  elif sed -n '/^general {/,/^}/p' "$HYPR_THEME" 2>/dev/null | grep -q '^ *col\.active_border *='; then
+    sed -i "/^general {/,/^}/ s/^\( *col\.active_border *= *\).*/\1rgb(${border})/" "$HYPR_THEME" 2>/dev/null || true
+  else
+    sed -i "/^general {$/a \  col.active_border = rgb(${border})" "$HYPR_THEME" 2>/dev/null || true
+  fi
 fi
 
 # gdm

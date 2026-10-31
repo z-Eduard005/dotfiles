@@ -9,407 +9,413 @@
 // Learn more about configuration at https://docs.vicinae.com/config
 
 {
-  "$schema": "https://vicinae.com/schemas/config.json",
-  "close_on_focus_loss": false,
-  "pop_to_root_on_close": true,
-  "wrap_navigation": true,
-  "escape_key_behavior": "close_window",
-  "favicon_service": "twenty",
-  "search_files_in_root": false,
-  "tray": {
-    "enabled": false
-  },
-  "font": {
-    "rendering": "native",
-    "normal": {
-      "family": "SF Pro Rounded",
-      "size": 18
-    }
-  },
-  "theme": {
-    "light": {
-      "name": "adwaita-dynamic",
-      "icon_theme": "Adwaita-green"
-    },
-    "dark": {
-      "name": "adwaita-dynamic",
-      "icon_theme": "Adwaita-green"
-    }
-  },
-  "telemetry": {
-    "system_info": false
-  },
-  "launcher_window": {
-    "opacity": 0.96,
-    "client_side_decorations": {
-      "border_width": 0,
-      "shadow_size": 0
-    },
-    "compact_mode": {
-      "enabled": true
-    }
-  },
-  "favorites": [],
-  "providers": {
-    "@EvanZhouDev/store.raycast.raycast-gemini": {
-      "preferences": {
-        "defaultModel": "gemini-2.5-flash-lite",
-        "safetyThreshold": "BLOCK_NONE"
-      },
-      "entrypoints": {
-        "aiChat": {
-          "enabled": false
-        },
-        "askAI": {
-          "alias": "ai"
-        },
-        "askAboutScreen": {
-          "enabled": false
-        },
-        "askAboutSelectedScreen": {
-          "enabled": false
-        },
-        "askAboutSelectedText": {
-          "enabled": false
-        },
-        "comment": {
-          "enabled": false
-        },
-        "explain": {
-          "enabled": false
-        },
-        "friendly": {
-          "enabled": false
-        },
-        "grammar": {
-          "enabled": false
-        },
-        "history": {
-          "enabled": false
-        },
-        "longer": {
-          "enabled": false
-        },
-        "professional": {
-          "enabled": false
-        },
-        "shorter": {
-          "enabled": false
-        },
-        "summarize": {
-          "enabled": false
-        },
-        "synonym": {
-          "enabled": false
-        },
-        "translate": {
-          "enabled": false
-        }
-      }
-    },
-    "@Gelei/store.vicinae.bluetooth": {
-      "preferences": {
-        "connectionToggleable": false
-      }
-    },
-    "@dagimg-dot/store.vicinae.wifi-commander": {
-      "preferences": {
-        "network-cli-tool": "nmcli"
-      }
-    },
-    "@gebeto/store.raycast.translate": {
-      "preferences": {
-        "autoInput": false,
-        "lang1": "en",
-        "lang2": "ru"
-      },
-      "entrypoints": {
-        "instant-translate-copy": {
-          "enabled": false
-        },
-        "instant-translate-paste": {
-          "enabled": false
-        },
-        "instant-translate-view": {
-          "enabled": false
-        },
-        "quick-translate": {
-          "enabled": false
-        },
-        "translate": {
-          "alias": "tr"
-        }
-      }
-    },
-    "@maggie/store.raycast.todo-list": {
-      "enabled": true,
-      "preferences": {
-        "completed": "hide_all",
-        "nlpParsing": false,
-        "sortOrder": "creation_date_ascending"
-      },
-      "entrypoints": {
-        "index": {
-          "alias": "todo",
-          "enabled": true
-        }
-      }
-    },
-    "@mblode/store.raycast.google-search": {
-      "entrypoints": {
-        "index": {
-          "alias": "g"
-        },
-        "searchSelectText": {
-          "enabled": false
-        }
-      }
-    },
-    "@muhammetakay/store.raycast.youtube-search": {
-      "entrypoints": {
-        "index": {
-          "alias": "y"
-        },
-        "searchSelectText": {
-          "enabled": false
-        }
-      }
-    },
-    "@vimtor/store.raycast.video-downloader": {
-      "preferences": {
-        "downloadPath": "~/Downloads",
-        "homebrewPath": "/opt/homebrew/bin/brew",
-        "autoLoadUrlFromClipboard": false,
-        "autoLoadUrlFromSelectedText": false,
-        "enableBrowserExtensionSupport": false,
-        "forceIpv4": false
-      }
-    },
-    "@z-Eduard005/hyprpaper-switcher": {
-      "preferences": {
-        "wallpaperDir": ""
-      }
-    },
-    "applications": {
-      "preferences": {
-        "paths": [
-          "/home/eduard/.local/share/applications",
-          "/var/lib/flatpak/exports/share/applications",
-          "/usr/local/share/applications",
-          "/usr/share/applications",
-          "/var/lib/snapd/desktop/applications"
-        ]
-      },
-      "entrypoints": {
-        "proton.vpn.app.gtk": {
-          "alias": "vpn"
-        },
-        "toogle-theme-script": {
-          "alias": "theme"
-        },
-        "update-system": {
-          "alias": "update"
-        },
-        "vicinae-off-script": {
-          "alias": "off"
-        },
-        "vicinae-reboot-script": {
-          "alias": "reboot"
-        },
-        "vicinae-toogle-power-saver-script": {
-          "alias": "saver"
-        },
-        "vicinae-toogle-theme-script": {
-          "alias": "theme"
-        }
-      }
-    },
-    "calculator": {
-      "entrypoints": {
-        "refresh-rates": {
-          "enabled": false
-        }
-      }
-    },
-    "clipboard": {
-      "enabled": true,
-      "preferences": {
-        "ignorePasswords": false,
-        "monitoring": true,
-        "preserveTagged": true,
-        "ignoredApps": [],
-        "evictionThreshold": "2592000",
-        "eraseOnStartup": false
-      },
-      "entrypoints": {
-        "clear": {
-          "enabled": false
-        },
-        "clear-history": {
-          "enabled": false
-        }
-      }
-    },
-    "core": {
-      "enabled": true,
-      "entrypoints": {
-        "about": {
-          "enabled": false
-        },
-        "documentation": {
-          "enabled": false
-        },
-        "inspect-local-storage": {
-          "enabled": false
-        },
-        "keybind-settings": {
-          "enabled": false
-        },
-        "list-extensions": {
-          "enabled": true
-        },
-        "manage-fallback": {
-          "enabled": false
-        },
-        "oauth-token-store": {
-          "enabled": false
-        },
-        "open-config-file": {
-          "enabled": true
-        },
-        "prune-memory": {
-          "enabled": false
-        },
-        "refresh-apps": {
-          "enabled": false
-        },
-        "report-bug": {
-          "enabled": false
-        },
-        "search-emojis": {
-          "enabled": false
-        },
-        "settings": {
-          "enabled": false
-        },
-        "sponsor": {
-          "enabled": false
-        },
-        "store": {
-          "enabled": true
-        }
-      }
-    },
-    "developer": {
-      "enabled": true,
-      "entrypoints": {
-        "create": {
-          "enabled": true
-        }
-      }
-    },
-    "files": {
-      "enabled": true,
-      "preferences": {
-        "paths": "/home/eduard/*"
-      },
-      "entrypoints": {
-        "search": {
-          "alias": "f"
-        }
-      }
-    },
-    "font": {
+   "$schema": "https://vicinae.com/schemas/config.json",
+   "close_on_focus_loss": false,
+   "pop_to_root_on_close": true,
+   "wrap_navigation": true,
+   "escape_key_behavior": "close_window",
+   "favicon_service": "twenty",
+   "search_files_in_root": false,
+   "tray": {
       "enabled": false
-    },
-    "manage-shortcuts": {
-      "enabled": false
-    },
-    "media": {
-      "enabled": false
-    },
-    "power": {
-      "enabled": true,
-      "entrypoints": {
-        "hibernate": {
-          "enabled": false
-        },
-        "lock": {
-          "alias": "lock",
-          "enabled": true,
-          "preferences": {
-            "confirm": false,
-            "customProgram": "hyprlock"
-          }
-        },
-        "logout": {
-          "alias": "out",
-          "enabled": true,
-          "preferences": {
-            "confirm": false,
-            "customProgram": "~/.config/hypr/scripts/power-actions.sh logout"
-          }
-        },
-        "power-off": {
-          "alias": "off",
-          "enabled": true,
-          "preferences": {
-            "confirm": false,
-            "customProgram": "~/.config/hypr/scripts/power-actions.sh shutdown"
-          }
-        },
-        "reboot": {
-          "alias": "reboot",
-          "enabled": true,
-          "preferences": {
-            "confirm": false,
-            "customProgram": "~/.config/hypr/scripts/power-actions.sh reboot"
-          }
-        },
-        "sleep": {
-          "enabled": false
-        },
-        "soft-reboot": {
-          "enabled": false
-        },
-        "suspend": {
-          "enabled": false
-        }
+   },
+   "font": {
+      "rendering": "native",
+      "normal": {
+         "family": "SF Pro Rounded",
+         "size": 18
       }
-    },
-    "scripts": {
-      "preferences": {
-        "customDirs": []
+   },
+   "theme": {
+      "light": {
+         "name": "adwaita-dynamic",
+         "icon_theme": "Adwaita-green"
+      },
+      "dark": {
+         "name": "adwaita-dynamic",
+         "icon_theme": "Adwaita-green"
       }
-    },
-    "snippets": {
-      "preferences": {
-        "enabled": true,
-        "undo": true,
-        "layout": "",
-        "prePasteDelay": "0",
-        "keyDelay": "2"
+   },
+   "telemetry": {
+      "system_info": false
+   },
+   "launcher_window": {
+      "opacity": 0.96,
+      "client_side_decorations": {
+         "border_width": 0,
+         "shadow_size": 0
+      },
+      "compact_mode": {
+         "enabled": true
       }
-    },
-    "system": {
-      "enabled": false,
-      "entrypoints": {
-        "browse-apps": {
-          "enabled": true
-        },
-        "run": {
-          "enabled": true,
-          "preferences": {
-            "default-action": "run"
-          }
-        }
+   },
+   "favorites": [],
+   "providers": {
+      "@EvanZhouDev/store.raycast.raycast-gemini": {
+         "preferences": {
+            "defaultModel": "gemini-2.5-flash-lite",
+            "safetyThreshold": "BLOCK_NONE"
+         },
+         "entrypoints": {
+            "aiChat": {
+               "enabled": false
+            },
+            "askAI": {
+               "alias": "ai"
+            },
+            "askAboutScreen": {
+               "enabled": false
+            },
+            "askAboutSelectedScreen": {
+               "enabled": false
+            },
+            "askAboutSelectedText": {
+               "enabled": false
+            },
+            "comment": {
+               "enabled": false
+            },
+            "explain": {
+               "enabled": false
+            },
+            "friendly": {
+               "enabled": false
+            },
+            "grammar": {
+               "enabled": false
+            },
+            "history": {
+               "enabled": false
+            },
+            "longer": {
+               "enabled": false
+            },
+            "professional": {
+               "enabled": false
+            },
+            "shorter": {
+               "enabled": false
+            },
+            "summarize": {
+               "enabled": false
+            },
+            "synonym": {
+               "enabled": false
+            },
+            "translate": {
+               "enabled": false
+            }
+         }
+      },
+      "@Gelei/store.vicinae.bluetooth": {
+         "preferences": {
+            "connectionToggleable": false
+         }
+      },
+      "@dagimg-dot/store.vicinae.wifi-commander": {
+         "preferences": {
+            "network-cli-tool": "nmcli"
+         }
+      },
+      "@gebeto/store.raycast.translate": {
+         "preferences": {
+            "autoInput": false,
+            "lang1": "en",
+            "lang2": "ru"
+         },
+         "entrypoints": {
+            "instant-translate-copy": {
+               "enabled": false
+            },
+            "instant-translate-paste": {
+               "enabled": false
+            },
+            "instant-translate-view": {
+               "enabled": false
+            },
+            "quick-translate": {
+               "enabled": false
+            },
+            "translate": {
+               "alias": "tr"
+            }
+         }
+      },
+      "@maggie/store.raycast.todo-list": {
+         "enabled": true,
+         "preferences": {
+            "completed": "hide_all",
+            "nlpParsing": false,
+            "sortOrder": "creation_date_ascending"
+         },
+         "entrypoints": {
+            "index": {
+               "alias": "todo",
+               "enabled": true
+            }
+         }
+      },
+      "@mblode/store.raycast.google-search": {
+         "entrypoints": {
+            "index": {
+               "alias": "g"
+            },
+            "searchSelectText": {
+               "enabled": false
+            }
+         }
+      },
+      "@muhammetakay/store.raycast.youtube-search": {
+         "entrypoints": {
+            "index": {
+               "alias": "y"
+            },
+            "searchSelectText": {
+               "enabled": false
+            }
+         }
+      },
+      "@vimtor/store.raycast.video-downloader": {
+         "preferences": {
+            "downloadPath": "~/Downloads",
+            "homebrewPath": "/opt/homebrew/bin/brew",
+            "autoLoadUrlFromClipboard": false,
+            "autoLoadUrlFromSelectedText": false,
+            "enableBrowserExtensionSupport": false,
+            "forceIpv4": false
+         }
+      },
+      "@z-Eduard005/hyprpaper-switcher": {
+         "preferences": {
+            "wallpaperDir": ""
+         }
+      },
+      "applications": {
+         "preferences": {
+            "paths": [
+               "/home/eduard/.local/share/applications",
+               "/var/lib/flatpak/exports/share/applications",
+               "/usr/local/share/applications",
+               "/usr/share/applications",
+               "/var/lib/snapd/desktop/applications"
+            ]
+         },
+         "entrypoints": {
+            "proton.vpn.app.gtk": {
+               "alias": "vpn"
+            },
+            "toggle-theme-script": {
+               "alias": "theme"
+            },
+            "toggle-zen-mode": {
+               "alias": "zen-mode"
+            },
+            "toogle-theme-script": {
+               "alias": "theme"
+            },
+            "update-system": {
+               "alias": "update"
+            },
+            "vicinae-off-script": {
+               "alias": "off"
+            },
+            "vicinae-reboot-script": {
+               "alias": "reboot"
+            },
+            "vicinae-toogle-power-saver-script": {
+               "alias": "saver"
+            },
+            "vicinae-toogle-theme-script": {
+               "alias": "theme"
+            }
+         }
+      },
+      "calculator": {
+         "entrypoints": {
+            "refresh-rates": {
+               "enabled": false
+            }
+         }
+      },
+      "clipboard": {
+         "enabled": true,
+         "preferences": {
+            "ignorePasswords": false,
+            "monitoring": true,
+            "preserveTagged": true,
+            "ignoredApps": [],
+            "evictionThreshold": "2592000",
+            "eraseOnStartup": false
+         },
+         "entrypoints": {
+            "clear": {
+               "enabled": false
+            },
+            "clear-history": {
+               "enabled": false
+            }
+         }
+      },
+      "core": {
+         "enabled": true,
+         "entrypoints": {
+            "about": {
+               "enabled": false
+            },
+            "documentation": {
+               "enabled": false
+            },
+            "inspect-local-storage": {
+               "enabled": false
+            },
+            "keybind-settings": {
+               "enabled": false
+            },
+            "list-extensions": {
+               "enabled": true
+            },
+            "manage-fallback": {
+               "enabled": false
+            },
+            "oauth-token-store": {
+               "enabled": false
+            },
+            "open-config-file": {
+               "enabled": true
+            },
+            "prune-memory": {
+               "enabled": false
+            },
+            "refresh-apps": {
+               "enabled": false
+            },
+            "report-bug": {
+               "enabled": false
+            },
+            "search-emojis": {
+               "enabled": false
+            },
+            "settings": {
+               "enabled": false
+            },
+            "sponsor": {
+               "enabled": false
+            },
+            "store": {
+               "enabled": true
+            }
+         }
+      },
+      "developer": {
+         "enabled": true,
+         "entrypoints": {
+            "create": {
+               "enabled": true
+            }
+         }
+      },
+      "files": {
+         "enabled": true,
+         "preferences": {
+            "paths": "/home/eduard/*"
+         },
+         "entrypoints": {
+            "search": {
+               "alias": "f"
+            }
+         }
+      },
+      "font": {
+         "enabled": false
+      },
+      "manage-shortcuts": {
+         "enabled": false
+      },
+      "media": {
+         "enabled": false
+      },
+      "power": {
+         "enabled": true,
+         "entrypoints": {
+            "hibernate": {
+               "enabled": false
+            },
+            "lock": {
+               "alias": "lock",
+               "enabled": true,
+               "preferences": {
+                  "confirm": false,
+                  "customProgram": "hyprlock"
+               }
+            },
+            "logout": {
+               "alias": "out",
+               "enabled": true,
+               "preferences": {
+                  "confirm": false,
+                  "customProgram": "~/.config/hypr/scripts/power-actions.sh logout"
+               }
+            },
+            "power-off": {
+               "alias": "off",
+               "enabled": true,
+               "preferences": {
+                  "confirm": false,
+                  "customProgram": "~/.config/hypr/scripts/power-actions.sh shutdown"
+               }
+            },
+            "reboot": {
+               "alias": "reboot",
+               "enabled": true,
+               "preferences": {
+                  "confirm": false,
+                  "customProgram": "~/.config/hypr/scripts/power-actions.sh reboot"
+               }
+            },
+            "sleep": {
+               "enabled": false
+            },
+            "soft-reboot": {
+               "enabled": false
+            },
+            "suspend": {
+               "enabled": false
+            }
+         }
+      },
+      "scripts": {
+         "preferences": {
+            "customDirs": []
+         }
+      },
+      "snippets": {
+         "preferences": {
+            "enabled": true,
+            "undo": true,
+            "layout": "",
+            "prePasteDelay": "0",
+            "keyDelay": "2"
+         }
+      },
+      "system": {
+         "enabled": false,
+         "entrypoints": {
+            "browse-apps": {
+               "enabled": true
+            },
+            "run": {
+               "enabled": true,
+               "preferences": {
+                  "default-action": "run"
+               }
+            }
+         }
+      },
+      "theme": {
+         "enabled": false
+      },
+      "wm": {
+         "enabled": false
       }
-    },
-    "theme": {
-      "enabled": false
-    },
-    "wm": {
-      "enabled": false
-    }
-  }
+   }
 }
