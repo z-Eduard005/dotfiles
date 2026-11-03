@@ -37,7 +37,7 @@ for dir in "${DIRS[@]}"; do
                 MATCH=$(hyprctl clients -j | jq -r ".[] | select(.class | ascii_downcase == \"${NAME,,}\") | .address" | head -1)
             fi
             if [[ -n "$MATCH" ]]; then
-                hyprctl dispatch focuswindow "address:$MATCH"
+                hyprctl dispatch "hl.dsp.focus({ window = \"address:$MATCH\" })"
                 exit 0
             fi
         fi

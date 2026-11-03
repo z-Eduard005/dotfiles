@@ -135,6 +135,6 @@ fi
 
 # telegram workaround: reload to take effect
 flatpak kill org.telegram.desktop 2>/dev/null || true
-hyprctl dispatch exec "[workspace 4 silent] ~/.config/hypr/scripts/entry-launch.sh org.telegram.desktop" 2>/dev/null || true
+hyprctl dispatch 'hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh org.telegram.desktop", { workspace = "4 silent" })' 2>/dev/null || true
 
 # hyprtoolkit
