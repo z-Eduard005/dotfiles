@@ -1,96 +1,25 @@
 #!/bin/bash
 set -euo pipefail
 
-HYPR_THEME="$HOME/dotfiles/hypr/.config/hypr/modules/theme.d/override.conf"
-ANIM_CONF="$HOME/dotfiles/hypr/.config/hypr/modules/animations.conf"
-WINDOWS_CONF="$HOME/dotfiles/hypr/.config/hypr/modules/windows.conf"
 KITTY_CONF="$HOME/dotfiles/kitty/.config/kitty/kitty.conf"
 WAYBAR_CSS="$HOME/dotfiles/waybar/.config/waybar/style.css"
 WAYBAR_LAYOUT="$HOME/dotfiles/waybar/.config/waybar/layout.jsonc"
 WAYBAR_MODULES="$HOME/dotfiles/waybar/.config/waybar/modules.jsonc"
 ZEN_STATE="$HOME/.local/state/hypr/zen-mode"
 
-# hyprland gaps
-set_key() {
-  local block="$1" key="$2"
-  if ! grep -q "^$block {" "$HYPR_THEME" 2>/dev/null; then
-    printf '%s {\n  %s = 0\n}\n' "$block" "$key" >> "$HYPR_THEME"
-  elif sed -n "/^$block {/,/^}/p" "$HYPR_THEME" 2>/dev/null | grep -q "^ *$key *="; then
-    sed -i "/^$block {/,/^}/ s/^\( *\)$key *=.*/\1$key = 0/" "$HYPR_THEME"
-  else
-    sed -i "/^$block {/,/^}/ { /^}$/i \\
-  $key = 0
-}" "$HYPR_THEME"
-  fi
-}
-
 zen="$(cat "$ZEN_STATE" 2>/dev/null || true)"
 [ "$zen" = true ] || zen=false
 
 if [ "$zen" = true ]; then
-  sed -i -e '/^general {/,/^}/ { /^ *gaps_in *= *0$/d; /^ *gaps_out *= *0$/d }' \
-         -e '/^decoration {/,/^}/ { /^ *rounding *= *0$/d }' "$HYPR_THEME"
-  sed -i '/^\(general\|decoration\) {$/{N;/^\(general\|decoration\) {\n}$/d}' "$HYPR_THEME"
   zen=false
 else
-  set_key general gaps_in
-  set_key general gaps_out
-  set_key decoration rounding
   zen=true
 fi
 
 mkdir -p "$(dirname "$ZEN_STATE")"
 printf '%s\n' "$zen" > "$ZEN_STATE"
 
-# hyprland animations
-set_animations() {
-  local val="$1"
-  [ -f "$ANIM_CONF" ] || return 0
-  if sed -n '/^animations {/,/^}/p' "$ANIM_CONF" 2>/dev/null | grep -q '^ *enabled *='; then
-    sed -i "/^animations {/,/^}/ s/^\( *\)enabled *=.*/\1enabled = $val/" "$ANIM_CONF"
-  else
-    sed -i "/^animations {$/a \  enabled = $val" "$ANIM_CONF"
-  fi
-}
-
-if [ "$zen" = true ]; then
-  set_animations false
-else
-  set_animations true
-fi
-
-# hyprland opacity
-set_opacity_rules() {
-  [ -f "$WINDOWS_CONF" ] || return 0
-  if [ "$1" = off ]; then
-    sed -i -E 's/^([[:space:]]*)(windowrule[[:space:]]*=[^#]*,[[:space:]]*opacity[[:space:]]+[0-9.]+[[:space:]]*)$/\1# \2/' "$WINDOWS_CONF"
-  else
-    sed -i -E 's/^([[:space:]]*)#[[:space:]]*(windowrule[[:space:]]*=[^#]*,[[:space:]]*opacity[[:space:]]+[0-9.]+[[:space:]]*)$/\1\2/' "$WINDOWS_CONF"
-  fi
-}
-
-if [ "$zen" = true ]; then
-  set_opacity_rules off
-else
-  set_opacity_rules on
-fi
-
-# hyprland single-window border
-set_single_window_border() {
-  [ -f "$WINDOWS_CONF" ] || return 0
-  if [ "$1" = on ]; then
-    sed -i -E 's/^([[:space:]]*)#[[:space:]]*(windowrule[[:space:]]*=[[:space:]]*border_size[[:space:]]+0,.*)$/\1\2/' "$WINDOWS_CONF"
-  else
-    sed -i -E 's/^([[:space:]]*)(windowrule[[:space:]]*=[[:space:]]*border_size[[:space:]]+0,.*)$/\1# \2/' "$WINDOWS_CONF"
-  fi
-}
-
-if [ "$zen" = true ]; then
-  set_single_window_border on
-else
-  set_single_window_border off
-fi
-
+# hyprland reads the zen state on load (gaps, rounding, animations, window rules)
 hyprctl reload 2>/dev/null || true
 
 # kitty cursor trail

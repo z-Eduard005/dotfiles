@@ -1,0 +1,23 @@
+-- Fast apps
+
+hl.bind("SUPER + 1", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh \"RUN_FASTFETCH=1 kitty\""))
+hl.bind("SUPER + 2", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh org.gnome.Nautilus"))
+hl.bind("SUPER + 3", hl.dsp.exec_cmd("XDG_CURRENT_DESKTOP=GNOME ~/.config/hypr/scripts/entry-launch.sh org.gnome.Settings"))
+hl.bind("SUPER + 4", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh org.gnome.Software"))
+hl.bind("SUPER + 5", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh youtube-music", { workspace = 5 }))
+hl.bind("SUPER + 6", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh org.signal.Signal", { workspace = 4 }))
+hl.bind("SUPER + 7", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh org.telegram.desktop", { workspace = 4 }))
+hl.bind("SUPER + 8", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh app.zen_browser.zen", { workspace = 3 }))
+hl.bind("SUPER + 9", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh cursor"))
+hl.bind("SUPER + 0", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh md.obsidian.Obsidian"))
+
+hl.bind("SUPER + CTRL + 1", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh --new \"RUN_FASTFETCH=1 kitty\""))
+hl.bind("SUPER + CTRL + 2", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh --new org.gnome.Nautilus"))
+hl.bind("SUPER + CTRL + 3", hl.dsp.exec_cmd("XDG_CURRENT_DESKTOP=GNOME ~/.config/hypr/scripts/entry-launch.sh --new org.gnome.Settings"))
+hl.bind("SUPER + CTRL + 4", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh --new org.gnome.Software"))
+hl.bind("SUPER + CTRL + 5", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh --new youtube-music"))
+hl.bind("SUPER + CTRL + 6", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh --new org.signal.Signal"))
+hl.bind("SUPER + CTRL + 7", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh --new org.telegram.desktop"))
+hl.bind("SUPER + CTRL + 8", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh --new app.zen_browser.zen"))
+hl.bind("SUPER + CTRL + 9", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh --new cursor"))
+hl.bind("SUPER + CTRL + 0", hl.dsp.exec_cmd("~/.config/hypr/scripts/entry-launch.sh --new md.obsidian.Obsidian"))

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONF="$HOME/.config/hypr/modules/monitors.d/override.conf"
+CONF="$HOME/.local/state/hypr/monitors"
 
 LAPTOP_HIGH='monitor=eDP-1,1920x1080@144,-1920x0,1.0,bitdepth,10'
 LAPTOP_LOW='monitor=eDP-1,1920x1080@60,-1920x0,1.0,bitdepth,10'
@@ -56,7 +56,10 @@ if [ -z "$NEW_LINES" ]; then
     exit 0
 fi
 
+mkdir -p "$(dirname "$CONF")"
 [ -f "$CONF" ] || touch "$CONF"
 grep -v "${FILTER_ARGS[@]}" "$CONF" > "$CONF.tmp"
 printf '%s' "$NEW_LINES" >> "$CONF.tmp"
 mv "$CONF.tmp" "$CONF"
+
+hyprctl reload 2>/dev/null || true

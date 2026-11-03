@@ -2,7 +2,7 @@
 set -euo pipefail
 
 THEME_DIR="$HOME/dotfiles/accent-styles-css/.config/accent-styles-css"
-HYPR_THEME="$HOME/dotfiles/hypr/.config/hypr/modules/theme.d/override.conf"
+ACCENT_STATE="$HOME/.local/state/hypr/accent"
 ACCENTS=(
   blue:#3584e4
   teal:#2190a4
@@ -44,13 +44,9 @@ swaync-client --reload-css >/dev/null
 # hyprland window border
 border="${HEX#\#}"
 if [ -n "$border" ]; then
-  if ! grep -q '^general {' "$HYPR_THEME" 2>/dev/null; then
-    printf 'general {\n  col.active_border = rgb(%s)\n}\n' "$border" >> "$HYPR_THEME" 2>/dev/null || true
-  elif sed -n '/^general {/,/^}/p' "$HYPR_THEME" 2>/dev/null | grep -q '^ *col\.active_border *='; then
-    sed -i "/^general {/,/^}/ s/^\( *col\.active_border *= *\).*/\1rgb(${border})/" "$HYPR_THEME" 2>/dev/null || true
-  else
-    sed -i "/^general {$/a \  col.active_border = rgb(${border})" "$HYPR_THEME" 2>/dev/null || true
-  fi
+  mkdir -p "$(dirname "$ACCENT_STATE")"
+  printf 'rgb(%s)\n' "$border" > "$ACCENT_STATE"
+  hyprctl reload 2>/dev/null || true
 fi
 
 # gdm
