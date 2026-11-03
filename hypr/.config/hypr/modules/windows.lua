@@ -6,7 +6,6 @@ hl.window_rule({
     float = true,
 })
 
--- update-system.sh runs a plain kitty; these rules float it at 75% on ws 5
 hl.window_rule({
     match = { class = "update-system" },
     float = true,
@@ -15,7 +14,6 @@ hl.window_rule({
 })
 
 if state.zen then
-    -- zen: no border when a single tiled window is alone on the workspace
     hl.window_rule({
         match = { float = false, workspace = "w[tv1]" },
         border_size = 0,

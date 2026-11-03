@@ -1,22 +1,23 @@
 #!/bin/bash
-STATE="${XDG_STATE_HOME:-$HOME/.local/state}/notify-yt-channel"
+STATE="$HOME/.local/state/dotfiles-youtube-notifier"
 CHANNELS="$STATE/channels"
 SEEN="$STATE/seen"
 PIDFILE="$STATE/pid"
 INTERVAL=1440  # 24 minutes
 FEED="https://www.youtube.com/feeds/videos.xml?channel_id="
+ICON="$HOME/.local/share/icons/yt-icon.png"
 
 help() {
   cat <<EOF
-notify-yt-channel - get a desktop notification when a YouTube channel posts a new video.
+$(basename $0) - get a desktop notification when a YouTube channel posts a new video.
 
 Usage:
-  notify-yt-channel start             Start watching in the background (checks every $((INTERVAL / 60)) min)
-  notify-yt-channel stop              Stop watching
-  notify-yt-channel add <channel>     Add a channel (youtube link, @handle or name)
-  notify-yt-channel remove <ID>       Stop watching a channel
-  notify-yt-channel list              Show watched channels
-  notify-yt-channel --help            Show this help
+  $(basename $0) start             Start watching in the background (checks every $((INTERVAL / 60)) min)
+  $(basename $0) stop              Stop watching
+  $(basename $0) add <channel>     Add a channel (youtube link, @handle)
+  $(basename $0) remove <channel>  Stop watching a channel
+  $(basename $0) list              Show watched channels
+  $(basename $0) --help            Show this help
 EOF
 }
 
@@ -47,6 +48,7 @@ add() {
 
 remove() {
   local id=$1
+  id=$(resolve "$id")
   grep -q "^$id" "$CHANNELS" 2>/dev/null || { echo "Not in list: $id" >&2; exit 1; }
   sed -i "/^$id/d" "$CHANNELS"
   rm -f "$SEEN/$id"
@@ -73,7 +75,11 @@ watch() {
         grep -qx "$id" "$SEEN/$ch" && continue
         echo "$id" >> "$SEEN/$ch"
         title=$(sed 's/&amp;/\&/g; s/&quot;/"/g; s/&#39;/'"'"'/g; s/&lt;/</g; s/&gt;/>/g' <<<"$title")
-        notify-send -a "Youtube Channels Notify" "$author" "$title"
+        [[ $(notify-send -i "$ICON" -a "Youtube Channels Notifier" -A watch=Watch "$author" "$title") == watch ]] && {
+          swaync-client -t -sw
+          xdg-open "https://www.youtube.com/watch?v=$id" &
+          dotfiles-entry-launch app.zen_browser.zen
+        }
       done
     done
     sleep "$INTERVAL"
@@ -82,7 +88,7 @@ watch() {
 
 start() {
   running && { echo "Already running" >&2; exit 1; }
-  [[ -s $CHANNELS ]] || { echo "No channels yet. Add one with: notify-yt-channel add <channel>" >&2; exit 1; }
+  [[ -s $CHANNELS ]] || { echo "No channels yet. Add one with: $(basename $0) add <channel>" >&2; exit 1; }
   watch >/dev/null 2>&1 &
   echo $! > "$PIDFILE"
   echo "Started"

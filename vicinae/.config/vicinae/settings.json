@@ -204,14 +204,11 @@
         "proton.vpn.app.gtk": {
           "alias": "vpn"
         },
-        "toggle-theme-script": {
+        "toggle-theme": {
           "alias": "theme"
         },
-        "toggle-zen-mode": {
+        "toggle-zenmode": {
           "alias": "zen-mode"
-        },
-        "toogle-theme-script": {
-          "alias": "theme"
         },
         "update-system": {
           "alias": "update"
@@ -221,12 +218,6 @@
         },
         "vicinae-reboot-script": {
           "alias": "reboot"
-        },
-        "vicinae-toogle-power-saver-script": {
-          "alias": "saver"
-        },
-        "vicinae-toogle-theme-script": {
-          "alias": "theme"
         }
       }
     },
@@ -353,7 +344,7 @@
           "enabled": true,
           "preferences": {
             "confirm": false,
-            "customProgram": "~/.config/hypr/scripts/power-actions.sh logout"
+            "customProgram": "dotfiles-power-actions logout"
           }
         },
         "power-off": {
@@ -361,7 +352,7 @@
           "enabled": true,
           "preferences": {
             "confirm": false,
-            "customProgram": "~/.config/hypr/scripts/power-actions.sh shutdown"
+            "customProgram": "dotfiles-power-actions shutdown"
           }
         },
         "reboot": {
@@ -369,7 +360,7 @@
           "enabled": true,
           "preferences": {
             "confirm": false,
-            "customProgram": "~/.config/hypr/scripts/power-actions.sh reboot"
+            "customProgram": "dotfiles-power-actions reboot"
           }
         },
         "sleep": {

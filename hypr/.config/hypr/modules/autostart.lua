@@ -20,14 +20,14 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-theme 'macOS'")
 
   -- Applications
-  hl.exec_cmd("~/.config/hypr/scripts/entry-launch.sh \"RUN_FASTFETCH=1 kitty\"", { workspace = "1 silent" })
-  hl.exec_cmd("~/.config/hypr/scripts/entry-launch.sh cursor", { workspace = "2 silent" })
-  hl.exec_cmd("~/.config/hypr/scripts/entry-launch.sh app.zen_browser.zen", { workspace = "3 silent" })
-  hl.exec_cmd("~/.config/hypr/scripts/entry-launch.sh org.telegram.desktop", { workspace = "4 silent" })
+  hl.exec_cmd("dotfiles-entry-launch \"RUN_FASTFETCH=1 kitty\"", { workspace = "1 silent" })
+  hl.exec_cmd("dotfiles-entry-launch cursor", { workspace = "2 silent" })
+  hl.exec_cmd("dotfiles-entry-launch app.zen_browser.zen", { workspace = "3 silent" })
+  hl.exec_cmd("dotfiles-entry-launch org.telegram.desktop", { workspace = "4 silent" })
 
   -- Other
   hl.exec_cmd("xmodmap -e \"keycode 108 = F3\"")
-  hl.exec_cmd("~/.local/bin/hyprland-per-window-layout")
-  hl.exec_cmd("~/.config/hypr/scripts/hypr-watcher.sh")
-  hl.exec_cmd("~/.config/hypr/scripts/notify-yt-channel.sh start")
+  hl.exec_cmd("hyprland-per-window-layout")
+  hl.exec_cmd("dotfiles-watcher")
+  hl.exec_cmd("dotfiles-youtube-notifier start")
 end)

@@ -25,8 +25,7 @@ hl.monitor({
     bitdepth = 10,
 })
 
--- Runtime overrides, written by
---   ~/.config/hypr/scripts/monitor-actions.sh
+-- Runtime overrides, written by dotfiles-monitor-actions
 -- Format is one `monitor=OUTPUT,MODE,POSITION,SCALE[,bitdepth,N]` per line,
 -- or `monitor=OUTPUT,disable`. Missing file = keep the defaults above.
 do

@@ -5,6 +5,7 @@
       "enable": true,
       "icon-size": 24,
       "tooltip": false,
+      "on-click-window": "hyprctl dispatch \"hl.dsp.focus({workspace = hl.get_window('address:{address}').workspace})\"",
     },
     "persistent-workspaces": { "*": 1 },
     "cursor": true,

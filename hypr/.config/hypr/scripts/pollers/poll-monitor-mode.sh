@@ -1,6 +1,5 @@
 #!/bin/bash
 EXTERNAL_PATTERN="HDMI"
-ACTIONS="$HOME/.config/hypr/scripts/monitor-actions.sh"
 STATE="/tmp/hypr-monitor-mode"
 
 notify_auto() {
@@ -8,13 +7,13 @@ notify_auto() {
 }
 
 dock() {
-  "$ACTIONS" monitor high laptop disable
+  dotfiles-monitor-actions monitor high laptop disable
   systemctl --user restart waybar.service
   notify_auto "monitor high, laptop disabled"
 }
 
 undock() {
-  "$ACTIONS" monitor disable laptop high
+  dotfiles-monitor-actions monitor disable laptop high
   systemctl --user restart waybar.service
   notify_auto "monitor disabled, monitor high"
 }

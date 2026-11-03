@@ -73,7 +73,7 @@ if [ "${#CANDS[@]}" -gt 0 ]; then
   #     chromaSim tolerance 0.20  (Oklab chroma units)
   #     lightSim  tolerance 0.60  (Oklab L units)
   #     POW      usage damping: 1 = raw multiplication, 0.5 = balanced.
-  #              override per run: ACCENT_USAGE_POW=1 ./extract-wallpaper-accent.sh
+  #              override per run: ACCENT_USAGE_POW=1 dotfiles-get-wallpaper-accent
   POW="${ACCENT_USAGE_POW:-0.5}"
   oklab() { magick "xc:$1" -colorspace Oklab -format '%[fx:r] %[fx:g] %[fx:b]' info: 2>/dev/null; }
 

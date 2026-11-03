@@ -14,5 +14,3 @@ detect_dri_prime() {
 }
 
 DRI_PRIME="$(detect_dri_prime)" "$@"
-# sudo cp ./dri_prime /usr/local/bin/dri_prime
-# copied!

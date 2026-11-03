@@ -1,5 +1,5 @@
 #!/bin/bash
-# vicinae-stow-adopt.sh — repair the stowed vicinae settings link.
+# poll-vicinae-stow-adopt.sh — repair the stowed vicinae settings link.
 
 LIVE="$HOME/.config/vicinae/settings.json"
 REPO="$HOME/dotfiles/vicinae/.config/vicinae/settings.json"

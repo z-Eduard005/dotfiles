@@ -130,7 +130,6 @@ hl.animation({
 })
 hl.config({
     animations = {
-        -- zen mode disables animations
         enabled = not state.zen,
         -- ease in
         -- ease out

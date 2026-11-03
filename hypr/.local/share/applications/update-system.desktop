@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Update System
-Exec=/bin/bash -lc "~/.config/hypr/scripts/update-system.sh"
+Exec=dotfiles-update-system
 Type=Application
 Terminal=false
 StartupWMClass=update-system

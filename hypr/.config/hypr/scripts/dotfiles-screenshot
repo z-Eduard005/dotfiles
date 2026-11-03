@@ -1,7 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-# Single instance: a second Print press while one is active exits silently.
 exec 9>/tmp/screenshot.lock
 flock -n 9 || exit 0
 

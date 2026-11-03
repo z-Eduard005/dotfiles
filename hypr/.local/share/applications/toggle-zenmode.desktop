@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Toggle ZenMode
+Exec=dotfiles-toggle-zenmode
+Type=Application
+Terminal=false
+Icon=/home/eduard/.local/share/icons/toggle-zenmode.png
+Categories=Application;

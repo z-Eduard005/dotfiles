@@ -3,14 +3,12 @@ local state = require("modules.state")
 
 hl.config({
     general = {
-        -- zen mode squashes gaps
         gaps_in = state.zen and 0 or 3,
         gaps_out = state.zen and 0 or 6,
         border_size = 2,
 
         -- https://wiki.hypr.land/Configuring/Variables/#variable-types for info about colors
         col = {
-            -- written by switch-accent.sh
             active_border = state.accent,
             inactive_border = "rgba(595959aa)",
         },
@@ -22,7 +20,6 @@ hl.config({
     },
     -- https://wiki.hypr.land/Configuring/Variables/#decoration
     decoration = {
-        -- zen mode squashes rounding
         rounding = state.zen and 0 or 6,
         rounding_power = 3,
         active_opacity = 1.0,
@@ -31,7 +28,7 @@ hl.config({
         shadow = {
             enabled = true,
             range = 4,
-            render_power = 16,
+            render_power = 4,
             color = "rgba(1a1a1aee)",
         },
 
