@@ -1,7 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-exec 9>/tmp/screenshot.lock
+STATE_DIR="$HOME/.local/state/dotfiles/hypr"
+mkdir -p "$STATE_DIR"
+
+exec 9>"$STATE_DIR/screenshot.lock"
 flock -n 9 || exit 0
 
 DIR="$HOME/Pictures/Screenshots"

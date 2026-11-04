@@ -1,5 +1,6 @@
 #!/bin/bash
-STATE="/tmp/hypr_hdmi_cycle_state"
+STATE="$HOME/.local/state/dotfiles/hypr/monitor-cycle"
+mkdir -p "$(dirname "$STATE")"
 
 notify_mode() {
   notify-send "Monitor mode changed" "$1"

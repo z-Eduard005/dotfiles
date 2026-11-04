@@ -2,7 +2,7 @@
 set -euo pipefail
 
 THEME_DIR="$HOME/dotfiles/accent-styles-css/.config/accent-styles-css"
-ACCENT_STATE="$HOME/.local/state/hypr/accent"
+ACCENT_STATE="$HOME/.local/state/dotfiles/hypr/accent"
 ACCENTS=(
   blue:#3584e4
   teal:#2190a4

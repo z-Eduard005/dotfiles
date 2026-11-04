@@ -5,7 +5,7 @@ KITTY_CONF="$HOME/dotfiles/kitty/.config/kitty/kitty.conf"
 WAYBAR_CSS="$HOME/dotfiles/waybar/.config/waybar/style.css"
 WAYBAR_LAYOUT="$HOME/dotfiles/waybar/.config/waybar/layout.jsonc"
 WAYBAR_MODULES="$HOME/dotfiles/waybar/.config/waybar/modules.jsonc"
-ZEN_STATE="$HOME/.local/state/hypr/zen-mode"
+ZEN_STATE="$HOME/.local/state/dotfiles/hypr/zen-mode"
 
 zen="$(cat "$ZEN_STATE" 2>/dev/null || true)"
 [ "$zen" = true ] || zen=false

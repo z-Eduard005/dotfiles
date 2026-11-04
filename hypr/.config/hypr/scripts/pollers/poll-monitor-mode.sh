@@ -1,6 +1,7 @@
 #!/bin/bash
 EXTERNAL_PATTERN="HDMI"
-STATE="/tmp/hypr-monitor-mode"
+STATE="$HOME/.local/state/dotfiles/hypr/monitor-docked"
+mkdir -p "$(dirname "$STATE")"
 
 notify_auto() {
   command -v notify-send >/dev/null 2>&1 && notify-send "Monitor mode changed" "$1"

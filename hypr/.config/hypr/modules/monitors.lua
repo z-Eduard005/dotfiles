@@ -25,30 +25,23 @@ hl.monitor({
     bitdepth = 10,
 })
 
--- Runtime overrides, written by dotfiles-monitor-actions
--- Format is one `monitor=OUTPUT,MODE,POSITION,SCALE[,bitdepth,N]` per line,
--- or `monitor=OUTPUT,disable`. Missing file = keep the defaults above.
+-- Runtime overrides, written by dotfiles-monitor-actions.
 do
-    local f = io.open((os.getenv("HOME") or "") .. "/.local/state/hypr/monitors", "r")
+    local path = (os.getenv("HOME") or "") .. "/.local/state/dotfiles/hypr/monitors.lua"
+    local f = io.open(path, "r")
     if f then
-        for line in f:lines() do
-            local output, rest = line:match("^monitor=([^,]+),(.+)$")
-            if output and rest == "disable" then
-                hl.monitor({ output = output, disabled = true })
-            elseif output then
-                local mode, position, scale = rest:match("^([^,]+),([^,]+),([^,]+)")
-                local bitdepth = rest:match(",bitdepth,(%d+)$")
-                if mode then
-                    hl.monitor({
-                        output = output,
-                        mode = mode,
-                        position = position,
-                        scale = scale,
-                        bitdepth = bitdepth and tonumber(bitdepth) or nil,
-                    })
+        local text = f:read("a")
+        f:close()
+
+        local chunk = load(text, "@" .. path, "t", {})
+        local ok, specs = pcall(chunk)
+
+        if ok and type(specs) == "table" then
+            for _, spec in ipairs(specs) do
+                if type(spec) == "table" and spec.output then
+                    hl.monitor(spec)
                 end
             end
         end
-        f:close()
     end
 end

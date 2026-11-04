@@ -1,6 +1,7 @@
 #!/bin/bash
 MAP="$HOME/.config/wallpaper-accent-map.txt"
-STATE="/tmp/hypr-wallpaper-accent"
+STATE="$HOME/.local/state/dotfiles/hypr/wallpaper-accent"
+mkdir -p "$(dirname "$STATE")"
 
 mapsig() { md5sum "$MAP" 2>/dev/null | cut -d' ' -f1; }
 

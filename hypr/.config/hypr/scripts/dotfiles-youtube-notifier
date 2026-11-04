@@ -76,9 +76,9 @@ watch() {
         echo "$id" >> "$SEEN/$ch"
         title=$(sed 's/&amp;/\&/g; s/&quot;/"/g; s/&#39;/'"'"'/g; s/&lt;/</g; s/&gt;/>/g' <<<"$title")
         [[ $(notify-send -i "$ICON" -a "Youtube Channels Notifier" -A watch=Watch "$author" "$title") == watch ]] && {
-          swaync-client -t -sw
           xdg-open "https://www.youtube.com/watch?v=$id" &
           dotfiles-entry-launch app.zen_browser.zen
+          swaync-client -t -sw
         }
       done
     done
