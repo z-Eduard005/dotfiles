@@ -33,8 +33,9 @@ for a in "${ACCENTS[@]}"; do
   fi
 done
 
-# gsettings
+# gsettings & gtk
 gsettings set org.gnome.desktop.interface accent-color "$ACCENT"
+systemctl --user restart xdg-desktop-portal-gtk.service
 
 # waybar & swaync
 ln -sfn "accent-$ACCENT.css" "$THEME_DIR/accents/accent-active.css"
