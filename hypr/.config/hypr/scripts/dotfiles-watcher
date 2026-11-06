@@ -3,7 +3,6 @@ SCRIPTS="$HOME/.config/hypr/scripts/pollers"
 
 while true; do
   sleep 0.5
-  "$SCRIPTS/poll-monitor-mode.sh"
   "$SCRIPTS/poll-wallpaper-accent.sh"
   "$SCRIPTS/poll-vicinae-stow-adopt.sh"
 done

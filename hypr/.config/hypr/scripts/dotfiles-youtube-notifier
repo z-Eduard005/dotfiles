@@ -1,5 +1,5 @@
 #!/bin/bash
-STATE="$HOME/.local/state/dotfiles-youtube-notifier"
+STATE="$HOME/.local/state/dotfiles/youtube-notifier"
 CHANNELS="$STATE/channels"
 SEEN="$STATE/seen"
 PIDFILE="$STATE/pid"

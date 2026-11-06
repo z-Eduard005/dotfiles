@@ -2,6 +2,8 @@
 
 require("modules.fast-apps")
 
+local monitors = require("modules.monitors")
+
 -- Basic
 hl.bind("ALT + W", hl.dsp.window.close())
 hl.bind("SUPER + V", hl.dsp.window.float({ action = "toggle" }))
@@ -11,7 +13,7 @@ hl.bind("SUPER + SLASH", hl.dsp.exec_cmd("nwg-drawer -nofs -nocats -ovl -is 128"
 hl.bind("CTRL + SHIFT + SLASH", hl.dsp.exec_cmd("pidof hyprpicker || hyprpicker -a"))
 hl.bind("Print", hl.dsp.exec_cmd("dotfiles-screenshot"))
 hl.bind("SUPER + S", hl.dsp.exec_cmd("swaync-client -t -sw"))
-hl.bind("SUPER + P", hl.dsp.exec_cmd("dotfiles-cycle-monitor-mode"))
+hl.bind("SUPER + P", monitors.cycle)
 hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("handy --toggle-transcription"))
 hl.bind("ALT + TAB", function()
   hl.dispatch(hl.dsp.window.cycle_next({ next = true }))
