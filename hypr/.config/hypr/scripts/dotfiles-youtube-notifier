@@ -17,7 +17,7 @@ Usage:
   $(basename $0) add <channel>     Add a channel (youtube link, @handle)
   $(basename $0) remove <channel>  Stop watching a channel
   $(basename $0) list              Show watched channels
-  $(basename $0) --help            Show this help
+  $(basename $0) help              Show this help
 EOF
 }
 

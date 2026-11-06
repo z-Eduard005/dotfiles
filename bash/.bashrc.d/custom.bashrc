@@ -6,7 +6,7 @@ alias remove="sudo dnf remove"
 alias search="sudo dnf search"
 alias ch="git checkout"
 alias repos='gh api "user/repos?affiliation=owner,collaborator,organization_member&per_page=100" --paginate --jq ".[].full_name"'
-alias fzf="fzf --height 40%"
+alias fzf='fzf --height 40% --color="pointer:$(dotfiles-accent get)"'
 alias l.="eza --icons -d .*"
 alias ls="eza --icons -l"
 alias l="eza --icons -lah"

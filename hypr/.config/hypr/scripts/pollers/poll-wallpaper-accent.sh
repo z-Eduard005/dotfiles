@@ -10,8 +10,8 @@ current="$(awww query 2>/dev/null | grep -oP 'image: \K.*' | head -1)"
 
 [ "$current $(mapsig)" = "$(cat "$STATE" 2>/dev/null)" ] && exit 0
 
-accent="$(dotfiles-get-wallpaper-accent)"
-[ -n "$accent" ] && dotfiles-switch-accent "$accent"
+accent="$(dotfiles-accent wallpaper-extract)"
+[ -n "$accent" ] && dotfiles-accent switch "$accent"
 
 # post-run hash is exactly what the next tick must compare against
 echo "$current $(mapsig)" > "$STATE"
