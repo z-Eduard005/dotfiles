@@ -1,5 +1,5 @@
 -- https://wiki.hypr.land/Configuring/Variables/#general
-local state = require("modules.state")
+local state = require("lib.state")
 
 hl.config({
     general = {

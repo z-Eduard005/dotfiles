@@ -1,5 +1,5 @@
 -- See https://wiki.hypr.land/Configuring/Window-Rules/ for more
-local state = require("modules.state")
+local state = require("lib.state")
 
 hl.window_rule({
   match = { class = "zoom" },

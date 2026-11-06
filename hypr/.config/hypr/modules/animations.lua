@@ -1,6 +1,6 @@
 -- https://wiki.hypr.land/Configuring/Variables/#animations
 
-local state = require("modules.state")
+local state = require("lib.state")
 
 hl.curve("overshot", { type = "bezier", points = { { 0.05, 0.9 }, { 0.1, 1.1 } } })
 hl.curve("softSnap", { type = "bezier", points = { { 0.4, 0 }, { 0.2, 1 } } })
