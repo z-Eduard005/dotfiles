@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Pick Monitor Mode
+Exec=dotfiles-pick-monitor-mode
+Type=Application
+Terminal=false
+StartupWMClass=pick-monitor-mode
+Icon=pick-monitor-mode
+Categories=Application;

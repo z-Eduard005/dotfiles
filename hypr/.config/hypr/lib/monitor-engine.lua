@@ -1,23 +1,30 @@
 -- Generic monitor layout engine.
 --
--- This file holds the behaviour (state files, applying presets, the SUPER+P
--- cycle, dock/undock handling). The actual layout configuration lives in
+-- This file holds the behaviour (state files, applying presets, the picker
+-- menu, dock/undock handling). The actual layout configuration lives in
 -- modules/monitors.lua, which only describes data:
 --
 --   return require("lib.monitor-engine").setup({
 --       defaults = { <HL.MonitorSpec>, ... },
---       layers   = { "laptop", "monitor" },
---       presets  = { laptop = { high = {...}, low = {...}, disable = {...} }, ... },
---       cycle    = { { laptop = "disable", monitor = "high", notify = "..." }, ... },
---       dock     = { laptop = "disable", monitor = "high", notify = "..." },
---       undock   = { laptop = "high",    monitor = "disable", notify = "..." },
---       external = "HDMI-A-1",
+--       presets  = { laptop = { name = "Laptop", output = "eDP-1", external = false,
+--                                variants = { high = {...}, low = {...}, disable = {...} } },
+--                    monitor = { name = "Monitor", output = "HDMI-A-1", external = true,
+--                                variants = { ... } } },
+--       modes    = { { laptop = "disable", monitor = "high" }, ... },
+--       dock     = { laptop = "disable", monitor = "high" },
+--       undock   = { laptop = "high",    monitor = "disable" },
 --   })
+--
+-- Optional overrides (defaults live in the engine):
+--   notify_app = "Monitor"  app name, used for notification grouping
+--
+-- Each preset sets `external`; the one set to true has its output watched for
+-- dock/undock.
 --
 -- State (all files optional, created on demand):
 --   monitors-layout.lua   layout currently applied (mirrors what the scripts used to write)
---   monitor-cycle  index of the last cycle step
---   monitor-docked "yes"/"no", last seen external monitor state
+--   monitor-modes         picker menu, one "N) label" line per entry
+--   monitor-docked        "yes"/"no", last seen external monitor state
 
 local M = {}
 
@@ -84,13 +91,35 @@ function M.setup(config)
   local home = os.getenv("HOME") or ""
   local state_dir = config.state_dir or (home .. "/.local/state/dotfiles/hypr/")
   local layout_file = state_dir .. (config.layout_file or "monitors-layout.lua")
-  local cycle_file = state_dir .. (config.cycle_file or "monitor-cycle")
   local docked_file = state_dir .. (config.docked_file or "monitor-docked")
 
-  local layers = config.layers or { "laptop", "monitor" }
-  local steps = config.cycle or {}
+  local modes = config.modes or {}
   local notify_title = config.notify_title or "Monitor mode changed"
+  local notify_app = config.notify_app or "Monitor Mode"
+  local icon = home .. "/.local/share/icons/pick-monitor-mode.png"
   local waybar_cmd = config.waybar_cmd or "systemctl --user restart waybar.service"
+  local active_specs
+
+  -- The preset with `external = true` contributes its output as the connector
+  -- watched for dock/undock.
+  local external
+  for _, group in pairs(config.presets or {}) do
+    if group.external then
+      external = group.output
+      break
+    end
+  end
+
+  -- Order of the groups in labels: explicit config.layers, else the preset
+  -- names sorted, so the config does not have to repeat them.
+  local layers = config.layers
+  if not layers then
+    layers = {}
+    for name in pairs(config.presets or {}) do
+      layers[#layers + 1] = name
+    end
+    table.sort(layers)
+  end
 
   os.execute("mkdir -p " .. shell_quote(state_dir) .. " 2>/dev/null")
 
@@ -108,15 +137,31 @@ function M.setup(config)
 
   local function notify(message)
     if message then
-      hl.exec_cmd("notify-send " .. shell_quote(notify_title) .. " " .. shell_quote(message))
+      local app_arg = "-a " .. shell_quote(notify_app) .. " "
+      local icon_arg = icon and ("-i " .. shell_quote(icon) .. " ") or ""
+      hl.exec_cmd("notify-send " .. app_arg .. icon_arg .. shell_quote(notify_title) .. " " .. shell_quote(message))
     end
+  end
+
+  -- Resolve one group+variant into a full HL.MonitorSpec. The connector lives
+  -- on the group, so a variant never repeats it.
+  local function variant_spec(layer, variant)
+    local group = config.presets and config.presets[layer]
+    local spec = group and group.variants and group.variants[variant]
+    if not spec then
+      return nil
+    end
+    local merged = { output = group.output, disabled = false }
+    for key, value in pairs(spec) do
+      merged[key] = value
+    end
+    return merged
   end
 
   local function specs_for(step)
     local specs = {}
     for _, layer in ipairs(layers) do
-      local mode = step[layer]
-      local spec = mode and config.presets and config.presets[layer] and config.presets[layer][mode]
+      local spec = variant_spec(layer, step[layer])
       if spec then
         specs[#specs + 1] = spec
       end
@@ -124,50 +169,73 @@ function M.setup(config)
     return specs
   end
 
+  local function specs_equal(a, b)
+    if not a or not b or #a ~= #b then
+      return false
+    end
+    for i = 1, #a do
+      if spec_to_lua(a[i]) ~= spec_to_lua(b[i]) then
+        return false
+      end
+    end
+    return true
+  end
+
+  -- Build a label from the group name and its variant.
+  local function label_for(step)
+    local parts = {}
+    for _, layer in ipairs(layers) do
+      local spec = variant_spec(layer, step[layer])
+      if spec then
+        local group = config.presets[layer]
+        local name = group.name or group.output
+        if spec.disabled then
+          parts[#parts + 1] = name .. " off"
+        else
+          parts[#parts + 1] = name .. " " .. (spec.mode or "")
+        end
+      end
+    end
+    return table.concat(parts, " + ")
+  end
+
   -- Apply a step and persist it, without notifying.
   local function apply_step(step)
     local specs = specs_for(step)
     if #specs == 0 then
-      return
+      return false
+    end
+    if specs_equal(specs, active_specs) then
+      return false
     end
     save_layout(specs)
     apply_specs(specs)
+    active_specs = specs
+    return true
   end
 
-  local function write_cycle(value)
-    write_file(cycle_file, tostring(value) .. "\n")
-  end
-
-  local function read_cycle()
-    local raw = read_file(cycle_file)
-    if raw == nil then
-      return 0
-    end
-    local value = tonumber(raw:match("^%s*(%-?%d+)%s*$") or "")
-    if value == nil or value < 0 or value >= #steps then
-      return nil
-    end
-    return value
-  end
-
-  local function cycle()
-    local index = read_cycle()
-    if index == nil then
-      write_cycle(0)
+  -- Apply one entry of config.modes by index (called from the picker).
+  local function apply(index)
+    local mode = modes[index]
+    if not mode then
       return
     end
-    local step = steps[index + 1]
-    if not step then
-      write_cycle(0)
-      return
+    if apply_step(mode) then
+      notify(label_for(mode))
     end
-    apply_step(step)
-    notify(step.notify)
-    write_cycle((index + 1) % #steps)
+  end
+
+  -- Rewrite the picker menu so the script never has to know the modes.
+  local function write_menu()
+    local lines = {}
+    for index, mode in ipairs(modes) do
+      lines[#lines + 1] = string.format("%d) %s", index, label_for(mode))
+    end
+    write_file(state_dir .. "monitor-modes", #lines > 0 and (table.concat(lines, "\n") .. "\n") or "")
   end
 
   local function external_connected()
-    local connector = config.external
+    local connector = external
     if connector then
       local family = connector:gsub("%-%d+$", "")
       for card = 0, 9 do
@@ -194,15 +262,17 @@ function M.setup(config)
   end
 
   local function dock()
-    apply_step(config.dock or {})
+    local step = config.dock or {}
+    apply_step(step)
     hl.exec_cmd(waybar_cmd)
-    notify((config.dock or {}).notify)
+    notify(label_for(step))
   end
 
   local function undock()
-    apply_step(config.undock or {})
+    local step = config.undock or {}
+    apply_step(step)
     hl.exec_cmd(waybar_cmd)
-    notify((config.undock or {}).notify)
+    notify(label_for(step))
   end
 
   local function sync_dock()
@@ -219,7 +289,7 @@ function M.setup(config)
     end
   end
 
-  ---------------- apply defaults, saved layout, then reconcile ----------------
+  -- apply defaults, saved layout, then reconcile
 
   for _, spec in ipairs(config.defaults or {}) do
     hl.monitor(spec)
@@ -231,23 +301,28 @@ function M.setup(config)
       local chunk = load(text, "@" .. layout_file, "t", {})
       local ok, specs = pcall(chunk)
       if ok and type(specs) == "table" then
+        local applied = {}
         for _, spec in ipairs(specs) do
           if type(spec) == "table" and spec.output then
             hl.monitor(spec)
+            applied[#applied + 1] = spec
           end
+        end
+        if #applied > 0 then
+          active_specs = applied
         end
       end
     end
   end
 
   sync_dock()
+  write_menu()
 
-  -- Hotplug: no poller needed anymore.
   hl.on("monitor.added", sync_dock)
   hl.on("monitor.removed", sync_dock)
 
   return {
-    cycle = cycle,
+    apply = apply,
     dock = dock,
     undock = undock,
     sync_dock = sync_dock,
