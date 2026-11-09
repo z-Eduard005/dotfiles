@@ -1,8 +1,37 @@
 #!/bin/bash
-SCRIPTS="$HOME/.config/hypr/scripts/pollers"
+set -euo pipefail
 
-while true; do
-  sleep 0.5
-  "$SCRIPTS/poll-wallpaper-accent.sh"
-  "$SCRIPTS/poll-vicinae-stow-adopt.sh"
-done
+readonly POLLERS_DIR="$HOME/.config/hypr/scripts/pollers"
+readonly BOLD=$'\033[1m'
+readonly RESET=$'\033[0m'
+
+usage() {
+  cat <<EOF
+${BOLD}$(basename "$0")${RESET} - run background helpers that keep the desktop in sync.
+
+usage: ${BOLD}$(basename "$0")${RESET}
+EOF
+}
+
+main() {
+  if [[ $# -gt 0 ]]; then
+    case "$1" in
+      -h|--help|help)
+        usage
+        exit 0
+        ;;
+      *)
+        usage >&2
+        exit 1
+        ;;
+    esac
+  fi
+
+  while true; do
+    sleep 0.5
+    "$POLLERS_DIR/poll-wallpaper-accent.sh" || true
+    "$POLLERS_DIR/poll-vicinae-stow-adopt.sh" || true
+  done
+}
+
+main "$@"

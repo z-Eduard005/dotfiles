@@ -1,71 +1,78 @@
 #!/bin/bash
-STATE="$HOME/.local/state/dotfiles/youtube-notifier"
-CHANNELS="$STATE/channels"
-SEEN="$STATE/seen"
-PIDFILE="$STATE/pid"
-INTERVAL=1440  # 24 minutes
-FEED="https://www.youtube.com/feeds/videos.xml?channel_id="
-ICON="$HOME/.local/share/icons/yt-icon.png"
+set -euo pipefail
+
+readonly STATE_DIR="$HOME/.local/state/dotfiles/youtube-notifier"
+readonly CHANNELS="$STATE_DIR/channels"
+readonly SEEN="$STATE_DIR/seen"
+readonly PIDFILE="$STATE_DIR/pid"
+readonly INTERVAL=1440  # 24 minutes
+readonly FEED="https://www.youtube.com/feeds/videos.xml?channel_id="
+readonly ICON="$HOME/.local/share/icons/yt-icon.png"
+readonly BOLD=$'\033[1m'
+readonly RESET=$'\033[0m'
 
 help() {
   cat <<EOF
-$(basename $0) - get a desktop notification when a YouTube channel posts a new video.
+${BOLD}$(basename "$0")${RESET} - get a desktop notification when a YouTube channel posts a new video.
 
 Usage:
-  $(basename $0) start             Start watching in the background (checks every $((INTERVAL / 60)) min)
-  $(basename $0) stop              Stop watching
-  $(basename $0) add <channel>     Add a channel (youtube link, @handle)
-  $(basename $0) remove <channel>  Stop watching a channel
-  $(basename $0) list              Show watched channels
-  $(basename $0) help              Show this help
+  ${BOLD}$(basename "$0")${RESET} ${BOLD}start${RESET}             Start watching in the background (checks every $((INTERVAL / 60)) min)
+  ${BOLD}$(basename "$0")${RESET} ${BOLD}stop${RESET}              Stop watching
+  ${BOLD}$(basename "$0")${RESET} ${BOLD}add${RESET} <channel>     Add a channel (youtube link, @handle)
+  ${BOLD}$(basename "$0")${RESET} ${BOLD}remove${RESET} <channel>  Stop watching a channel
+  ${BOLD}$(basename "$0")${RESET} ${BOLD}list${RESET}              Show watched channels
+  ${BOLD}$(basename "$0")${RESET} ${BOLD}help${RESET}              Show this help
 EOF
 }
 
-running() { [[ -f $PIDFILE ]] && kill -0 "$(<"$PIDFILE")" 2>/dev/null; }
+running() {
+  [[ -f "$PIDFILE" ]] && kill -0 "$(<"$PIDFILE")" 2>/dev/null
+}
 
 resolve() {
-  local in=$1 handle
-  if [[ $in =~ UC[A-Za-z0-9_-]{22} ]]; then
-    echo "${BASH_REMATCH[0]}"
+  local input="$1" handle
+  if [[ "$input" =~ UC[A-Za-z0-9_-]{22} ]]; then
+    printf '%s\n' "${BASH_REMATCH[0]}"
     return
   fi
-  handle=${in#*youtube.com/}
-  handle=${handle#@}
-  handle=${handle%%[/?#]*}
+  handle="${input#*youtube.com/}"
+  handle="${handle#@}"
+  handle="${handle%%[/?#]*}"
   curl -fsSL "https://www.youtube.com/@$handle" | grep -oP 'youtube.com/channel/\KUC[\w-]{22}' | head -1
 }
 
 add() {
   local id xml name
-  id=$(resolve "$1")
-  [[ $id =~ ^UC[A-Za-z0-9_-]{22}$ ]] || { echo "Could not find channel: '$1'" >&2; exit 1; }
-  grep -q "^$id" "$CHANNELS" 2>/dev/null && { echo "Already added: $id" >&2; exit 1; }
-  xml=$(curl -fsS "$FEED$id") || { echo "Channel not found: $id" >&2; exit 1; }
-  name=$(grep -m1 -oP '<name>\K[^<]+' <<<"$xml")
-  echo "$id  # $name" >> "$CHANNELS"
-  echo "Added: $name ($id)"
+  id="$(resolve "$1" || true)"
+  [[ "$id" =~ ^UC[A-Za-z0-9_-]{22}$ ]] || { printf "Could not find channel: '%s'\n" "$1" >&2; exit 1; }
+  grep -q "^$id" "$CHANNELS" 2>/dev/null && { printf 'Already added: %s\n' "$id" >&2; exit 1; }
+  xml="$(curl -fsS "$FEED$id")" || { printf 'Channel not found: %s\n' "$id" >&2; exit 1; }
+  name="$(grep -m1 -oP '<name>\K[^<]+' <<<"$xml" || true)"
+  printf '%s  # %s\n' "$id" "$name" >> "$CHANNELS"
+  printf 'Added: %s (%s)\n' "$name" "$id"
 }
 
 remove() {
-  local id=$1
-  id=$(resolve "$id")
-  grep -q "^$id" "$CHANNELS" 2>/dev/null || { echo "Not in list: $id" >&2; exit 1; }
+  local id="$1"
+  id="$(resolve "$id" || true)"
+  grep -q "^$id" "$CHANNELS" 2>/dev/null || { printf 'Not in list: %s\n' "$id" >&2; exit 1; }
   sed -i "/^$id/d" "$CHANNELS"
   rm -f "$SEEN/$id"
-  echo "Removed: $id"
+  printf 'Removed: %s\n' "$id"
 }
 
 list() {
-  [[ -s $CHANNELS ]] || { echo "No channels yet."; return; }
+  [[ -s "$CHANNELS" ]] || { printf 'No channels yet.\n'; return; }
   cat "$CHANNELS"
 }
 
 watch() {
+  local ch xml author id title
   while true; do
     mapfile -t channels < <(sed 's/#.*//; s/[[:space:]]//g; /^$/d' "$CHANNELS")
     for ch in "${channels[@]}"; do
-      xml=$(curl -fsS "$FEED$ch") || continue
-      author=$(grep -m1 -oP '<name>\K[^<]+' <<<"$xml")
+      xml="$(curl -fsS "$FEED$ch")" || continue
+      author="$(grep -m1 -oP '<name>\K[^<]+' <<<"$xml" || true)"
       touch "$SEEN/$ch"
 
       paste -d'\t' \
@@ -73,9 +80,9 @@ watch() {
         <(grep -oP '<title>\K[^<]+' <<<"$xml" | tail -n +2) | tac |
       while IFS=$'\t' read -r id title; do
         grep -qx "$id" "$SEEN/$ch" && continue
-        echo "$id" >> "$SEEN/$ch"
-        title=$(sed 's/&amp;/\&/g; s/&quot;/"/g; s/&#39;/'"'"'/g; s/&lt;/</g; s/&gt;/>/g' <<<"$title")
-        [[ $(notify-send -i "$ICON" -a "Youtube Channels Notifier" -A watch=Watch "$author" "$title") == watch ]] && {
+        printf '%s\n' "$id" >> "$SEEN/$ch"
+        title="$(sed 's/&amp;/\&/g; s/&quot;/"/g; s/&#39;/'"'"'/g; s/&lt;/</g; s/&gt;/>/g' <<<"$title")"
+        [[ "$(notify-send -i "$ICON" -a "Youtube Channels Notifier" -A watch=Watch "$author" "$title")" == watch ]] && {
           xdg-open "https://www.youtube.com/watch?v=$id" &
           dotfiles-entry-launch app.zen_browser.zen
           swaync-client -t -sw
@@ -87,27 +94,31 @@ watch() {
 }
 
 start() {
-  running && { echo "Already running" >&2; exit 1; }
-  [[ -s $CHANNELS ]] || { echo "No channels yet. Add one with: $(basename $0) add <channel>" >&2; exit 1; }
+  running && { printf 'Already running\n' >&2; exit 1; }
+  [[ -s "$CHANNELS" ]] || { printf 'No channels yet. Add one with: %s add <channel>\n' "$(basename "$0")" >&2; exit 1; }
   watch >/dev/null 2>&1 &
-  echo $! > "$PIDFILE"
-  echo "Started"
+  printf '%s\n' "$!" > "$PIDFILE"
+  printf 'Started\n'
 }
 
 stop() {
-  running || { echo "Not running" >&2; rm -f "$PIDFILE"; exit 1; }
-  kill "$(<"$PIDFILE")"
+  running || { printf 'Not running\n' >&2; rm -f "$PIDFILE"; exit 1; }
+  kill "$(<"$PIDFILE")" || true
   rm -f "$PIDFILE"
-  echo "Stopped"
+  printf 'Stopped\n'
 }
 
-mkdir -p "$SEEN"
+main() {
+  mkdir -p "$SEEN"
 
-case $1 in
-  start)      start ;;
-  stop)       stop ;;
-  add)        [[ -n $2 ]] || { help; exit 1; }; add "$2" ;;
-  remove)     [[ -n $2 ]] || { help; exit 1; }; remove "$2" ;;
-  list)       list ;;
-  *)          help ;;
-esac
+  case "${1:-}" in
+    start)      start ;;
+    stop)       stop ;;
+    add)        [[ -n "${2:-}" ]] || { help; exit 1; }; add "${2:-}" ;;
+    remove)     [[ -n "${2:-}" ]] || { help; exit 1; }; remove "${2:-}" ;;
+    list)       list ;;
+    *)          help ;;
+  esac
+}
+
+main "$@"

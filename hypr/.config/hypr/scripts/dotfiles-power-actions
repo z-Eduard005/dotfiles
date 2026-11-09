@@ -1,41 +1,68 @@
 #!/bin/bash
-exec >/dev/null 2>&1 </dev/null
-ACTION="${1:-}"
+set -euo pipefail
+
+readonly BOLD=$'\033[1m'
+readonly RESET=$'\033[0m'
+readonly USAGE="{${BOLD}shutdown${RESET}|${BOLD}logout${RESET}|${BOLD}reboot${RESET}}"
+
+usage() {
+  cat <<EOF
+${BOLD}$(basename "$0")${RESET} - shut down, log out, or reboot the session.
+
+usage: ${BOLD}$(basename "$0")${RESET} ${USAGE}
+EOF
+}
 
 is_hyprland() {
-    [[ "$XDG_CURRENT_DESKTOP" == *Hyprland* ]]
+  [[ "${XDG_CURRENT_DESKTOP:-}" == *Hyprland* ]]
 }
 
 do_shutdown() {
-    if is_hyprland; then
-        hyprshutdown -t "Shutting down..." --post-cmd "shutdown -P 0"
-    else
-        gnome-session-quit --power-off
-    fi
+  if is_hyprland; then
+    hyprshutdown -t "Shutting down..." --post-cmd "shutdown -P 0"
+  else
+    gnome-session-quit --power-off
+  fi
 }
 
 do_logout() {
-    if is_hyprland; then
-        hyprshutdown -t "Logging out..."
-    else
-        gnome-session-quit --logout
-    fi
+  if is_hyprland; then
+    hyprshutdown -t "Logging out..."
+  else
+    gnome-session-quit --logout
+  fi
 }
 
 do_reboot() {
-    if is_hyprland; then
-        hyprshutdown -t "Rebooting..." --post-cmd "reboot"
-    else
-        gnome-session-quit --reboot
-    fi
+  if is_hyprland; then
+    hyprshutdown -t "Rebooting..." --post-cmd "reboot"
+  else
+    gnome-session-quit --reboot
+  fi
 }
 
-case "$ACTION" in
-    shutdown)   do_shutdown ;;
-    logout)     do_logout   ;;
-    reboot)     do_reboot   ;;
+main() {
+  local action="${1:-}"
+
+  case "$action" in
+    -h|--help|help)
+      usage
+      exit 0
+      ;;
+    shutdown|logout|reboot) ;;
     *)
-        echo "Usage: $0 {shutdown|logout|reboot}"
-        exit 1
-        ;;
-esac
+      usage >&2
+      exit 1
+      ;;
+  esac
+
+  exec >/dev/null 2>&1 </dev/null
+
+  case "$action" in
+    shutdown) do_shutdown ;;
+    logout)   do_logout ;;
+    reboot)   do_reboot ;;
+  esac
+}
+
+main "$@"

@@ -1,17 +1,31 @@
 #!/bin/bash
-MAP="$HOME/.config/wallpaper-accent-map.txt"
-STATE="$HOME/.local/state/dotfiles/hypr/wallpaper-accent"
-mkdir -p "$(dirname "$STATE")"
+set -euo pipefail
 
-mapsig() { md5sum "$MAP" 2>/dev/null | cut -d' ' -f1; }
+readonly MAP="$HOME/.config/wallpaper-accent-map.txt"
+readonly STATE="$HOME/.local/state/dotfiles/hypr/wallpaper-accent"
 
-current="$(awww query 2>/dev/null | grep -oP 'image: \K.*' | head -1)"
-[ -n "$current" ] || exit 0
+map_signature() {
+  md5sum "$MAP" 2>/dev/null | cut -d' ' -f1 || true
+}
 
-[ "$current $(mapsig)" = "$(cat "$STATE" 2>/dev/null)" ] && exit 0
+main() {
+  mkdir -p "$(dirname "$STATE")"
 
-accent="$(dotfiles-accent wallpaper-extract)"
-[ -n "$accent" ] && dotfiles-accent switch "$accent"
+  local current accent
+  current="$(awww query 2>/dev/null | grep -oP 'image: \K.*' | head -1 || true)"
+  [[ -n "$current" ]] || exit 0
 
-# post-run hash is exactly what the next tick must compare against
-echo "$current $(mapsig)" > "$STATE"
+  if [[ "$current $(map_signature)" == "$(cat "$STATE" 2>/dev/null || true)" ]]; then
+    exit 0
+  fi
+
+  accent="$(dotfiles-accent wallpaper-extract || true)"
+  if [[ -n "$accent" ]]; then
+    dotfiles-accent switch "$accent" || true
+  fi
+
+  # post-run hash is exactly what the next tick must compare against
+  printf '%s %s\n' "$current" "$(map_signature)" > "$STATE"
+}
+
+main "$@"

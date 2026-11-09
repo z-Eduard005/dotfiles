@@ -1,38 +1,73 @@
 #!/bin/bash
 set -euo pipefail
 
-STATE_DIR="$HOME/.local/state/dotfiles/hypr"
-mkdir -p "$STATE_DIR"
+readonly STATE_DIR="$HOME/.local/state/dotfiles/hypr"
+readonly SHOT_DIR="$HOME/Pictures/Screenshots"
+readonly BOLD=$'\033[1m'
+readonly RESET=$'\033[0m'
 
-exec 9>"$STATE_DIR/screenshot.lock"
-flock -n 9 || exit 0
+usage() {
+  cat <<EOF
+${BOLD}$(basename "$0")${RESET} - take a screenshot of a selected region and copy it to the clipboard.
 
-DIR="$HOME/Pictures/Screenshots"
-mkdir -p "$DIR"
-FILENAME="$DIR/ss_$(date +%Y-%m-%d_%H-%M-%S).png"
+usage: ${BOLD}$(basename "$0")${RESET}
+EOF
+}
 
 FREEZE_PID=""
+
 cleanup() {
   if [[ -n "$FREEZE_PID" ]]; then
     kill "$FREEZE_PID" 2>/dev/null || true
   fi
 }
-trap cleanup EXIT INT TERM
 
-hyprpicker -r -z >/dev/null 2>&1 &
-FREEZE_PID=$!
-sleep 0.2
+take_screenshot() {
+  local filename geometry
 
-GEOM="$(slurp -d)" || exit 0
-[[ -n "$GEOM" ]] || exit 0
+  mkdir -p "$STATE_DIR"
+  exec 9>"$STATE_DIR/screenshot.lock"
+  flock -n 9 || exit 0
 
-grim -g "$GEOM" "$FILENAME"
+  mkdir -p "$SHOT_DIR"
+  filename="$SHOT_DIR/ss_$(date +%Y-%m-%d_%H-%M-%S).png"
 
-kill "$FREEZE_PID" 2>/dev/null || true
-FREEZE_PID=""
+  trap cleanup EXIT INT TERM
 
-# Release the lock before wl-copy: it forks a background daemon to serve
-# the clipboard, and an inherited lock fd would block all future runs.
-exec 9>&-
+  hyprpicker -r -z >/dev/null 2>&1 &
+  FREEZE_PID=$!
+  sleep 0.2
 
-wl-copy --type image/png < "$FILENAME"
+  geometry="$(slurp -d)" || exit 0
+  [[ -n "$geometry" ]] || exit 0
+
+  grim -g "$geometry" "$filename"
+
+  kill "$FREEZE_PID" 2>/dev/null || true
+  FREEZE_PID=""
+
+  # Release the lock before wl-copy: it forks a background daemon to serve
+  # the clipboard, and an inherited lock fd would block all future runs.
+  exec 9>&-
+
+  wl-copy --type image/png < "$filename"
+}
+
+main() {
+  if [[ $# -gt 0 ]]; then
+    case "$1" in
+      -h|--help|help)
+        usage
+        exit 0
+        ;;
+      *)
+        usage >&2
+        exit 1
+        ;;
+    esac
+  fi
+
+  take_screenshot
+}
+
+main "$@"

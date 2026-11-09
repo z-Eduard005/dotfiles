@@ -1,9 +1,10 @@
 #!/bin/bash
-LOCK="$HOME/.local/state/dotfiles/hypr/pick-monitor-mode.lock"
-exec 9>"$LOCK"
-flock -n 9 || exit 0
+set -euo pipefail
 
-kitty --class pick-monitor-mode -o font_size=22 /bin/bash -lc '
+readonly LOCK_FILE="$HOME/.local/state/dotfiles/hypr/pick-monitor-mode.lock"
+readonly BOLD=$'\033[1m'
+readonly RESET=$'\033[0m'
+readonly PICKER_SCRIPT='
   MENU="$HOME/.local/state/dotfiles/hypr/monitor-modes"
   n=0
   binds=""
@@ -18,3 +19,36 @@ kitty --class pick-monitor-mode -o font_size=22 /bin/bash -lc '
   index=${choice%%)*}
   hyprctl eval "require(\"modules.monitors\").apply($index)"
 '
+
+usage() {
+  cat <<EOF
+${BOLD}$(basename "$0")${RESET} - pick a monitor layout from a menu.
+
+usage: ${BOLD}$(basename "$0")${RESET}
+
+Opens an fzf picker with the available monitor modes and applies the selection.
+  ${BOLD}-h${RESET}, ${BOLD}--help${RESET}, ${BOLD}help${RESET}   show this help
+EOF
+}
+
+main() {
+  if [[ $# -gt 0 ]]; then
+    case "$1" in
+      -h|--help|help)
+        usage
+        exit 0
+        ;;
+      *)
+        usage >&2
+        exit 1
+        ;;
+    esac
+  fi
+
+  exec 9>"$LOCK_FILE"
+  flock -n 9 || exit 0
+
+  kitty --class pick-monitor-mode -o font_size=22 /bin/bash -lc "$PICKER_SCRIPT"
+}
+
+main "$@"

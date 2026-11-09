@@ -1,2 +1,35 @@
 #!/bin/bash
-kitty --class update-system -o font_size=16 /bin/bash -lc 'sudo dnf upgrade --refresh && sudo flatpak update -y && fwupdmgr refresh --force >/dev/null 2>&1; fwupdmgr update -y; printf "\n\033[33mPress Enter to close...\033[0m"; read'
+set -euo pipefail
+
+readonly KITTY_CLASS="update-system"
+readonly KITTY_FONT_SIZE="16"
+readonly UPDATE_CMD='sudo dnf upgrade --refresh && sudo flatpak update -y && fwupdmgr refresh --force >/dev/null 2>&1; fwupdmgr update -y; printf "\n\033[33mPress Enter to close...\033[0m"; read'
+readonly BOLD=$'\033[1m'
+readonly RESET=$'\033[0m'
+
+usage() {
+  cat <<EOF
+${BOLD}$(basename "$0")${RESET} - open a terminal and update the system (dnf, flatpak, firmware).
+
+usage: ${BOLD}$(basename "$0")${RESET}
+EOF
+}
+
+main() {
+  if [[ $# -gt 0 ]]; then
+    case "$1" in
+      -h|--help|help)
+        usage
+        exit 0
+        ;;
+      *)
+        usage >&2
+        exit 1
+        ;;
+    esac
+  fi
+
+  kitty --class "$KITTY_CLASS" -o "font_size=$KITTY_FONT_SIZE" /bin/bash -lc "$UPDATE_CMD"
+}
+
+main "$@"
