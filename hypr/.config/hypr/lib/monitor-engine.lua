@@ -318,8 +318,8 @@ function M.setup(config)
   sync_dock()
   write_menu()
 
-  hl.on("monitor.added", sync_dock)
-  hl.on("monitor.removed", sync_dock)
+  -- hl.on("monitor.added", sync_dock)
+  -- hl.on("monitor.removed", sync_dock)
 
   return {
     apply = apply,
