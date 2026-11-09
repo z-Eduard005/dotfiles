@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-readonly MAP="$HOME/.config/wallpaper-accent-map.txt"
+readonly MAP="$HOME/.local/state/dotfiles/hypr/wallpaper-accent-map.txt"
 readonly STATE="$HOME/.local/state/dotfiles/hypr/wallpaper-accent"
 
 map_signature() {

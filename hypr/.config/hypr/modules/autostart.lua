@@ -16,8 +16,8 @@ hl.on("hyprland.start", function()
 
   -- Inconsistent cursor fix
   hl.exec_cmd("hyprctl setcursor macOS 28")
-  hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-size 28")
   hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-theme 'macOS'")
+  hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-size 28")
 
   -- Applications
   hl.exec_cmd("dotfiles-entry-launch \"RUN_FASTFETCH=1 kitty\"", { workspace = "1 silent" })

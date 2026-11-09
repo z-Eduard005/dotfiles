@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/common.sh" || exit 1
+
 readonly STATE_DIR="$HOME/.local/state/dotfiles/hypr"
 readonly SHOT_DIR="$HOME/Pictures/Screenshots"
 readonly BOLD=$'\033[1m'
@@ -15,8 +18,30 @@ EOF
 }
 
 FREEZE_PID=""
+CURSOR_HW=0
+
+reload_cursor() {
+  local theme="${HYPRCURSOR_THEME:-${XCURSOR_THEME:-macOS}}"
+  local size="${HYPRCURSOR_SIZE:-${XCURSOR_SIZE:-28}}"
+  [[ "$size" =~ ^[0-9]+$ ]] || size=28
+  hyprctl setcursor "$theme" "$size" >/dev/null 2>&1 || true
+}
+
+use_hardware_cursor() {
+  hyprctl eval 'hl.config({ cursor = { no_hardware_cursors = 0 } })' >/dev/null 2>&1 || true
+  reload_cursor
+  CURSOR_HW=1
+}
+
+restore_cursor() {
+  [[ "$CURSOR_HW" -eq 1 ]] || return 0
+  hyprctl eval 'hl.config({ cursor = { no_hardware_cursors = 1 } })' >/dev/null 2>&1 || true
+  reload_cursor
+  CURSOR_HW=0
+}
 
 cleanup() {
+  restore_cursor
   if [[ -n "$FREEZE_PID" ]]; then
     kill "$FREEZE_PID" 2>/dev/null || true
   fi
@@ -24,6 +49,8 @@ cleanup() {
 
 take_screenshot() {
   local filename geometry
+
+  require_cmd hyprpicker slurp grim wl-copy
 
   mkdir -p "$STATE_DIR"
   exec 9>"$STATE_DIR/screenshot.lock"
@@ -41,7 +68,9 @@ take_screenshot() {
   geometry="$(slurp -d)" || exit 0
   [[ -n "$geometry" ]] || exit 0
 
+  use_hardware_cursor
   grim -g "$geometry" "$filename"
+  restore_cursor
 
   kill "$FREEZE_PID" 2>/dev/null || true
   FREEZE_PID=""
@@ -66,6 +95,8 @@ main() {
         ;;
     esac
   fi
+
+  require_hyprland
 
   take_screenshot
 }

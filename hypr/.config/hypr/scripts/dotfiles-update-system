@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/common.sh" || exit 1
+
 readonly KITTY_CLASS="update-system"
 readonly KITTY_FONT_SIZE="16"
 readonly UPDATE_CMD='sudo dnf upgrade --refresh && sudo flatpak update -y && fwupdmgr refresh --force >/dev/null 2>&1; fwupdmgr update -y; printf "\n\033[33mPress Enter to close...\033[0m"; read'
@@ -28,6 +31,9 @@ main() {
         ;;
     esac
   fi
+
+  require_hyprland
+  require_cmd kitty
 
   kitty --class "$KITTY_CLASS" -o "font_size=$KITTY_FONT_SIZE" /bin/bash -lc "$UPDATE_CMD"
 }

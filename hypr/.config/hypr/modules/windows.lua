@@ -1,6 +1,12 @@
 -- See https://wiki.hypr.land/Configuring/Window-Rules/ for more
 local state = require("lib.state")
 
+-- no border on screenshots
+hl.layer_rule({
+  match = { namespace = "^(selection|hyprpicker)$" },
+  no_anim = true,
+})
+
 hl.window_rule({
   match = { class = "zoom" },
   float = true,

@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/common.sh" || exit 1
+
 readonly STATE_DIR="$HOME/.local/state/dotfiles/youtube-notifier"
 readonly CHANNELS="$STATE_DIR/channels"
 readonly SEEN="$STATE_DIR/seen"
@@ -83,9 +86,11 @@ watch() {
         printf '%s\n' "$id" >> "$SEEN/$ch"
         title="$(sed 's/&amp;/\&/g; s/&quot;/"/g; s/&#39;/'"'"'/g; s/&lt;/</g; s/&gt;/>/g' <<<"$title")"
         [[ "$(notify-send -i "$ICON" -a "Youtube Channels Notifier" -A watch=Watch "$author" "$title")" == watch ]] && {
-          xdg-open "https://www.youtube.com/watch?v=$id" &
-          dotfiles-entry-launch app.zen_browser.zen
-          swaync-client -t -sw
+          has xdg-open && xdg-open "https://www.youtube.com/watch?v=$id" &
+          has dotfiles-entry-launch && dotfiles-entry-launch app.zen_browser.zen || true
+          if has swaync-client; then
+            swaync-client -t -sw || true
+          fi
         }
       done
     done
@@ -109,6 +114,16 @@ stop() {
 }
 
 main() {
+  case "${1:-}" in
+    help|-h|--help)
+      help
+      exit 0
+      ;;
+  esac
+
+  require_hyprland
+  require_cmd curl notify-send
+
   mkdir -p "$SEEN"
 
   case "${1:-}" in

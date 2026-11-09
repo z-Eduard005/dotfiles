@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/common.sh" || exit 1
+
 readonly APP_DIRS=(
   "/usr/share/applications"
   "/usr/local/share/applications"
@@ -34,6 +37,8 @@ main() {
       ;;
   esac
 
+  require_hyprland
+
   [[ "${1:-}" == "--new" ]] && new=1 && shift
 
   [[ $# -eq 1 ]] && eval "set -- $1"
@@ -59,7 +64,7 @@ main() {
       [[ -z "$class" ]] && class="$name"
       [[ -z "$class" ]] && class="$bin"
 
-      if [[ "$new" -eq 0 ]]; then
+      if [[ "$new" -eq 0 ]] && has hyprctl && has jq; then
         match="$(hyprctl clients -j | jq -r ".[] | select(.class | ascii_downcase == \"${class,,}\") | .address" | head -1 || true)"
         if [[ -z "$match" ]]; then
           match="$(hyprctl clients -j | jq -r ".[] | select(.class | ascii_downcase == \"${name,,}\") | .address" | head -1 || true)"
@@ -72,7 +77,10 @@ main() {
 
       [[ ${#launch_env[@]} -gt 0 ]] && export "${launch_env[@]}"
       eval "set -- $exec_line"
-      exec uwsm app -- "$@"
+      if has uwsm; then
+        exec uwsm app -- "$@"
+      fi
+      exec "$@"
     fi
   done
 

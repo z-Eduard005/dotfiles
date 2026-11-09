@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Toggle Theme
-Exec=dotfiles-toggle-theme
+Exec=dotfiles-theme toggle
 Type=Application
 Terminal=false
 Icon=/home/eduard/.local/share/icons/toggle-theme.png

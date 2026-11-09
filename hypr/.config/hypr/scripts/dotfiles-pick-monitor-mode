@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/common.sh" || exit 1
+
 readonly LOCK_FILE="$HOME/.local/state/dotfiles/hypr/pick-monitor-mode.lock"
 readonly BOLD=$'\033[1m'
 readonly RESET=$'\033[0m'
@@ -44,6 +47,10 @@ main() {
         ;;
     esac
   fi
+
+  require_hyprland
+
+  require_cmd kitty fzf
 
   exec 9>"$LOCK_FILE"
   flock -n 9 || exit 0

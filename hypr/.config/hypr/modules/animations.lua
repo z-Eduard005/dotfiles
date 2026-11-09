@@ -31,119 +31,120 @@ hl.curve("easeInOutQuint", { type = "bezier", points = { { 0.83, 0 }, { 0.17, 1 
 hl.curve("easeInOutExpo", { type = "bezier", points = { { 0.87, 0 }, { 0.13, 1 } } })
 hl.curve("easeInOutCirc", { type = "bezier", points = { { 0.85, 0 }, { 0.15, 1 } } })
 hl.curve("easeInOutBack", { type = "bezier", points = { { 0.68, -0.6 }, { 0.32, 1.6 } } })
+
 hl.animation({
-    leaf = "windows",
-    enabled = true,
-    speed = 7,
-    bezier = "easeInOutQuint",
+  leaf = "windows",
+  enabled = true,
+  speed = 7,
+  bezier = "easeInOutQuint",
 })
 hl.animation({
-    leaf = "windowsIn",
-    enabled = true,
-    speed = 3,
-    bezier = "smoothIn",
+  leaf = "windowsIn",
+  enabled = true,
+  speed = 3,
+  bezier = "smoothIn",
 })
 hl.animation({
-    leaf = "windowsOut",
-    enabled = true,
-    speed = 3,
-    bezier = "easeOutQuint",
+  leaf = "windowsOut",
+  enabled = true,
+  speed = 3,
+  bezier = "easeOutQuint",
 })
 hl.animation({
-    leaf = "windowsMove",
-    enabled = true,
-    speed = 4,
-    bezier = "softSnap",
+  leaf = "windowsMove",
+  enabled = true,
+  speed = 4,
+  bezier = "softSnap",
 })
 hl.animation({
-    leaf = "layers",
-    enabled = true,
-    speed = 5,
-    bezier = "easeInQuint",
-    style = "popin 75%",
+  leaf = "layers",
+  enabled = true,
+  speed = 5,
+  bezier = "easeInQuint",
+  style = "popin 75%",
 })
 hl.animation({
-    leaf = "layersIn",
-    enabled = true,
-    speed = 5,
-    bezier = "easeInQuint",
+  leaf = "layersIn",
+  enabled = true,
+  speed = 5,
+  bezier = "easeInQuint",
 })
 hl.animation({
-    leaf = "layersOut",
-    enabled = true,
-    speed = 7,
-    bezier = "easeInQuint",
+  leaf = "layersOut",
+  enabled = true,
+  speed = 7,
+  bezier = "easeInQuint",
 })
 hl.animation({
-    leaf = "border",
-    enabled = true,
-    speed = 7,
-    bezier = "easeOutQuint",
+  leaf = "border",
+  enabled = true,
+  speed = 7,
+  bezier = "easeOutQuint",
 })
 hl.animation({
-    leaf = "borderangle",
-    enabled = true,
-    speed = 15,
-    bezier = "easeOutBack",
+  leaf = "borderangle",
+  enabled = true,
+  speed = 15,
+  bezier = "easeOutBack",
 })
 hl.animation({
-    leaf = "workspaces",
-    enabled = true,
-    speed = 7,
-    bezier = "easeOutQuint",
-    style = "slidefade 10%",
+  leaf = "workspaces",
+  enabled = true,
+  speed = 7,
+  bezier = "easeOutQuint",
+  style = "slidefade 10%",
 })
 hl.animation({
-    leaf = "workspacesIn",
-    enabled = true,
-    speed = 5,
-    bezier = "easeOutQuint",
-    style = "slidefade 10%",
+  leaf = "workspacesIn",
+  enabled = true,
+  speed = 5,
+  bezier = "easeOutQuint",
+  style = "slidefade 10%",
 })
 hl.animation({
-    leaf = "workspacesOut",
-    enabled = true,
-    speed = 3,
-    bezier = "easeOutQuint",
-    style = "slidefade 10%",
+  leaf = "workspacesOut",
+  enabled = true,
+  speed = 3,
+  bezier = "easeOutQuint",
+  style = "slidefade 10%",
 })
 hl.animation({
-    leaf = "specialWorkspace",
-    enabled = true,
-    speed = 7,
-    bezier = "easeOutQuint",
-    style = "slidefadevert -10%",
+  leaf = "specialWorkspace",
+  enabled = true,
+  speed = 7,
+  bezier = "easeOutQuint",
+  style = "slidefadevert -10%",
 })
 hl.animation({
-    leaf = "specialWorkspaceIn",
-    enabled = true,
-    speed = 7,
-    bezier = "easeOutQuint",
-    style = "slidefadevert -10%",
+  leaf = "specialWorkspaceIn",
+  enabled = true,
+  speed = 7,
+  bezier = "easeOutQuint",
+  style = "slidefadevert -10%",
 })
 hl.animation({
-    leaf = "specialWorkspaceOut",
-    enabled = true,
-    speed = 7,
-    bezier = "easeOutQuint",
-    style = "slidefadevert -10%",
-})
-hl.config({
-    animations = {
-        enabled = not state.zen,
-        -- ease in
-        -- ease out
-        -- ease in-out
-        ---------------------------------------------------------------------------
-        -- animation = fade                , 1 , 5 , easeOutQuint
-        -- animation = fadeIn              , 1 , 5 , easeOutQuint
-        -- animation = fadeOut             , 1 , 7 , easeOutQuint
-        -- animation = fadeSwitch          , 0
-        -- animation = fadeShadow          , 1 , 5 , easeInOutQuint
-        -- animation = fadeDim             , 1 , 7 , easeInOutQuint
-        -- animation = fadeLayers          , 1 , 5 , easeOutQuint
-        -- animation = fadeLayersIn        , 1 , 5 , easeOutQuint
-        -- animation = fadeLayersOut       , 1 , 7 , easeOutQuint
-    },
+  leaf = "specialWorkspaceOut",
+  enabled = true,
+  speed = 7,
+  bezier = "easeOutQuint",
+  style = "slidefadevert -10%",
 })
 
+hl.config({
+  animations = {
+    enabled = not state.zen,
+    -- ease in
+    -- ease out
+    -- ease in-out
+    ---------------------------------------------------------------------------
+    -- animation = fade                , 1 , 5 , easeOutQuint
+    -- animation = fadeIn              , 1 , 5 , easeOutQuint
+    -- animation = fadeOut             , 1 , 7 , easeOutQuint
+    -- animation = fadeSwitch          , 0
+    -- animation = fadeShadow          , 1 , 5 , easeInOutQuint
+    -- animation = fadeDim             , 1 , 7 , easeInOutQuint
+    -- animation = fadeLayers          , 1 , 5 , easeOutQuint
+    -- animation = fadeLayersIn        , 1 , 5 , easeOutQuint
+    -- animation = fadeLayersOut       , 1 , 7 , easeOutQuint
+  },
+})

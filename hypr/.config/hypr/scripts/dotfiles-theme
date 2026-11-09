@@ -1,0 +1,178 @@
+#!/bin/bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/common.sh" || exit 1
+
+readonly ACCENT_DIR="$HOME/dotfiles/accent-styles-css/.config/accent-styles-css"
+readonly WAYBAR_DIR="$HOME/dotfiles/waybar/.config/waybar"
+readonly DRAWER_CSS="$HOME/dotfiles/nwg-drawer/.config/nwg-drawer/drawer.css"
+readonly KITTY_DIR="$HOME/dotfiles/kitty/.config/kitty"
+readonly VICINAE_THEME="$HOME/dotfiles/vicinae/.local/share/vicinae/themes/adwaita-dynamic.toml"
+readonly BOLD=$'\033[1m'
+readonly RESET=$'\033[0m'
+
+usage() {
+  cat <<EOF
+${BOLD}$(basename "$0")${RESET} - toggle the desktop between dark and light theme.
+
+usage: ${BOLD}$(basename "$0")${RESET} <command>
+
+commands:
+  ${BOLD}toggle${RESET}   toggle between dark and light
+  ${BOLD}get${RESET}      print the current theme (dark or light)
+  ${BOLD}help${RESET}     show this help
+EOF
+}
+
+set_kitty_keys() {
+  local file="$1" value="$2" key
+  shift 2
+  [[ -f "$file" ]] || return 0
+  for key in "$@"; do
+    if grep -q "^$key " "$file" 2>/dev/null; then
+      sed -i "s/^\($key \+\).*/\1${value}/" "$file" 2>/dev/null || true
+    else
+      printf '%s %s\n' "$key" "$value" >> "$file" 2>/dev/null || true
+    fi
+  done
+}
+
+set_toml() {
+  local file="$1" section="$2" key="$3" value="$4"
+  [[ -f "$file" ]] || return 0
+  if grep -q "^$key = " "$file" 2>/dev/null; then
+    sed -i "s/^\($key = \).*/\1\"$value\"/" "$file" 2>/dev/null || true
+  elif grep -q "^\[$section\]$" "$file" 2>/dev/null; then
+    sed -i "/^\[$section\]$/a $key = \"$value\"" "$file" 2>/dev/null || true
+  else
+    { printf '\n[%s]\n%s = "%s"\n' "$section" "$key" "$value" >> "$file" 2>/dev/null; } || true
+  fi
+}
+
+theme_now() {
+  local current
+  current="$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null || true)"
+  if [[ "$current" == "'prefer-dark'" ]]; then
+    printf 'dark\n'
+  else
+    printf 'light\n'
+  fi
+}
+
+toggle_theme() {
+  if [[ "$(theme_now)" == "dark" ]]; then
+    printf 'light'
+  else
+    printf 'dark'
+  fi
+}
+
+cmd_get() {
+  require_cmd gsettings
+  theme_now
+}
+
+cmd_toggle() {
+  require_cmd gsettings
+
+  local theme
+  theme="$(toggle_theme)"
+
+  # gsettings
+  gsettings set org.gnome.desktop.interface color-scheme "prefer-$theme"
+
+  # waybar & swaync
+  ln -sfn "colors-$theme.css" "$ACCENT_DIR/colors/colors-active.css"
+  ln -sfn "icons-$theme" "$WAYBAR_DIR/assets/icons-active"
+  if has waybar; then
+    systemctl --user restart waybar.service 2>/dev/null || true
+  fi
+  if has swaync-client; then
+    swaync-client --reload-css >/dev/null 2>&1 || true
+  fi
+
+  # nwg-drawer
+  if has nwg-drawer; then
+    local d_bg d_fg
+    d_bg="alpha(#222226, 0.95)"
+    d_fg="#eeeeee"
+
+    if [[ "$theme" == "dark" ]]; then
+      d_bg="alpha(#222226, 0.95)"
+      d_fg="#eeeeee"
+    else
+      d_bg="alpha(#ebebed, 0.95)"
+      d_fg="#2f2f34"
+    fi
+    if [[ -f "$DRAWER_CSS" ]]; then
+      sed -i "/^window {/,/^}/ s/^\( *background-color: \).*/\1${d_bg};/" "$DRAWER_CSS" 2>/dev/null || true
+      sed -i "/^label {/,/^}/ s/^\( *color: \).*/\1${d_fg};/" "$DRAWER_CSS" 2>/dev/null || true
+      grep -qF "background-color: ${d_bg};" "$DRAWER_CSS" 2>/dev/null || printf '\nwindow {\n  background-color: %s;\n}\n' "$d_bg" >> "$DRAWER_CSS" 2>/dev/null || true
+      grep -qF "color: ${d_fg};" "$DRAWER_CSS" 2>/dev/null || printf '\nlabel {\n  color: %s;\n}\n' "$d_fg" >> "$DRAWER_CSS" 2>/dev/null || true
+    fi
+  fi
+
+  # kitty
+  if has kitty; then
+    set_kitty_keys "$KITTY_DIR/dark-theme.auto.conf" "#222226" background selection_foreground
+    set_kitty_keys "$KITTY_DIR/light-theme.auto.conf" "#eeeeee" selection_foreground
+    set_kitty_keys "$KITTY_DIR/light-theme.auto.conf" "#222226" active_tab_foreground foreground
+  fi
+
+  # vicinae
+  if has vicinae; then
+    local v_variant v_inherits v_bg v_fg
+    v_variant="dark"
+    v_inherits="vicinae-dark"
+    v_bg="#222226"
+    v_fg="#eeeeee"
+
+    if [[ "$theme" == "dark" ]]; then
+      v_variant="dark"
+      v_inherits="vicinae-dark"
+      v_bg="#222226"
+      v_fg="#ebebed"
+    else
+      v_variant="light"
+      v_inherits="vicinae-light"
+      v_bg="#ebebed"
+      v_fg="#222226"
+    fi
+    set_toml "$VICINAE_THEME" "meta" "variant" "$v_variant"
+    set_toml "$VICINAE_THEME" "meta" "inherits" "$v_inherits"
+    set_toml "$VICINAE_THEME" "colors.core" "background" "$v_bg"
+    set_toml "$VICINAE_THEME" "colors.core" "foreground" "$v_fg"
+    vicinae theme set adwaita-dynamic 2>/dev/null || true
+  fi
+
+  # hyprtoolkit
+}
+
+main() {
+  case "${1:-}" in
+    help|-h|--help)
+      usage
+      exit 0
+      ;;
+  esac
+
+  require_hyprland
+
+  case "${1:-}" in
+    toggle)
+      [[ $# -eq 1 ]] || { usage >&2; exit 1; }
+      cmd_toggle
+      ;;
+    get)
+      [[ $# -eq 1 ]] || { usage >&2; exit 1; }
+      cmd_get
+      ;;
+    *)
+      usage >&2
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

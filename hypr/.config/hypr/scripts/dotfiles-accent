@@ -1,8 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/common.sh" || exit 1
+
 readonly THEME_DIR="$HOME/dotfiles/accent-styles-css/.config/accent-styles-css"
 readonly ACCENT_STATE="$HOME/.local/state/dotfiles/hypr/accent"
+readonly ACCENT_MAP="$HOME/.local/state/dotfiles/hypr/wallpaper-accent-map.txt"
 readonly BOLD=$'\033[1m'
 readonly RESET=$'\033[0m'
 
@@ -72,20 +76,26 @@ oklab() {
 
 cmd_switch() {
   local accent="$1"
-  local css="$THEME_DIR/accents/accent-$accent.css"
-  [[ -f "$css" ]] || { usage >&2; exit 2; }
-
   local hex
   hex="$(hex_for "$accent")" || { usage >&2; exit 2; }
 
+  local css="$THEME_DIR/accents/accent-$accent.css"
+  [[ -f "$css" ]] || { usage >&2; exit 2; }
+
   # gsettings & gtk
-  gsettings set org.gnome.desktop.interface accent-color "$accent"
-  systemctl --user restart xdg-desktop-portal-gtk.service
+  if has gsettings; then
+    gsettings set org.gnome.desktop.interface accent-color "$accent"
+  fi
+  systemctl --user restart xdg-desktop-portal-gtk.service 2>/dev/null || true
 
   # waybar & swaync
   ln -sfn "accent-$accent.css" "$THEME_DIR/accents/accent-active.css"
-  systemctl --user restart waybar.service
-  swaync-client --reload-css >/dev/null
+  if has waybar; then
+    systemctl --user restart waybar.service 2>/dev/null || true
+  fi
+  if has swaync-client; then
+    swaync-client --reload-css >/dev/null 2>&1 || true
+  fi
 
   # hyprland window border
   local border="${hex#\#}"
@@ -103,46 +113,48 @@ cmd_switch() {
   fi
 
   # kitty
-  if [[ -n "$hex" ]]; then
+  if has kitty && [[ -n "$hex" ]]; then
     set_kitty_keys "$HOME/dotfiles/kitty/.config/kitty/dark-theme.auto.conf" "$hex" cursor color6 selection_background active_tab_background
     set_kitty_keys "$HOME/dotfiles/kitty/.config/kitty/light-theme.auto.conf" "$hex" cursor color6 selection_background active_tab_background
   fi
 
   # kitty workaround: dark theme does not update accent
-  if [[ "$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null)" == "'prefer-dark'" ]]; then
+  if [[ "$(dotfiles-theme get 2>/dev/null || true)" == "dark" ]]; then
     gsettings set org.gnome.desktop.interface color-scheme "prefer-light" 2>/dev/null || true
     sleep 0.1 2>/dev/null || true
     gsettings set org.gnome.desktop.interface color-scheme "prefer-dark" 2>/dev/null || true
   fi
 
   # vicinae
-  local vicinae_theme="$HOME/dotfiles/vicinae/.local/share/vicinae/themes/adwaita-dynamic.toml"
-  local vicinae_settings="$HOME/dotfiles/vicinae/.config/vicinae/settings.json"
-  local icon="Adwaita-$accent"
+  if has vicinae; then
+    local vicinae_theme="$HOME/dotfiles/vicinae/.local/share/vicinae/themes/adwaita-dynamic.toml"
+    local vicinae_settings="$HOME/dotfiles/vicinae/.config/vicinae/settings.json"
+    local icon="Adwaita-$accent"
 
-  if [[ -n "$hex" ]]; then
-    toml_set "$vicinae_theme" "colors.core" "accent" "$hex"
+    if [[ -n "$hex" ]]; then
+      toml_set "$vicinae_theme" "colors.core" "accent" "$hex"
 
-    if [[ -f "$vicinae_settings" ]] && [[ -w "$vicinae_settings" ]] && command -v jq >/dev/null 2>&1; then
-      local jq_dir
-      jq_dir="$(mktemp -d 2>/dev/null)" || jq_dir=""
-      if [[ -n "$jq_dir" ]]; then
-        local first
-        first="$(grep -n -m1 '^{' "$vicinae_settings" 2>/dev/null | cut -d: -f1)"
-        if [[ -n "$first" ]] \
-          && head -n $((first - 1)) "$vicinae_settings" > "$jq_dir/head" 2>/dev/null \
-          && tail -n +"$first" "$vicinae_settings" 2>/dev/null | jq --arg icon "$icon" '.theme.dark.icon_theme = $icon | .theme.light.icon_theme = $icon | .theme.dark.name //= "adwaita-dynamic" | .theme.light.name //= "adwaita-dynamic"' > "$jq_dir/body" 2>/dev/null \
-          && [[ -s "$jq_dir/body" ]] \
-          && cat "$jq_dir/head" "$jq_dir/body" > "$jq_dir/full" 2>/dev/null \
-          && ! cmp -s "$jq_dir/full" "$vicinae_settings" 2>/dev/null \
-          && cat "$jq_dir/full" > "$vicinae_settings" 2>/dev/null; then
-          : # settings updated (header comments preserved, write only on change)
+      if [[ -f "$vicinae_settings" ]] && [[ -w "$vicinae_settings" ]] && has jq; then
+        local jq_dir
+        jq_dir="$(mktemp -d 2>/dev/null)" || jq_dir=""
+        if [[ -n "$jq_dir" ]]; then
+          local first
+          first="$(grep -n -m1 '^{' "$vicinae_settings" 2>/dev/null | cut -d: -f1)"
+          if [[ -n "$first" ]] \
+            && head -n $((first - 1)) "$vicinae_settings" > "$jq_dir/head" 2>/dev/null \
+            && tail -n +"$first" "$vicinae_settings" 2>/dev/null | jq --arg icon "$icon" '.theme.dark.icon_theme = $icon | .theme.light.icon_theme = $icon | .theme.dark.name //= "adwaita-dynamic" | .theme.light.name //= "adwaita-dynamic"' > "$jq_dir/body" 2>/dev/null \
+            && [[ -s "$jq_dir/body" ]] \
+            && cat "$jq_dir/head" "$jq_dir/body" > "$jq_dir/full" 2>/dev/null \
+            && ! cmp -s "$jq_dir/full" "$vicinae_settings" 2>/dev/null \
+            && cat "$jq_dir/full" > "$vicinae_settings" 2>/dev/null; then
+            : # settings updated (header comments preserved, write only on change)
+          fi
+          rm -rf "$jq_dir" 2>/dev/null || true
         fi
-        rm -rf "$jq_dir" 2>/dev/null || true
       fi
     fi
+    vicinae theme set adwaita-dynamic 2>/dev/null || true
   fi
-  vicinae theme set adwaita-dynamic 2>/dev/null || true
 
   # hyprlock
   local lock_conf="$HOME/dotfiles/hypr/.config/hypr/hyprlock.conf"
@@ -167,18 +179,29 @@ cmd_switch() {
 
 cmd_get() {
   local name hex
-  name="$(gsettings get org.gnome.desktop.interface accent-color 2>/dev/null | tr -d "\47" || true)"
-  hex="${ACCENT_HEX[$name]:-}"
+  name="$(gsettings get org.gnome.desktop.interface accent-color 2>/dev/null || true)"
+  name="${name//\'/}"
+  hex=""
+  if [[ -n "$name" ]]; then
+    hex="${ACCENT_HEX[$name]:-}"
+  fi
   printf '%s\n' "${hex:-#6f8396}"
+}
+
+wallpaper_image() {
+  awww query 2>/dev/null | grep -oP 'image: \K.*' | head -1 || true
 }
 
 cmd_wallpaper_extract() {
   local img
-  img="$(awww query | grep -oP 'image: \K.*' | head -1)"
+  require_cmd awww matugen magick
+
+  img="$(wallpaper_image)"
 
   [[ -n "$img" ]] || { printf 'no wallpaper found\n' >&2; printf 'slate\n'; exit 0; }
 
-  local map="$HOME/.config/wallpaper-accent-map.txt"
+  local map="$ACCENT_MAP"
+  mkdir -p "$(dirname "$map")"
   [[ -f "$map" ]] || : > "$map" 2>/dev/null || true
 
   if [[ -f "$map" ]]; then
@@ -301,6 +324,15 @@ cmd_wallpaper_extract() {
 
 main() {
   case "${1:-}" in
+    help|-h|--help)
+      usage
+      exit 0
+      ;;
+  esac
+
+  require_hyprland
+
+  case "${1:-}" in
     switch)
       shift
       [[ $# -eq 1 ]] || { usage >&2; exit 2; }
@@ -313,9 +345,6 @@ main() {
     wallpaper-extract)
       [[ $# -eq 1 ]] || { usage >&2; exit 2; }
       cmd_wallpaper_extract
-      ;;
-    help|-h|--help)
-      usage
       ;;
     *)
       usage >&2
