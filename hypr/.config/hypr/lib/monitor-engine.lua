@@ -23,7 +23,7 @@
 --
 -- State (all files optional, created on demand):
 --   monitors-layout.lua   layout currently applied (mirrors what the scripts used to write)
---   monitor-modes         picker menu, one "N) label" line per entry
+--   monitor-modes         picker menu, one label per line (active one marked)
 --   monitor-docked        "yes"/"no", last seen external monitor state
 
 local M = {}
@@ -71,18 +71,15 @@ end
 
 local function apply_specs(specs)
   -- Enable outputs before disabling any, so we never blank the only screen.
-  local ordered = {}
+  local enabled, disabled = {}, {}
   for _, spec in ipairs(specs) do
-    if not spec.disabled then
-      ordered[#ordered + 1] = spec
-    end
+    local target = spec.disabled and disabled or enabled
+    target[#target + 1] = spec
   end
-  for _, spec in ipairs(specs) do
-    if spec.disabled then
-      ordered[#ordered + 1] = spec
-    end
+  for _, spec in ipairs(enabled) do
+    hl.monitor(spec)
   end
-  for _, spec in ipairs(ordered) do
+  for _, spec in ipairs(disabled) do
     hl.monitor(spec)
   end
 end
@@ -136,11 +133,15 @@ function M.setup(config)
   end
 
   local function notify(message)
-    if message then
-      local app_arg = "-a " .. shell_quote(notify_app) .. " "
-      local icon_arg = icon and ("-i " .. shell_quote(icon) .. " ") or ""
-      hl.exec_cmd("notify-send " .. app_arg .. icon_arg .. shell_quote(notify_title) .. " " .. shell_quote(message))
+    if not message then
+      return
     end
+    hl.exec_cmd(
+      "notify-send -a " .. shell_quote(notify_app) ..
+      " -i " .. shell_quote(icon) ..
+      " " .. shell_quote(notify_title) ..
+      " " .. shell_quote(message)
+    )
   end
 
   -- Resolve one group+variant into a full HL.MonitorSpec. The connector lives
@@ -181,7 +182,8 @@ function M.setup(config)
     return true
   end
 
-  -- Build a label from the group name and its variant.
+  -- Build a label from the configured group names and variants, e.g.
+  -- "Laptop off + Monitor 2560x1440@75". Modes are shown as configured.
   local function label_for(step)
     local parts = {}
     for _, layer in ipairs(layers) do
@@ -191,12 +193,27 @@ function M.setup(config)
         local name = group.name or group.output
         if spec.disabled then
           parts[#parts + 1] = name .. " off"
+        elseif spec.mode then
+          parts[#parts + 1] = name .. " " .. spec.mode
         else
-          parts[#parts + 1] = name .. " " .. (spec.mode or "")
+          parts[#parts + 1] = name
         end
       end
     end
     return table.concat(parts, " + ")
+  end
+
+  -- Rewrite the picker menu so the script never has to know the modes.
+  local function write_menu()
+    local lines = {}
+    for _, mode in ipairs(modes) do
+      local marker = "○ "
+      if active_specs and specs_equal(specs_for(mode), active_specs) then
+        marker = "● "
+      end
+      lines[#lines + 1] = marker .. label_for(mode)
+    end
+    write_file(state_dir .. "monitor-modes", #lines > 0 and (table.concat(lines, "\n") .. "\n") or "")
   end
 
   -- Apply a step and persist it, without notifying.
@@ -211,6 +228,7 @@ function M.setup(config)
     save_layout(specs)
     apply_specs(specs)
     active_specs = specs
+    write_menu()
     return true
   end
 
@@ -225,54 +243,41 @@ function M.setup(config)
     end
   end
 
-  -- Rewrite the picker menu so the script never has to know the modes.
-  local function write_menu()
-    local lines = {}
-    for index, mode in ipairs(modes) do
-      lines[#lines + 1] = string.format("%d) %s", index, label_for(mode))
-    end
-    write_file(state_dir .. "monitor-modes", #lines > 0 and (table.concat(lines, "\n") .. "\n") or "")
-  end
-
-  local function external_connected()
-    local connector = external
-    if connector then
-      local family = connector:gsub("%-%d+$", "")
-      for card = 0, 9 do
-        local status = read_file(string.format("/sys/class/drm/card%d-%s/status", card, connector))
-        if status and status:match("^connected") then
-          return true
-        end
-      end
-      for _, monitor in ipairs(hl.get_monitors()) do
-        local name = monitor.name
-        if name and name:match("^" .. family) then
-          return true
-        end
-      end
-      return false
-    end
+  local function monitor_matches(pattern)
     for _, monitor in ipairs(hl.get_monitors()) do
-      local name = monitor.name
-      if name and name:match("^HDMI") then
+      if monitor.name and monitor.name:match(pattern) then
         return true
       end
     end
     return false
   end
 
-  local function dock()
-    local step = config.dock or {}
+  local function external_connected()
+    if not external then
+      return monitor_matches("^HDMI")
+    end
+    for card = 0, 9 do
+      local status = read_file(string.format("/sys/class/drm/card%d-%s/status", card, external))
+      if status and status:match("^connected") then
+        return true
+      end
+    end
+    return monitor_matches("^" .. external:gsub("%-%d+$", ""))
+  end
+
+  -- Apply a dock/undock step and refresh the bar.
+  local function switch_to(step)
     apply_step(step)
     hl.exec_cmd(waybar_cmd)
     notify(label_for(step))
   end
 
+  local function dock()
+    switch_to(config.dock or {})
+  end
+
   local function undock()
-    local step = config.undock or {}
-    apply_step(step)
-    hl.exec_cmd(waybar_cmd)
-    notify(label_for(step))
+    switch_to(config.undock or {})
   end
 
   local function sync_dock()
@@ -289,31 +294,33 @@ function M.setup(config)
     end
   end
 
-  -- apply defaults, saved layout, then reconcile
+  -- Re-apply the saved layout, if any, so `active_specs` reflects reality.
+  local function load_saved_layout()
+    local text = read_file(layout_file)
+    if not text then
+      return
+    end
+    local chunk = load(text, "@" .. layout_file, "t", {})
+    local ok, specs = pcall(chunk)
+    if not ok or type(specs) ~= "table" then
+      return
+    end
+    local applied = {}
+    for _, spec in ipairs(specs) do
+      if type(spec) == "table" and spec.output then
+        hl.monitor(spec)
+        applied[#applied + 1] = spec
+      end
+    end
+    if #applied > 0 then
+      active_specs = applied
+    end
+  end
 
   for _, spec in ipairs(config.defaults or {}) do
     hl.monitor(spec)
   end
-
-  do
-    local text = read_file(layout_file)
-    if text then
-      local chunk = load(text, "@" .. layout_file, "t", {})
-      local ok, specs = pcall(chunk)
-      if ok and type(specs) == "table" then
-        local applied = {}
-        for _, spec in ipairs(specs) do
-          if type(spec) == "table" and spec.output then
-            hl.monitor(spec)
-            applied[#applied + 1] = spec
-          end
-        end
-        if #applied > 0 then
-          active_specs = applied
-        end
-      end
-    end
-  end
+  load_saved_layout()
 
   sync_dock()
   write_menu()

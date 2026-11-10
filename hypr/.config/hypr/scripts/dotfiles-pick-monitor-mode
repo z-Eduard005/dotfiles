@@ -4,24 +4,11 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib/common.sh" || exit 1
 
-readonly LOCK_FILE="$HOME/.local/state/dotfiles/hypr/pick-monitor-mode.lock"
+readonly MENU="$HOME/.local/state/dotfiles/hypr/monitor-modes"
+readonly CONFIG="$HOME/.config/hypr/modules/monitors.lua"
+readonly EDITOR_ACTION="⚙ Edit monitor modes…"
 readonly BOLD=$'\033[1m'
 readonly RESET=$'\033[0m'
-readonly PICKER_SCRIPT='
-  MENU="$HOME/.local/state/dotfiles/hypr/monitor-modes"
-  n=0
-  binds=""
-  while IFS= read -r _; do
-    n=$((n + 1))
-    [ "$n" -le 9 ] && binds+="${n}:pos(${n})+accept,"
-  done < "$MENU"
-  [ "$n" -gt 0 ] || exit 0
-  accent=$(dotfiles-accent get)
-  choice=$(fzf --header="Select Monitor Mode:" --color="pointer:${accent}" --cycle --height=100% --reverse --no-sort --no-input --disabled --bind "${binds%,}" < "$MENU") || exit 0
-  [ -n "$choice" ] || exit 0
-  index=${choice%%)*}
-  hyprctl eval "require(\"modules.monitors\").apply($index)"
-'
 
 usage() {
   cat <<EOF
@@ -29,33 +16,57 @@ ${BOLD}$(basename "$0")${RESET} - pick a monitor layout from a menu.
 
 usage: ${BOLD}$(basename "$0")${RESET}
 
-Opens an fzf picker with the available monitor modes and applies the selection.
+Opens a vicinae picker with the available monitor modes and applies the selection.
   ${BOLD}-h${RESET}, ${BOLD}--help${RESET}, ${BOLD}help${RESET}   show this help
 EOF
 }
 
-main() {
-  if [[ $# -gt 0 ]]; then
-    case "$1" in
-      -h|--help|help)
-        usage
-        exit 0
-        ;;
-      *)
-        usage >&2
-        exit 1
-        ;;
-    esac
+reap_stale_picker() {
+  pgrep -f '^vicinae dmenu ' >/dev/null 2>&1 || return 0
+  if vicinae state open >/dev/null 2>&1; then
+    return 1
   fi
+  pkill -f '^vicinae dmenu ' 2>/dev/null || true
+}
+
+main() {
+  case "${1:-}" in
+    -h|--help|help)
+      usage
+      exit 0
+      ;;
+    "")
+      ;;
+    *)
+      usage >&2
+      exit 1
+      ;;
+  esac
 
   require_hyprland
+  require_cmd vicinae pgrep pkill
 
-  require_cmd kitty fzf
+  [[ -s "$MENU" ]] || exit 0
 
-  exec 9>"$LOCK_FILE"
-  flock -n 9 || exit 0
+  reap_stale_picker || exit 0
 
-  kitty --class pick-monitor-mode -o font_size=22 /bin/bash -lc "$PICKER_SCRIPT"
+  local lines choice
+  lines="$(grep -c '' "$MENU")"
+
+  choice="$( { cat "$MENU"; printf '%s\n' "$EDITOR_ACTION"; } |
+    vicinae dmenu -f index \
+      -p "Choose a layout…" \
+      -W 640 -H 400 \
+      --no-footer \
+      --no-section )" || exit 0
+  [[ "$choice" =~ ^[0-9]+$ ]] || exit 0
+
+  if ((choice == lines)); then
+    require_cmd gnome-text-editor
+    exec gnome-text-editor -s "$CONFIG"
+  fi
+
+  hyprctl eval "require(\"modules.monitors\").apply($((choice + 1)))"
 }
 
 main "$@"
