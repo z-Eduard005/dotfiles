@@ -6,14 +6,19 @@ source "$SCRIPT_DIR/lib/common.sh" || exit 1
 
 readonly STATE_DIR="$HOME/.local/state/dotfiles/hypr"
 readonly SHOT_DIR="$HOME/Pictures/Screenshots"
+readonly REGION_FILE="$STATE_DIR/screenshot-region"
 readonly BOLD=$'\033[1m'
 readonly RESET=$'\033[0m'
 
 usage() {
   cat <<EOF
-${BOLD}$(basename "$0")${RESET} - take a screenshot of a selected region and copy it to the clipboard.
+${BOLD}$(basename "$0")${RESET} - take a screenshot and copy it to the clipboard.
 
-usage: ${BOLD}$(basename "$0")${RESET}
+usage: ${BOLD}$(basename "$0")${RESET} [${BOLD}region${RESET}|${BOLD}last-region${RESET}]
+
+  ${BOLD}region${RESET}        select a region to capture
+  ${BOLD}last-region${RESET}   reuse the last selected region, or capture the full screen if none
+  ${BOLD}-h${RESET}, ${BOLD}--help${RESET}    show this help
 EOF
 }
 
@@ -47,9 +52,23 @@ cleanup() {
   fi
 }
 
-take_screenshot() {
-  local filename geometry
+notify_saved() {
+  has notify-send || return 0
+  notify-send -a "Screenshot" -i "$1" "Screenshot taken" "$SHOT_DIR"
+}
 
+# Print the geometry of the last region screenshot, or fail if there is none.
+last_geometry() {
+  local geometry
+  [[ -s "$REGION_FILE" ]] || return 1
+  IFS= read -r geometry < "$REGION_FILE" || true
+  [[ "$geometry" =~ ^[0-9]+,[0-9]+[[:space:]][0-9]+x[0-9]+$ ]] || return 1
+  printf '%s\n' "$geometry"
+}
+
+take_screenshot() {
+  local mode="$1"
+  local filename geometry=""
   require_cmd hyprpicker slurp grim wl-copy
 
   mkdir -p "$STATE_DIR"
@@ -61,44 +80,63 @@ take_screenshot() {
 
   trap cleanup EXIT INT TERM
 
-  hyprpicker -r -z >/dev/null 2>&1 &
-  FREEZE_PID=$!
-  sleep 0.2
+  if [[ "$mode" == region ]]; then
+    hyprpicker -r -z >/dev/null 2>&1 &
+    FREEZE_PID=$!
+    sleep 0.2
 
-  geometry="$(slurp -d)" || exit 0
-  [[ -n "$geometry" ]] || exit 0
+    geometry="$(slurp -d)" || exit 0
+    [[ -n "$geometry" ]] || exit 0
+  else
+    geometry="$(last_geometry)" || geometry=""
+  fi
 
   use_hardware_cursor
-  grim -g "$geometry" "$filename"
+  if [[ -n "$geometry" ]]; then
+    grim -g "$geometry" "$filename"
+  else
+    grim "$filename"
+  fi
   restore_cursor
 
   kill "$FREEZE_PID" 2>/dev/null || true
   FREEZE_PID=""
+
+  if [[ "$mode" == region ]]; then
+    printf '%s\n' "$geometry" > "$REGION_FILE"
+  fi
 
   # Release the lock before wl-copy: it forks a background daemon to serve
   # the clipboard, and an inherited lock fd would block all future runs.
   exec 9>&-
 
   wl-copy --type image/png < "$filename"
+  notify_saved "$filename"
 }
 
 main() {
-  if [[ $# -gt 0 ]]; then
-    case "$1" in
-      -h|--help|help)
-        usage
-        exit 0
-        ;;
-      *)
-        usage >&2
-        exit 1
-        ;;
-    esac
-  fi
+  local mode
+
+  case "${1:-}" in
+    ""|-h|--help|help)
+      usage
+      exit 0
+      ;;
+    region)
+      mode=region
+      ;;
+    last-region)
+      mode=last-region
+      ;;
+    *)
+      usage >&2
+      exit 1
+      ;;
+  esac
 
   require_hyprland
 
-  take_screenshot
+  take_screenshot "$mode"
 }
 
 main "$@"
