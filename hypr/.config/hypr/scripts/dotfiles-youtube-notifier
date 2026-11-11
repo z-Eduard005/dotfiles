@@ -87,7 +87,7 @@ watch() {
         title="$(sed 's/&amp;/\&/g; s/&quot;/"/g; s/&#39;/'"'"'/g; s/&lt;/</g; s/&gt;/>/g' <<<"$title")"
         [[ "$(notify-send -i "$ICON" -a "Youtube Channels Notifier" -A watch=Watch "$author" "$title")" == watch ]] && {
           has xdg-open && xdg-open "https://www.youtube.com/watch?v=$id" &
-          has dotfiles-entry-launch && dotfiles-entry-launch app.zen_browser.zen || true
+          has hyprctl && hyprctl dispatch 'hl.dsp.focus({ window = "class:app.zen_browser.zen" })' || true
           if has swaync-client; then
             swaync-client -t -sw || true
           fi
