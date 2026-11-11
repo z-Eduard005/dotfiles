@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Keybind Cheatsheet
+Exec=dotfiles-settings cheatsheet
+Type=Application
+Terminal=false
+Icon=cheatsheet
+Categories=Application;

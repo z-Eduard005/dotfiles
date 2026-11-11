@@ -1,7 +1,6 @@
 #!/bin/bash
-# Shared helpers for the Hyprland dotfiles scripts.
+# Shared helpers for the dotfiles scripts.
 
-# has <command> - succeed when the command is installed.
 has() {
   command -v "$1" >/dev/null 2>&1
 }
@@ -11,7 +10,6 @@ die() {
   exit 1
 }
 
-# require_cmd <command>... - abort when any required command is missing.
 require_cmd() {
   local cmd
   local -a missing=()
@@ -33,4 +31,12 @@ require_hyprland() {
   is_hyprland && return 0
   printf '%s only works under Hyprland\n' "$(basename "$0")" >&2
   exit 1
+}
+
+reap_stale_picker() {
+  pgrep -f '^vicinae dmenu ' >/dev/null 2>&1 || return 0
+  if vicinae state open >/dev/null 2>&1; then
+    return 1
+  fi
+  pkill -f '^vicinae dmenu ' 2>/dev/null || true
 }

@@ -184,7 +184,9 @@ function M.setup(config)
 
   -- Build a label from the configured group names and variants, e.g.
   -- "Laptop off + Monitor 2560x1440@75". Modes are shown as configured.
-  local function label_for(step)
+  -- A custom separator is used by the notification to put each monitor on its
+  -- own line; the picker menu always stays single-line.
+  local function label_for(step, sep)
     local parts = {}
     for _, layer in ipairs(layers) do
       local spec = variant_spec(layer, step[layer])
@@ -200,7 +202,7 @@ function M.setup(config)
         end
       end
     end
-    return table.concat(parts, " + ")
+    return table.concat(parts, sep or " + ")
   end
 
   -- Rewrite the picker menu so the script never has to know the modes.
@@ -239,7 +241,7 @@ function M.setup(config)
       return
     end
     if apply_step(mode) then
-      notify(label_for(mode))
+      notify(label_for(mode, "\n"))
     end
   end
 
@@ -269,7 +271,7 @@ function M.setup(config)
   local function switch_to(step)
     apply_step(step)
     hl.exec_cmd(waybar_cmd)
-    notify(label_for(step))
+    notify(label_for(step, "\n"))
   end
 
   local function dock()

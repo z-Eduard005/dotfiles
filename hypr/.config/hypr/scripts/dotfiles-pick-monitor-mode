@@ -21,14 +21,6 @@ Opens a vicinae picker with the available monitor modes and applies the selectio
 EOF
 }
 
-reap_stale_picker() {
-  pgrep -f '^vicinae dmenu ' >/dev/null 2>&1 || return 0
-  if vicinae state open >/dev/null 2>&1; then
-    return 1
-  fi
-  pkill -f '^vicinae dmenu ' 2>/dev/null || true
-}
-
 main() {
   case "${1:-}" in
     -h|--help|help)

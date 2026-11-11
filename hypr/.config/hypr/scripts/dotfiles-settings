@@ -18,6 +18,7 @@ usage: ${BOLD}$(basename "$0")${RESET} <command>
 
   ${BOLD}monitors${RESET}       edit the monitor layout presets
   ${BOLD}keybinds${RESET}       edit the Hyprland keybindings
+  ${BOLD}cheatsheet${RESET}     browse the keybindings in a picker
   ${BOLD}-h${RESET}, ${BOLD}--help${RESET}, ${BOLD}help${RESET}   show this help
 EOF
 }
@@ -28,6 +29,76 @@ open_conf() {
   [[ -f "$path" ]] || die "missing config: $path"
   require_cmd "$EDITOR_CMD"
   exec "$EDITOR_CMD" -s "$path"
+}
+
+# Net parenthesis delta of a Lua line, ignoring quoted strings. Result in REPLY.
+paren_delta() {
+  local text="$1"
+  while [[ "$text" =~ \"[^\"]*\" ]]; do
+    text="${text/"${BASH_REMATCH[0]}"/}"
+  done
+  local opens="${text//[^(]/}" closes="${text//[^)]/}"
+  REPLY=$(( ${#opens} - ${#closes} ))
+}
+
+# Render keybindings.lua as "[key]  →  description" rows, in file order.
+# Only binds annotated with "-- [CHEATSHEET_DESC]: text" are listed; a bind
+# without that marker is never shown.
+cheatsheet_rows() {
+  local file="$1"
+  local -a lines=()
+  local line key desc
+  local depth=0
+
+  mapfile -t lines < "$file"
+
+  for line in "${lines[@]}"; do
+    if (( depth == 0 )); then
+      if [[ ! "$line" =~ ^[[:blank:]]*hl\.bind\( ]]; then
+        continue
+      fi
+      key=""
+      desc=""
+      if [[ "$line" =~ hl\.bind\([[:blank:]]*\"([^\"]*)\" ]]; then
+        key="${BASH_REMATCH[1]}"
+      fi
+    elif [[ -z "$key" && "$line" =~ ^[[:blank:]]*\"([^\"]*)\" ]]; then
+      key="${BASH_REMATCH[1]}"
+    fi
+
+    if [[ -z "$desc" && "$line" =~ \[CHEATSHEET_DESC\]:[[:blank:]]*(.*) ]]; then
+      desc="${BASH_REMATCH[1]}"
+      desc="${desc%"${desc##*[![:blank:]]}"}"
+    fi
+
+    paren_delta "$line"
+    depth=$(( depth + REPLY ))
+    if (( depth > 0 )); then
+      continue
+    fi
+
+    if [[ -n "$key" && -n "$desc" ]]; then
+      printf '[%s]  →  %s\n' "$key" "$desc"
+    fi
+    key=""
+    desc=""
+  done
+}
+
+show_cheatsheet() {
+  local file="$HYPR_MODULES/keybinds.lua"
+  local -a rows=()
+
+  [[ -f "$file" ]] || die "missing config: $file"
+  require_cmd vicinae pgrep pkill
+
+  reap_stale_picker || exit 0
+
+  mapfile -t rows < <(cheatsheet_rows "$file")
+  ((${#rows[@]})) || die "no binds tagged with -- [CHEATSHEET_DESC]: in $file"
+
+  printf '%s\n' "${rows[@]}" |
+    vicinae dmenu -f index -p "Keybinds" -W 1120 -H 630 --no-footer --no-section >/dev/null || exit 0
 }
 
 main() {
@@ -41,6 +112,9 @@ main() {
       ;;
     keybinds)
       open_conf "$HYPR_MODULES/keybinds.lua"
+      ;;
+    cheatsheet)
+      show_cheatsheet
       ;;
     ""|*)
       usage >&2
