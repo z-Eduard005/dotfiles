@@ -1,0 +1,11 @@
+[Unit]
+Description=Persist the Wayland clipboard after the source application exits
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/wl-clip-persist --clipboard regular --selection-size-limit 67108864
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target

@@ -5,6 +5,7 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("systemctl --user enable --now waybar.service")
   hl.exec_cmd("systemctl --user enable --now waybar-signals.service")
   hl.exec_cmd("systemctl --user enable --now vicinae.service") -- hl.exec_cmd("vicinae server")
+  hl.exec_cmd("systemctl --user enable --now wl-clip-persist.service")
   hl.exec_cmd("systemctl --user enable --now hyprsunset.service")
   hl.exec_cmd("gnome-software --gapplication-service")
   -- exec-once = /usr/libexec/evolution-calendar-factory -r # does not work
