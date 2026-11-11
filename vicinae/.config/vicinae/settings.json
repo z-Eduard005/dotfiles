@@ -179,6 +179,14 @@
             "clear-history": {
                "enabled": false
             }
+         },
+         "tools": {
+            "read_entry": {
+               "policy": "allow"
+            },
+            "search_history": {
+               "policy": "allow"
+            }
          }
       },
       "core": {

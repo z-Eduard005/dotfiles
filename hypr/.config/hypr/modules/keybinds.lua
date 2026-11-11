@@ -3,12 +3,13 @@
 require("modules.fast-apps")
 
 -- Basic
-hl.bind("ALT + W", hl.dsp.window.close())
+hl.bind("ALT + W", hl.dsp.window.close()) -- [CHEATSHEET_DESC]:
 hl.bind("SUPER + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
 hl.bind("CTRL + SUPER + F", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }))
-hl.bind("SUPER + SLASH", hl.dsp.exec_cmd("nwg-drawer -nofs -nocats -ovl -is 128"))
-hl.bind("CTRL + SHIFT + SLASH", hl.dsp.exec_cmd("pidof hyprpicker || hyprpicker -a"))
+hl.bind("SUPER + SLASH", hl.dsp.exec_cmd("dotfiles-settings cheatsheet"))
+hl.bind("SUPER + PERIOD", hl.dsp.exec_cmd("nwg-drawer -nofs -nocats -ovl -is 128"))
+hl.bind("CTRL + SUPER + SLASH", hl.dsp.exec_cmd("pidof hyprpicker || hyprpicker -a"))
 hl.bind("Print", hl.dsp.exec_cmd("dotfiles-screenshot region"))
 hl.bind("CTRL + Print", hl.dsp.exec_cmd("dotfiles-screenshot last-region"))
 hl.bind("SUPER + S", hl.dsp.exec_cmd("swaync-client -t -sw"))
@@ -18,6 +19,10 @@ hl.bind("ALT + TAB", function()
   hl.dispatch(hl.dsp.window.cycle_next({ next = true }))
   hl.dispatch(hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }))
 end)
+hl.bind(
+  "CTRL + SUPER + ALT + COMMA",
+  hl.dsp.exec_cmd("XDG_CURRENT_DESKTOP=GNOME dotfiles-entry-launch org.gnome.Settings")
+) -- HIDDEN
 
 -- Disable middle click paste
 hl.bind("mouse:274", hl.dsp.exec_cmd("wl-copy -pc"))
@@ -29,6 +34,7 @@ hl.bind("CTRL + ALT + BACKSPACE", hl.dsp.exec_cmd("node ~/Programs/obs-hotkeys/t
 -- Vicinae
 hl.bind("ALT + SPACE", hl.dsp.exec_cmd("vicinae open"))
 hl.bind("ALT + V", hl.dsp.exec_cmd("vicinae deeplink vicinae://launch/clipboard/history"))
+-- hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("vicinae deeplink vicinae://")) -- need to add vicinae voice stuff
 hl.bind("CTRL + ALT + SPACE", hl.dsp.exec_cmd("vicinae server --replace"))
 
 -- Move focus with arrow keys
@@ -98,3 +104,26 @@ hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
+
+-- Fast apps
+hl.bind("SUPER + 1", hl.dsp.exec_cmd("dotfiles-entry-launch \"RUN_FASTFETCH=1 kitty\""))
+hl.bind("SUPER + 2", hl.dsp.exec_cmd("dotfiles-entry-launch org.gnome.Nautilus"))
+hl.bind("SUPER + 3", hl.dsp.exec_cmd("dotfiles-entry-launch org.gnome.Software"))
+hl.bind("SUPER + 4", hl.dsp.exec_cmd("dotfiles-entry-launch org.gnome.SystemMonitor"))
+hl.bind("SUPER + 5", hl.dsp.exec_cmd("dotfiles-entry-launch youtube-music", { workspace = 5 }))
+hl.bind("SUPER + 6", hl.dsp.exec_cmd("dotfiles-entry-launch org.signal.Signal", { workspace = 4 }))
+hl.bind("SUPER + 7", hl.dsp.exec_cmd("dotfiles-entry-launch org.telegram.desktop", { workspace = 4 }))
+hl.bind("SUPER + 8", hl.dsp.exec_cmd("dotfiles-entry-launch app.zen_browser.zen", { workspace = 3 }))
+hl.bind("SUPER + 9", hl.dsp.exec_cmd("dotfiles-entry-launch cursor"))
+hl.bind("SUPER + 0", hl.dsp.exec_cmd("dotfiles-entry-launch md.obsidian.Obsidian"))
+
+hl.bind("SUPER + CTRL + 1", hl.dsp.exec_cmd("dotfiles-entry-launch --new \"RUN_FASTFETCH=1 kitty\""))
+hl.bind("SUPER + CTRL + 2", hl.dsp.exec_cmd("dotfiles-entry-launch --new org.gnome.Nautilus"))
+hl.bind("SUPER + CTRL + 3", hl.dsp.exec_cmd("dotfiles-entry-launch --new org.gnome.Software"))
+hl.bind("SUPER + CTRL + 4", hl.dsp.exec_cmd("dotfiles-entry-launch --new org.gnome.SystemMonitor"))
+hl.bind("SUPER + CTRL + 5", hl.dsp.exec_cmd("dotfiles-entry-launch --new youtube-music"))
+hl.bind("SUPER + CTRL + 6", hl.dsp.exec_cmd("dotfiles-entry-launch --new org.signal.Signal"))
+hl.bind("SUPER + CTRL + 7", hl.dsp.exec_cmd("dotfiles-entry-launch --new org.telegram.desktop"))
+hl.bind("SUPER + CTRL + 8", hl.dsp.exec_cmd("dotfiles-entry-launch --new app.zen_browser.zen"))
+hl.bind("SUPER + CTRL + 9", hl.dsp.exec_cmd("dotfiles-entry-launch --new cursor"))
+hl.bind("SUPER + CTRL + 0", hl.dsp.exec_cmd("dotfiles-entry-launch --new md.obsidian.Obsidian"))
