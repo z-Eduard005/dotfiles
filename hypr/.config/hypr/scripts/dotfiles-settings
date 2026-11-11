@@ -1,0 +1,52 @@
+#!/bin/bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/common.sh" || exit 1
+
+readonly DOTFILES_DIR="$HOME/dotfiles"
+readonly HYPR_MODULES="$DOTFILES_DIR/hypr/.config/hypr/modules"
+readonly EDITOR_CMD="gnome-text-editor"
+readonly BOLD=$'\033[1m'
+readonly RESET=$'\033[0m'
+
+usage() {
+  cat <<EOF
+${BOLD}$(basename "$0")${RESET} - open dotfiles configuration files for editing.
+
+usage: ${BOLD}$(basename "$0")${RESET} <command>
+
+  ${BOLD}monitors${RESET}       edit the monitor layout presets
+  ${BOLD}keybinds${RESET}       edit the Hyprland keybindings
+  ${BOLD}-h${RESET}, ${BOLD}--help${RESET}, ${BOLD}help${RESET}   show this help
+EOF
+}
+
+# Open a config file in the graphical editor, standalone window.
+open_conf() {
+  local path="$1"
+  [[ -f "$path" ]] || die "missing config: $path"
+  require_cmd "$EDITOR_CMD"
+  exec "$EDITOR_CMD" -s "$path"
+}
+
+main() {
+  case "${1:-}" in
+    -h|--help|help)
+      usage
+      exit 0
+      ;;
+    monitors)
+      open_conf "$HYPR_MODULES/monitors.lua"
+      ;;
+    keybinds)
+      open_conf "$HYPR_MODULES/keybinds.lua"
+      ;;
+    ""|*)
+      usage >&2
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

@@ -56,7 +56,7 @@ main() {
   choice="$( { cat "$MENU"; printf '%s\n' "$EDITOR_ACTION"; } |
     vicinae dmenu -f index \
       -p "Choose a layout…" \
-      -W 640 -H 400 \
+      -W 640 -H 360 \
       --no-footer \
       --no-section )" || exit 0
   [[ "$choice" =~ ^[0-9]+$ ]] || exit 0
