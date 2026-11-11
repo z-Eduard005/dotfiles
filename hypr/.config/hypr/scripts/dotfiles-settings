@@ -6,6 +6,10 @@ source "$SCRIPT_DIR/lib/common.sh" || exit 1
 
 readonly DOTFILES_DIR="$HOME/dotfiles"
 readonly HYPR_MODULES="$DOTFILES_DIR/hypr/.config/hypr/modules"
+readonly GTK_CONFIG="$DOTFILES_DIR/gtk/.config"
+readonly GDM_FILE="$DOTFILES_DIR/.gdm/etc/dconf/db/gdm.d/01-gdm-custom"
+readonly -a CURSOR_DIRS=("$HOME/.local/share/icons" "/usr/share/icons")
+readonly DEFAULT_CURSOR_SIZE=28
 readonly EDITOR_CMD="gnome-text-editor"
 readonly BOLD=$'\033[1m'
 readonly RESET=$'\033[0m'
@@ -17,8 +21,9 @@ ${BOLD}$(basename "$0")${RESET} - open dotfiles configuration files for editing.
 usage: ${BOLD}$(basename "$0")${RESET} <command>
 
   ${BOLD}monitors${RESET}       edit the monitor layout presets
-  ${BOLD}keybinds${RESET}       edit the Hyprland keybindings
   ${BOLD}cheatsheet${RESET}     browse the keybindings in a picker
+  ${BOLD}setcursor${RESET}      set the cursor theme and size (<theme>@<size>)
+  ${BOLD}getcursor${RESET}      print the current cursor theme and size
   ${BOLD}-h${RESET}, ${BOLD}--help${RESET}, ${BOLD}help${RESET}   show this help
 EOF
 }
@@ -39,6 +44,171 @@ paren_delta() {
   done
   local opens="${text//[^(]/}" closes="${text//[^)]/}"
   REPLY=$(( ${#opens} - ${#closes} ))
+}
+
+# Replace the first line matching <pattern> with <line>. When the pattern is absent, insert <line> right after the first line containing <anchor>, or at the end of the file when there is no anchor either.
+set_line() {
+  local file="$1" pattern="$2" line="$3" anchor="${4:-}"
+  local -a lines=()
+  local i target=-1 text trailing_newline=1
+
+  [[ -f "$file" ]] || die "missing config: $file"
+
+  # Keep a missing final newline missing, so a no-op run leaves no diff.
+  if [[ -n "$(tail -c 1 -- "$file")" ]]; then
+    trailing_newline=0
+  fi
+  mapfile -t lines < "$file"
+
+  for i in "${!lines[@]}"; do
+    if [[ "${lines[i]}" =~ $pattern ]]; then
+      target=$i
+      break
+    fi
+  done
+
+  if (( target >= 0 )); then
+    lines[target]="$line"
+  else
+    target=-1
+    if [[ -n "$anchor" ]]; then
+      for i in "${!lines[@]}"; do
+        if [[ "${lines[i]}" == *"$anchor"* ]]; then
+          target=$i
+          break
+        fi
+      done
+    fi
+    if (( target >= 0 )); then
+      lines=("${lines[@]:0:target+1}" "$line" "${lines[@]:target+1}")
+    else
+      lines+=("$line")
+    fi
+  fi
+
+  # Write through the path so a stow symlink keeps pointing at the repo file.
+  if ((${#lines[@]})); then
+    printf -v text '%s\n' "${lines[@]}"
+    (( trailing_newline )) || text="${text%$'\n'}"
+  else
+    text=""
+  fi
+  printf '%s' "$text" > "$file"
+}
+
+cursor_now() {
+  local theme size
+
+  theme="$(gsettings get org.gnome.desktop.interface cursor-theme 2>/dev/null || true)"
+  size="$(gsettings get org.gnome.desktop.interface cursor-size 2>/dev/null || true)"
+  theme="${theme//\'/}"
+
+  [[ "$size" =~ ^[0-9]+$ ]] || size="$DEFAULT_CURSOR_SIZE"
+  printf '%s %s\n' "$theme" "$size"
+}
+
+cursor_theme_exists() {
+  local theme="$1" dir
+  for dir in "${CURSOR_DIRS[@]}"; do
+    [[ -f "$dir/$theme/cursor.theme" ]] && return 0
+  done
+  return 1
+}
+
+apply_cursor_config() {
+  local theme="$1" size="$2" ini
+
+  set_line "$HYPR_MODULES/env.lua" '^hl\.env\("XCURSOR_THEME"' \
+    "hl.env(\"XCURSOR_THEME\", \"$theme\")"
+  set_line "$HYPR_MODULES/env.lua" '^hl\.env\("XCURSOR_SIZE"' \
+    "hl.env(\"XCURSOR_SIZE\", \"$size\")" 'XCURSOR_THEME'
+  set_line "$HYPR_MODULES/env.lua" '^hl\.env\("HYPRCURSOR_THEME"' \
+    "hl.env(\"HYPRCURSOR_THEME\", \"$theme\")"
+  set_line "$HYPR_MODULES/env.lua" '^hl\.env\("HYPRCURSOR_SIZE"' \
+    "hl.env(\"HYPRCURSOR_SIZE\", \"$size\")" 'HYPRCURSOR_THEME'
+  set_line "$HYPR_MODULES/env.lua" '^hl\.env\("QT_CURSOR_THEME"' \
+    "hl.env(\"QT_CURSOR_THEME\", \"$theme\")"
+  set_line "$HYPR_MODULES/env.lua" '^hl\.env\("QT_CURSOR_SIZE"' \
+    "hl.env(\"QT_CURSOR_SIZE\", \"$size\")" 'QT_CURSOR_THEME'
+
+  set_line "$HYPR_MODULES/autostart.lua" 'hyprctl setcursor' \
+    "  hl.exec_cmd(\"hyprctl setcursor $theme $size\")" \
+    'Inconsistent cursor fix'
+  set_line "$HYPR_MODULES/autostart.lua" \
+    'gsettings set org\.gnome\.desktop\.interface cursor-theme' \
+    "  hl.exec_cmd(\"gsettings set org.gnome.desktop.interface cursor-theme '$theme'\")" \
+    'hyprctl setcursor'
+  set_line "$HYPR_MODULES/autostart.lua" \
+    'gsettings set org\.gnome\.desktop\.interface cursor-size' \
+    "  hl.exec_cmd(\"gsettings set org.gnome.desktop.interface cursor-size $size\")" \
+    'gsettings set org.gnome.desktop.interface cursor-theme'
+
+  for ini in "$GTK_CONFIG/gtk-3.0/settings.ini" "$GTK_CONFIG/gtk-4.0/settings.ini"; do
+    set_line "$ini" '^gtk-cursor-theme-name=' \
+      "gtk-cursor-theme-name=$theme" '[Settings]'
+    set_line "$ini" '^gtk-cursor-theme-size=' \
+      "gtk-cursor-theme-size=$size" 'gtk-cursor-theme-name='
+  done
+
+  set_line "$GDM_FILE" '^cursor-theme=' \
+    "cursor-theme='$theme'" '[org/gnome/desktop/interface]'
+  set_line "$GDM_FILE" '^cursor-size=' \
+    "cursor-size=$size" 'cursor-theme='
+}
+
+apply_cursor_live() {
+  local theme="$1" size="$2"
+
+  if is_hyprland && has hyprctl; then
+    hyprctl setcursor "$theme" "$size" >/dev/null
+  fi
+  if has gsettings; then
+    gsettings set org.gnome.desktop.interface cursor-theme "$theme"
+    gsettings set org.gnome.desktop.interface cursor-size "$size"
+  fi
+}
+
+refresh_gdm() {
+  sudo -n dconf update 2>/dev/null && return 0
+  printf 'note: run "sudo dconf update" to apply the cursor to the login screen\n' >&2
+}
+
+set_cursor() {
+  local spec="${1:-}" theme size
+
+  [[ "$spec" == *@* ]] || die "usage: $(basename "$0") setcursor <theme>@<size>"
+
+  theme="${spec%@*}"
+  size="${spec##*@}"
+
+  [[ -n "$theme" ]] || die "missing cursor theme"
+  [[ -n "$size" ]] || die "missing cursor size"
+  [[ "$theme" =~ ^[A-Za-z0-9._-]+$ ]] || die "invalid cursor theme: $theme"
+  [[ "$size" =~ ^[0-9]+$ ]] || die "invalid cursor size: $size"
+  (( size >= 8 && size <= 256 )) || die "cursor size out of range: $size"
+  cursor_theme_exists "$theme" || die "cursor theme not found: $theme"
+
+  local file
+  for file in "$HYPR_MODULES/env.lua" "$HYPR_MODULES/autostart.lua" \
+    "$GTK_CONFIG/gtk-3.0/settings.ini" "$GTK_CONFIG/gtk-4.0/settings.ini" "$GDM_FILE"; do
+    [[ -f "$file" ]] || die "missing config: $file"
+  done
+
+  apply_cursor_config "$theme" "$size"
+  apply_cursor_live "$theme" "$size"
+  refresh_gdm
+
+  printf 'cursor: %s %s\n' "$theme" "$size"
+}
+
+# getcursor - print the cursor theme and size the session is using.
+show_cursor() {
+  local theme size
+
+  read -r theme size < <(cursor_now)
+  [[ -n "$theme" ]] || die "cannot read cursor settings from gsettings"
+
+  printf '%s@%s\n' "$theme" "$size"
 }
 
 # Render keybindings.lua as "[key]  →  description" rows, in file order.
@@ -110,11 +280,14 @@ main() {
     monitors)
       open_conf "$HYPR_MODULES/monitors.lua"
       ;;
-    keybinds)
-      open_conf "$HYPR_MODULES/keybinds.lua"
-      ;;
     cheatsheet)
       show_cheatsheet
+      ;;
+    setcursor)
+      set_cursor "${2:-}"
+      ;;
+    getcursor)
+      show_cursor
       ;;
     ""|*)
       usage >&2
