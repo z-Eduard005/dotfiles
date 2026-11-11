@@ -1,5 +1,5 @@
 # This package only can be `stow`-ed to root directory!
-Use this command:
+Use this command instead:
 ```
 sudo stow -d "$HOME/dotfiles" -t / .gdm
 printf '%s ALL=(root) NOPASSWD: /usr/bin/dconf update\n' "$(id -un)" | sudo tee /etc/sudoers.d/gdm-dconf-update >/dev/null

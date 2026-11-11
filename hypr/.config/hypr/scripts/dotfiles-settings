@@ -188,13 +188,10 @@ cursor_themes() {
   done | LC_ALL=C sort -u
 }
 
+# Open the GNOME-Look cursor catalogue.
 browse_cursor_themes() {
   if has xdg-open; then
     xdg-open "https://www.gnome-look.org/browse?cat=107&ord=latest" >/dev/null 2>&1 &
-  fi
-  if has hyprctl; then
-    hyprctl dispatch 'hl.dsp.focus({ window = "class:app.zen_browser.zen" })' \
-      >/dev/null 2>&1 || true
   fi
 }
 

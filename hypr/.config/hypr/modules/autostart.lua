@@ -1,7 +1,7 @@
 hl.on("hyprland.start", function()
   -- Services
   hl.exec_cmd("systemctl --user enable --now hypridle.service")
-  hl.exec_cmd("awww-daemon") -- exec-once = systemctl --user enable --now hyprpaper.service
+  hl.exec_cmd("awww-daemon")
   hl.exec_cmd("systemctl --user enable --now waybar.service")
   hl.exec_cmd("systemctl --user enable --now waybar-signals.service")
   hl.exec_cmd("vicinae server")
@@ -27,7 +27,7 @@ hl.on("hyprland.start", function()
 
   -- Other
   hl.exec_cmd("xmodmap -e \"keycode 108 = F3\"")
-  hl.exec_cmd("hyprland-per-window-layout")
+  hl.exec_cmd("~/.local/bin/hyprland-per-window-layout")
   hl.exec_cmd("dotfiles-watcher")
   hl.exec_cmd("dotfiles-youtube-notifier start")
 end)

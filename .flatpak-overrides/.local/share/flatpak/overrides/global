@@ -1,0 +1,6 @@
+[Context]
+filesystems=xdg-config/qt5ct:ro;xdg-config/qt6ct:ro;xdg-config/gtk-3.0:ro;xdg-config/gtk-4.0:ro;xdg-config/fontconfig:ro
+
+[Environment]
+XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons
+QT_QPA_PLATFORMTHEME=qt6ct

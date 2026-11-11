@@ -20,9 +20,8 @@ hl.window_rule({
 })
 
 hl.window_rule({
-  match = { class = "pick-monitor-mode" },
-  float = true,
-  size = "monitor_w*0.4 monitor_h*0.4",
+  match = { class = "^(app[.]zen_browser[.]zen|org[.]telegram[.]desktop)$" },
+  focus_on_activate = true,
 })
 
 if state.zen then
