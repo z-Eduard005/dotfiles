@@ -58,13 +58,12 @@ set_kitty_keys() {
   done
 }
 
-toml_set() {
+set_toml() {
   local file="$1" section="$2" key="$3" value="$4"
   [[ -f "$file" ]] || return 0
-  if grep -q "^$key = " "$file" 2>/dev/null; then
-    sed -i "s/^\($key = \).*/\1\"$value\"/" "$file" 2>/dev/null || true
-  elif grep -q "^\[$section\]$" "$file" 2>/dev/null; then
-    sed -i "/^\[$section\]$/a $key = \"$value\"" "$file" 2>/dev/null || true
+  if grep -q "^$key = " "$file" 2>/dev/null \
+    || grep -q "^\[$section\]$" "$file" 2>/dev/null; then
+    set_line "$file" "^$key = " "$key = \"$value\"" "[$section]" || true
   else
     { printf '\n[%s]\n%s = "%s"\n' "$section" "$key" "$value" >> "$file" 2>/dev/null; } || true
   fi
@@ -107,8 +106,9 @@ cmd_switch() {
 
   # gdm
   local gdm_dconf="$HOME/dotfiles/.gdm/etc/dconf/db/gdm.d/01-gdm-custom"
-  if [[ -f "$gdm_dconf" ]] && grep -q "^accent-color='" "$gdm_dconf"; then
-    sed -i "s/^\(accent-color='\)[a-z]*\('\)/\1${accent}\2/" "$gdm_dconf" 2>/dev/null || true
+  if [[ -f "$gdm_dconf" ]] && grep -qF '[org/gnome/desktop/interface]' "$gdm_dconf"; then
+    set_line "$gdm_dconf" '^accent-color=' "accent-color='$accent'" \
+      '[org/gnome/desktop/interface]' || true
     sudo -n dconf update 2>/dev/null || true
   fi
 
@@ -132,7 +132,7 @@ cmd_switch() {
     local icon="Adwaita-$accent"
 
     if [[ -n "$hex" ]]; then
-      toml_set "$vicinae_theme" "colors.core" "accent" "$hex"
+      set_toml "$vicinae_theme" "colors.core" "accent" "$hex"
 
       if [[ -f "$vicinae_settings" ]] && [[ -w "$vicinae_settings" ]] && has jq; then
         local jq_dir

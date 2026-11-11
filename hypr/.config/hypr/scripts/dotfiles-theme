@@ -41,10 +41,9 @@ set_kitty_keys() {
 set_toml() {
   local file="$1" section="$2" key="$3" value="$4"
   [[ -f "$file" ]] || return 0
-  if grep -q "^$key = " "$file" 2>/dev/null; then
-    sed -i "s/^\($key = \).*/\1\"$value\"/" "$file" 2>/dev/null || true
-  elif grep -q "^\[$section\]$" "$file" 2>/dev/null; then
-    sed -i "/^\[$section\]$/a $key = \"$value\"" "$file" 2>/dev/null || true
+  if grep -q "^$key = " "$file" 2>/dev/null \
+    || grep -q "^\[$section\]$" "$file" 2>/dev/null; then
+    set_line "$file" "^$key = " "$key = \"$value\"" "[$section]" || true
   else
     { printf '\n[%s]\n%s = "%s"\n' "$section" "$key" "$value" >> "$file" 2>/dev/null; } || true
   fi

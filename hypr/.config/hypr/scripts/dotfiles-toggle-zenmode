@@ -22,11 +22,7 @@ EOF
 
 set_cursor_trail() {
   [[ -f "$KITTY_CONF" ]] || return 0
-  if grep -q '^[[:space:]]*cursor_trail[[:space:]]' "$KITTY_CONF"; then
-    sed -i -E "s/^([[:space:]]*)cursor_trail[[:space:]]+[0-9]+/\1cursor_trail $1/" "$KITTY_CONF"
-  else
-    printf 'cursor_trail %s\n' "$1" >> "$KITTY_CONF"
-  fi
+  set_line "$KITTY_CONF" '^[[:space:]]*cursor_trail[[:space:]]' "cursor_trail $1"
   pkill -USR1 -x kitty 2>/dev/null || true
 }
 
