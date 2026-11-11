@@ -45,6 +45,22 @@ hex_for() {
   printf '%s' "$hex"
 }
 
+# Blend <hex> towards white or black by <percent> (0-100).
+hex_mix() {
+  local hex="${1#\#}" percent="$2" target="$3"
+  local r=$((16#${hex:0:2})) g=$((16#${hex:2:2})) b=$((16#${hex:4:2}))
+  local tr tg tb
+  case "$target" in
+    white) tr=255; tg=255; tb=255 ;;
+    black) tr=0; tg=0; tb=0 ;;
+    *) return 1 ;;
+  esac
+  printf '#%02x%02x%02x' \
+    $(((r * (100 - percent) + tr * percent) / 100)) \
+    $(((g * (100 - percent) + tg * percent) / 100)) \
+    $(((b * (100 - percent) + tb * percent) / 100))
+}
+
 set_kitty_keys() {
   local file="$1" value="$2" key
   shift 2
@@ -175,6 +191,20 @@ cmd_switch() {
   hyprctl dispatch 'hl.dsp.exec_cmd("dotfiles-entry-launch org.telegram.desktop", { workspace = "4 silent" })' 2>/dev/null || true
 
   # hyprtoolkit
+  local tk_conf="$HOME/dotfiles/hypr/.config/hypr/hyprtoolkit.conf"
+  if [[ -f "$tk_conf" ]] && [[ -n "$hex" ]]; then
+    local tk_accent tk_secondary
+    if [[ "$("$SCRIPT_DIR/dotfiles-theme" get 2>/dev/null || true)" == "light" ]]; then
+      tk_accent="$(hex_mix "$hex" 30 black)"
+      tk_secondary="$(hex_mix "$hex" 45 black)"
+    else
+      tk_accent="$hex"
+      tk_secondary="$(hex_mix "$hex" 40 white)"
+    fi
+    set_line "$tk_conf" '^accent = ' "accent = 0xFF${tk_accent#\#}" || true
+    set_line "$tk_conf" '^accent_secondary = ' "accent_secondary = 0xFF${tk_secondary#\#}" || true
+    systemctl --user restart hyprpolkitagent.service 2>/dev/null || true
+  fi
 }
 
 cmd_get() {

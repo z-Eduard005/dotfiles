@@ -9,6 +9,7 @@ readonly WAYBAR_DIR="$HOME/dotfiles/waybar/.config/waybar"
 readonly DRAWER_CSS="$HOME/dotfiles/nwg-drawer/.config/nwg-drawer/drawer.css"
 readonly KITTY_DIR="$HOME/dotfiles/kitty/.config/kitty"
 readonly VICINAE_THEME="$HOME/dotfiles/vicinae/.local/share/vicinae/themes/adwaita-dynamic.toml"
+readonly HYPRTOOLKIT_CONF="$HOME/dotfiles/hypr/.config/hypr/hyprtoolkit.conf"
 readonly BOLD=$'\033[1m'
 readonly RESET=$'\033[0m'
 
@@ -47,6 +48,36 @@ set_toml() {
   else
     { printf '\n[%s]\n%s = "%s"\n' "$section" "$key" "$value" >> "$file" 2>/dev/null; } || true
   fi
+}
+
+# Neutral palette only: accent and accent_secondary belong to dotfiles-accent.
+set_hyprtoolkit_theme() {
+  local theme="$1"
+  local text bright_text background base alternate_base
+
+  [[ -f "$HYPRTOOLKIT_CONF" ]] || return 0
+
+  if [[ "$theme" == "dark" ]]; then
+    text="0xFFeeeeee"
+    bright_text="0xFFffffff"
+    background="0xFF222226"
+    base="0xFF2e2e32"
+    alternate_base="0xFF272727"
+  else
+    text="0xFF2f2f34"
+    bright_text="0xFF17171a"
+    background="0xFFebebed"
+    base="0xFFf7f7f8"
+    alternate_base="0xFFf0f0f2"
+  fi
+
+  set_line "$HYPRTOOLKIT_CONF" '^text = ' "text = $text" || true
+  set_line "$HYPRTOOLKIT_CONF" '^bright_text = ' "bright_text = $bright_text" || true
+  set_line "$HYPRTOOLKIT_CONF" '^background = ' "background = $background" || true
+  set_line "$HYPRTOOLKIT_CONF" '^base = ' "base = $base" || true
+  set_line "$HYPRTOOLKIT_CONF" '^alternate_base = ' "alternate_base = $alternate_base" || true
+
+  systemctl --user restart hyprpolkitagent.service 2>/dev/null || true
 }
 
 theme_now() {
@@ -146,6 +177,7 @@ cmd_toggle() {
   fi
 
   # hyprtoolkit
+  set_hyprtoolkit_theme "$theme"
 }
 
 main() {
