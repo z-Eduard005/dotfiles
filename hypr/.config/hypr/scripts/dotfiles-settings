@@ -10,6 +10,9 @@ readonly GTK_CONFIG="$DOTFILES_DIR/gtk/.config"
 readonly GDM_FILE="$DOTFILES_DIR/.gdm/etc/dconf/db/gdm.d/01-gdm-custom"
 readonly -a CURSOR_DIRS=("$HOME/.local/share/icons" "/usr/share/icons")
 readonly DEFAULT_CURSOR_SIZE=28
+readonly BROWSE_ACTION="⚙ Browse New Cursors"
+readonly -a CURSOR_SIZE_NAMES=(xs sm md lg xl)
+readonly -a CURSOR_SIZES=(20 24 28 32 36)
 readonly EDITOR_CMD="gnome-text-editor"
 readonly BOLD=$'\033[1m'
 readonly RESET=$'\033[0m'
@@ -22,6 +25,7 @@ usage: ${BOLD}$(basename "$0")${RESET} <command>
 
   ${BOLD}monitors${RESET}       edit the monitor layout presets
   ${BOLD}cheatsheet${RESET}     browse the keybindings in a picker
+  ${BOLD}cursor-ui${RESET}      pick the cursor theme and size in a picker
   ${BOLD}setcursor${RESET}      set the cursor theme and size (<theme>@<size>)
   ${BOLD}getcursor${RESET}      print the current cursor theme and size
   ${BOLD}-h${RESET}, ${BOLD}--help${RESET}, ${BOLD}help${RESET}   show this help
@@ -161,6 +165,93 @@ show_cursor() {
   printf '%s@%s\n' "$theme" "$size"
 }
 
+cursor_themes() {
+  local dir path theme
+  local -A seen=()
+
+  for dir in "${CURSOR_DIRS[@]}"; do
+    for path in "$dir"/*/; do
+      theme="${path%/}"
+      theme="${theme##*/}"
+      if [[ ! "$theme" =~ ^[A-Za-z0-9._-]+$ ]]; then
+        continue
+      fi
+      if [[ ! -f "$path/cursor.theme" ]]; then
+        continue
+      fi
+      if [[ -n "${seen[$theme]:-}" ]]; then
+        continue
+      fi
+      seen["$theme"]=1
+      printf '%s\n' "$theme"
+    done
+  done | LC_ALL=C sort -u
+}
+
+browse_cursor_themes() {
+  if has xdg-open; then
+    xdg-open "https://www.gnome-look.org/browse?cat=107&ord=latest" >/dev/null 2>&1 &
+  fi
+  if has hyprctl; then
+    hyprctl dispatch 'hl.dsp.focus({ window = "class:app.zen_browser.zen" })' \
+      >/dev/null 2>&1 || true
+  fi
+}
+
+pick_cursor_size() {
+  local theme="$1" current_size="$2" choice i
+  local -a rows=()
+
+  for i in "${!CURSOR_SIZES[@]}"; do
+    if (( CURSOR_SIZES[i] == current_size )); then
+      rows+=("● ${CURSOR_SIZE_NAMES[i]} (${CURSOR_SIZES[i]})")
+    else
+      rows+=("○ ${CURSOR_SIZE_NAMES[i]} (${CURSOR_SIZES[i]})")
+    fi
+  done
+
+  choice="$(printf '%s\n' "${rows[@]}" |
+    vicinae dmenu -f index -p "Cursor Size" -W 420 -H 320 \
+      --no-footer --no-section)" || exit 0
+  [[ "$choice" =~ ^[0-9]+$ ]] || exit 0
+  (( choice < ${#CURSOR_SIZES[@]} )) || exit 0
+
+  set_cursor "$theme@${CURSOR_SIZES[choice]}"
+}
+
+show_cursor_ui() {
+  local current_theme current_size theme choice
+  local -a themes=() rows=()
+
+  require_cmd vicinae pgrep pkill
+  reap_stale_picker || exit 0
+
+  read -r current_theme current_size < <(cursor_now)
+
+  mapfile -t themes < <(cursor_themes)
+  ((${#themes[@]})) || die "no cursor themes found in ${CURSOR_DIRS[*]}"
+
+  for theme in "${themes[@]}"; do
+    if [[ "$theme" == "$current_theme" ]]; then
+      rows+=("● $theme")
+    else
+      rows+=("○ $theme")
+    fi
+  done
+  rows+=("$BROWSE_ACTION")
+
+  choice="$(printf '%s\n' "${rows[@]}" |
+    vicinae dmenu -f index -p "Cursor Theme" -W 420 -H 320 \
+      --no-footer --no-section)" || exit 0
+  [[ "$choice" =~ ^[0-9]+$ ]] || exit 0
+
+  if (( choice < ${#themes[@]} )); then
+    pick_cursor_size "${themes[choice]}" "$current_size"
+  elif (( choice == ${#themes[@]} )); then
+    browse_cursor_themes
+  fi
+}
+
 # Render keybindings.lua as "[key]  →  description" rows, in file order.
 # Only binds annotated with "-- [CHEATSHEET_DESC]: text" are listed; a bind
 # without that marker is never shown.
@@ -198,7 +289,7 @@ cheatsheet_rows() {
     fi
 
     if [[ -n "$key" && -n "$desc" ]]; then
-      printf '[%s]  →  %s\n' "$key" "$desc"
+      printf '%s  →  %s\n' "$key" "<i>$desc</i>"
     fi
     key=""
     desc=""
@@ -232,6 +323,9 @@ main() {
       ;;
     cheatsheet)
       show_cheatsheet
+      ;;
+    cursor-ui)
+      show_cursor_ui
       ;;
     setcursor)
       set_cursor "${2:-}"

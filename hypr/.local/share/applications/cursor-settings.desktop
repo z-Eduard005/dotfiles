@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Cursor Settings
+Exec=dotfiles-settings cursor-ui
+Type=Application
+Terminal=false
+Icon=cursor-settings
+Categories=Application;
