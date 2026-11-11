@@ -23,6 +23,7 @@ ${BOLD}$(basename "$0")${RESET} - open dotfiles configuration files for editing.
 
 usage: ${BOLD}$(basename "$0")${RESET} <command>
 
+  ${BOLD}workspace${RESET}      open the dotfiles repo in Cursor, or focus it
   ${BOLD}monitors${RESET}       edit the monitor layout presets
   ${BOLD}cheatsheet${RESET}     browse the keybindings in a picker
   ${BOLD}cursor-ui${RESET}      pick the cursor theme and size in a picker
@@ -286,7 +287,7 @@ cheatsheet_rows() {
     fi
 
     if [[ -n "$key" && -n "$desc" ]]; then
-      printf '%s  →  %s\n' "$key" "<i>$desc</i>"
+      printf '%s    |    %s\n' "$key" "$desc"
     fi
     key=""
     desc=""
@@ -309,11 +310,45 @@ show_cheatsheet() {
     vicinae dmenu -f index -p "Keybinds" -W 1120 -H 630 --no-footer --no-section >/dev/null || exit 0
 }
 
+workspace_address() {
+  local name clients
+  name="$(basename "$DOTFILES_DIR")"
+  clients="$(hyprctl clients -j 2>/dev/null || true)"
+  [[ -n "$clients" ]] || return 0
+  jq -r --arg name "$name" '
+    .[]
+    | select((.class | ascii_downcase) == "cursor")
+    | select(.title == "\($name) - Cursor"
+             or (.title | endswith(" - " + $name + " - Cursor")))
+    | .address' <<<"$clients"
+}
+
+open_workspace() {
+  local address
+
+  require_hyprland
+  require_cmd jq
+
+  address="$(workspace_address)"
+  address="${address%%$'\n'*}"
+
+  if [[ -n "$address" ]]; then
+    hyprctl dispatch "hl.dsp.focus({ window = \"address:$address\" })"
+    return 0
+  fi
+
+  require_cmd cursor
+  exec cursor --new-window "$DOTFILES_DIR"
+}
+
 main() {
   case "${1:-}" in
     -h|--help|help)
       usage
       exit 0
+      ;;
+    workspace)
+      open_workspace
       ;;
     monitors)
       open_conf "$HYPR_MODULES/monitors.lua"

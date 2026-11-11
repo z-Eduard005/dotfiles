@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Settings
+Exec=dotfiles-settings workspace
+Type=Application
+Terminal=false
+Icon=/home/eduard/.local/share/icons/dotfiles-settings.png
+Categories=Application;
