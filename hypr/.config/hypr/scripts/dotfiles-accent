@@ -134,6 +134,13 @@ cmd_switch() {
     set_kitty_keys "$HOME/dotfiles/kitty/.config/kitty/light-theme.auto.conf" "$hex" cursor color6 selection_background active_tab_background
   fi
 
+  # fzf
+  local fzfrc="$HOME/dotfiles/fzf/.config/fzf/fzfrc"
+  if [[ -f "$fzfrc" ]] && [[ -n "$hex" ]]; then
+    set_line "$fzfrc" '^--color=' \
+      "--color=pointer:${hex},marker:${hex},spinner:${hex},prompt:${hex},header:${hex},hl:${hex},hl+:${hex}"
+  fi
+
   # kitty workaround: dark theme does not update accent
   if [[ "$(dotfiles-theme get 2>/dev/null || true)" == "dark" ]]; then
     gsettings set org.gnome.desktop.interface color-scheme "prefer-light" 2>/dev/null || true

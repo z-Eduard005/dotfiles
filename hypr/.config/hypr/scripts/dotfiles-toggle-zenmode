@@ -8,13 +8,16 @@ readonly KITTY_CONF="$HOME/dotfiles/kitty/.config/kitty/kitty.conf"
 readonly WAYBAR_CSS="$HOME/dotfiles/waybar/.config/waybar/style.css"
 readonly WAYBAR_LAYOUT="$HOME/dotfiles/waybar/.config/waybar/layout.jsonc"
 readonly WAYBAR_MODULES="$HOME/dotfiles/waybar/.config/waybar/modules.jsonc"
+readonly VICINAE_SETTINGS="$HOME/dotfiles/vicinae/.config/vicinae/settings.json"
+readonly VICINAE_OPACITY_STATE="$HOME/.local/state/dotfiles/hypr/vicinae-opacity"
+readonly VICINAE_OPACITY_DEFAULT="0.96"
 readonly ZEN_STATE="$HOME/.local/state/dotfiles/hypr/zen-mode"
 readonly BOLD=$'\033[1m'
 readonly RESET=$'\033[0m'
 
 usage() {
   cat <<EOF
-${BOLD}$(basename "$0")${RESET} - toggle zen mode (gaps, kitty cursor trail and waybar sizes).
+${BOLD}$(basename "$0")${RESET} - toggle zen mode (gaps, kitty cursor trail, waybar sizes and vicinae transparency).
 
 usage: ${BOLD}$(basename "$0")${RESET}
 EOF
@@ -53,6 +56,36 @@ set_waybar_sizes() {
     "$WAYBAR_MODULES"
 }
 
+vicinae_opacity() {
+  local first
+  first="$(grep -n -m1 '^[[:space:]]*{' -- "$VICINAE_SETTINGS" 2>/dev/null | cut -d: -f1)"
+  [[ -n "$first" ]] || return 0
+  tail -n +"$first" -- "$VICINAE_SETTINGS" 2>/dev/null \
+    | jq -r '.launcher_window.opacity // empty' 2>/dev/null || true
+}
+
+set_vicinae_opacity() {
+  local opacity
+
+  [[ -f "$VICINAE_SETTINGS" ]] || return 0
+  has vicinae || return 0
+  has jq || return 0
+
+  if [[ "$1" == "on" ]]; then
+    if [[ ! -f "$VICINAE_OPACITY_STATE" ]]; then
+      opacity="$(vicinae_opacity)"
+      mkdir -p "$(dirname "$VICINAE_OPACITY_STATE")"
+      printf '%s\n' "${opacity:-$VICINAE_OPACITY_DEFAULT}" > "$VICINAE_OPACITY_STATE"
+    fi
+    jsonc_jq "$VICINAE_SETTINGS" '.launcher_window.opacity = 1.0' || true
+  else
+    opacity="$(cat "$VICINAE_OPACITY_STATE" 2>/dev/null || true)"
+    rm -f -- "$VICINAE_OPACITY_STATE"
+    jsonc_jq "$VICINAE_SETTINGS" --argjson o "${opacity:-$VICINAE_OPACITY_DEFAULT}" \
+      '.launcher_window.opacity = $o' || true
+  fi
+}
+
 main() {
   if [[ $# -gt 0 ]]; then
     case "$1" in
@@ -84,6 +117,13 @@ main() {
 
   # hyprland reads the zen state on load (gaps, rounding, animations, window rules)
   hyprctl reload 2>/dev/null || true
+
+  # vicinae launcher transparency
+  if [[ "$zen" == "true" ]]; then
+    set_vicinae_opacity on
+  else
+    set_vicinae_opacity off
+  fi
 
   # kitty cursor trail
   if has kitty; then

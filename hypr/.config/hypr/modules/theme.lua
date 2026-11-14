@@ -34,15 +34,15 @@ hl.config({
 
     blur = {
       enabled = true,
-      size = 4,
-      passes = 1,
+      size = 3,
+      passes = 2,
       vibrancy = 0.1696,
     },
   },
 
   -- See https://wiki.hypr.land/Configuring/Dwindle-Layout/ for more
   dwindle = {
-    preserve_split = true,     -- You probably want this
+    preserve_split = true, -- You probably want this
   },
 
   -- See https://wiki.hypr.land/Configuring/Master-Layout/ for more

@@ -31,7 +31,7 @@ if state.zen then
   })
 else
   hl.window_rule({
-    match = { class = "(cursor|kitty|ai.opencode.desktop)" },
+    match = { class = "(cursor|kitty|ai.opencode.desktop|vicinae)" },
     opacity = "0.96",
   })
 end

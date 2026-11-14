@@ -73,6 +73,37 @@ set_line() {
   printf '%s' "$text" > "$file"
 }
 
+jsonc_jq() {
+  local file="${1:-}" first tmp rc=0
+  (($# >= 2)) || die "usage: jsonc_jq <file> [jq options...] <filter>"
+  shift
+
+  [[ -f "$file" ]] || die "missing config: $file"
+  has jq || die "missing dependency: jq"
+
+  first="$(grep -n -m1 '^[[:space:]]*{' -- "$file" 2>/dev/null | cut -d: -f1)"
+  [[ -n "$first" ]] || { printf 'no JSON object in %s\n' "$file" >&2; return 1; }
+
+  # No EXIT trap here: this is a sourced helper and would clobber the caller's.
+  tmp="$(mktemp -d)" || return 1
+
+  if ! head -n $((first - 1)) -- "$file" > "$tmp/head" 2>/dev/null; then
+    rc=1
+  elif ! tail -n +"$first" -- "$file" 2>/dev/null | jq "$@" > "$tmp/body" 2>"$tmp/err"; then
+    cat "$tmp/err" >&2
+    rc=1
+  elif [[ ! -s "$tmp/body" ]]; then
+    rc=1
+  elif ! cat "$tmp/head" "$tmp/body" > "$tmp/full" 2>/dev/null; then
+    rc=1
+  elif ! cmp -s "$tmp/full" "$file" 2>/dev/null; then
+    cat "$tmp/full" > "$file" 2>/dev/null || rc=1
+  fi
+
+  rm -rf -- "$tmp"
+  return "$rc"
+}
+
 is_hyprland() {
   [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" || "${XDG_CURRENT_DESKTOP:-}" == *Hyprland* ]]
 }

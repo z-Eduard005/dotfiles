@@ -6,10 +6,12 @@ alias remove="sudo dnf remove"
 alias search="sudo dnf search"
 alias ch="git checkout"
 alias repos='gh api "user/repos?affiliation=owner,collaborator,organization_member&per_page=100" --paginate --jq ".[].full_name"'
-alias fzf='fzf --height 40% --color="pointer:$(dotfiles-accent get 2>/dev/null || printf "#6f8396")"'
+alias fzf='fzf --height 40%'
 alias l.="eza --icons -d .*"
 alias ls="eza --icons -l"
 alias l="eza --icons -lah"
 alias ff="fastfetch"
 alias c='clear && [ "$TERM" = "xterm-kitty" ] && ff; true'
 alias cc="cd ~ && c"
+
+export FZF_DEFAULT_OPTS_FILE="$HOME/.config/fzf/fzfrc"
