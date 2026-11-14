@@ -2,6 +2,7 @@
 
 local state = require("lib.state")
 
+-- Curves
 hl.curve("overshot", { type = "bezier", points = { { 0.05, 0.9 }, { 0.1, 1.1 } } })
 hl.curve("softSnap", { type = "bezier", points = { { 0.4, 0 }, { 0.2, 1 } } })
 hl.curve("fluent", { type = "bezier", points = { { 0.0, 0.0 }, { 0.2, 1.0 } } })
@@ -32,10 +33,11 @@ hl.curve("easeInOutExpo", { type = "bezier", points = { { 0.87, 0 }, { 0.13, 1 }
 hl.curve("easeInOutCirc", { type = "bezier", points = { { 0.85, 0 }, { 0.15, 1 } } })
 hl.curve("easeInOutBack", { type = "bezier", points = { { 0.68, -0.6 }, { 0.32, 1.6 } } })
 
+-- Windows
 hl.animation({
   leaf = "windows",
   enabled = true,
-  speed = 7,
+  speed = 3,
   bezier = "easeInOutQuint",
 })
 hl.animation({
@@ -56,25 +58,8 @@ hl.animation({
   speed = 4,
   bezier = "softSnap",
 })
-hl.animation({
-  leaf = "layers",
-  enabled = true,
-  speed = 5,
-  bezier = "easeInQuint",
-  style = "popin 75%",
-})
-hl.animation({
-  leaf = "layersIn",
-  enabled = true,
-  speed = 5,
-  bezier = "easeInQuint",
-})
-hl.animation({
-  leaf = "layersOut",
-  enabled = true,
-  speed = 7,
-  bezier = "easeInQuint",
-})
+
+-- Border
 hl.animation({
   leaf = "border",
   enabled = true,
@@ -87,6 +72,8 @@ hl.animation({
   speed = 15,
   bezier = "easeOutBack",
 })
+
+-- Workspaces
 hl.animation({
   leaf = "workspaces",
   enabled = true,
@@ -130,21 +117,43 @@ hl.animation({
   style = "slidefadevert -10%",
 })
 
+-- Layers
+hl.layer_rule({
+  match = { namespace = "^(swaync-control-center|swaync-notification-window|gsr-notify)$" },
+  animation = "slide right"
+})
+
+hl.layer_rule({
+  match = { namespace = "^waybar$" },
+  animation = "slide top"
+})
+
+hl.animation({
+  leaf = "layers",
+  enabled = true,
+  speed = 2,
+  bezier = "softSnap",
+  style = "slide bottom"
+})
+
+hl.animation({
+  leaf = "fadeLayersIn",
+  enabled = true,
+  speed = 1,
+  bezier = "linear"
+})
+
+hl.animation({
+  leaf = "fadeLayersOut",
+  enabled = true,
+  speed = 10,
+  bezier = "linear"
+})
+
+
+-- Config
 hl.config({
   animations = {
-    enabled = not state.zen,
-    -- ease in
-    -- ease out
-    -- ease in-out
-    ---------------------------------------------------------------------------
-    -- animation = fade                , 1 , 5 , easeOutQuint
-    -- animation = fadeIn              , 1 , 5 , easeOutQuint
-    -- animation = fadeOut             , 1 , 7 , easeOutQuint
-    -- animation = fadeSwitch          , 0
-    -- animation = fadeShadow          , 1 , 5 , easeInOutQuint
-    -- animation = fadeDim             , 1 , 7 , easeInOutQuint
-    -- animation = fadeLayers          , 1 , 5 , easeOutQuint
-    -- animation = fadeLayersIn        , 1 , 5 , easeOutQuint
-    -- animation = fadeLayersOut       , 1 , 7 , easeOutQuint
+    enabled = not state.zen
   },
 })
