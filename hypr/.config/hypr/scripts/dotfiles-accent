@@ -7,6 +7,11 @@ source "$SCRIPT_DIR/lib/common.sh" || exit 1
 readonly THEME_DIR="$HOME/dotfiles/accent-styles-css/.config/accent-styles-css"
 readonly ACCENT_STATE="$HOME/.local/state/dotfiles/hypr/accent"
 readonly ACCENT_MAP="$HOME/.local/state/dotfiles/hypr/wallpaper-accent-map.txt"
+readonly KVANTUM_THEME="$HOME/dotfiles/qt/.config/Kvantum/KvLibadwaita"
+readonly QT_SCHEMES=(
+  "$HOME/dotfiles/qt/.config/qt6ct/colors/dotfiles.conf"
+  "$HOME/dotfiles/qt/.config/qt5ct/colors/dotfiles.conf"
+)
 readonly BOLD=$'\033[1m'
 readonly RESET=$'\033[0m'
 
@@ -56,9 +61,9 @@ hex_mix() {
     *) return 1 ;;
   esac
   printf '#%02x%02x%02x' \
-    $(((r * (100 - percent) + tr * percent) / 100)) \
-    $(((g * (100 - percent) + tg * percent) / 100)) \
-    $(((b * (100 - percent) + tb * percent) / 100))
+    $(((r * (100 - percent) + tr * percent + 50) / 100)) \
+    $(((g * (100 - percent) + tg * percent + 50) / 100)) \
+    $(((b * (100 - percent) + tb * percent + 50) / 100))
 }
 
 set_kitty_keys() {
@@ -85,14 +90,79 @@ set_toml() {
   fi
 }
 
+set_qt_kvconfig_accent() {
+  local accent="$1" kvconfig
+
+  for kvconfig in "$KVANTUM_THEME/KvLibadwaita.kvconfig" "$KVANTUM_THEME/KvLibadwaitaDark.kvconfig"; do
+    [[ -f "$kvconfig" ]] || continue
+    set_line "$kvconfig" '^highlight\.color=' "highlight.color=$accent" || true
+    set_line "$kvconfig" '^inactive\.highlight\.color=' "inactive.highlight.color=$accent" || true
+    set_line "$kvconfig" '^link\.color=' "link.color=$accent" || true
+  done
+}
+
+set_qt_scheme_accent() {
+  local accent="$1" scheme tmp
+
+  for scheme in "${QT_SCHEMES[@]}"; do
+    [[ -f "$scheme" ]] || continue
+
+    tmp="$(mktemp)" || return 0
+    if awk -v accent="#ff${accent#\#}" '
+        /^(active|disabled|inactive)_colors=/ {
+          key = substr($0, 1, index($0, "="))
+          n = split(substr($0, index($0, "=") + 1), role, ", ")
+          role[13] = accent
+          role[15] = accent
+          line = key
+          for (i = 1; i <= n; i++) line = line (i > 1 ? ", " : "") role[i]
+          print line
+          next
+        }
+        { print }
+      ' "$scheme" > "$tmp"; then
+      mv -- "$tmp" "$scheme"
+    else
+      rm -f -- "$tmp"
+    fi
+  done
+}
+
+set_qt_svg_accent() {
+  local accent="$1" previous="$2" hover previous_hover svg stock
+
+  if ! grep -qi -- "$previous" "$KVANTUM_THEME/KvLibadwaitaDark.svg" 2>/dev/null; then
+    previous="#3584e4"
+  fi
+
+  hover="$(hex_mix "$accent" 10 white)"
+  previous_hover="$(hex_mix "$previous" 10 white)"
+
+  for svg in "$KVANTUM_THEME/KvLibadwaita.svg" "$KVANTUM_THEME/KvLibadwaitaDark.svg"; do
+    [[ -f "$svg" ]] || continue
+    sed -i "s/${previous}/${accent}/gi; s/${previous_hover}/${hover}/gi" "$svg"
+    # focus rings, pressed titlebar buttons and tear-off dots carry their own blue
+    for stock in "#587392" "#81abdf" "#4285f4" "#3c84f7"; do
+      sed -i "s/${stock}/${accent}/gi" "$svg"
+    done
+  done
+}
+
+set_qt_accent() {
+  set_qt_kvconfig_accent "$1"
+  set_qt_scheme_accent "$1"
+  set_qt_svg_accent "$1" "$2"
+}
+
 oklab() {
   magick "xc:$1" -colorspace Oklab -format '%[fx:r] %[fx:g] %[fx:b]' info: 2>/dev/null
 }
 
 cmd_switch() {
   local accent="$1"
-  local hex
+  local hex previous_hex
   hex="$(hex_for "$accent")" || { usage >&2; exit 2; }
+  previous_hex="$(cmd_get)"
 
   local css="$THEME_DIR/accents/accent-$accent.css"
   [[ -f "$css" ]] || { usage >&2; exit 2; }
@@ -139,6 +209,11 @@ cmd_switch() {
   if [[ -f "$fzfrc" ]] && [[ -n "$hex" ]]; then
     set_line "$fzfrc" '^--color=' \
       "--color=pointer:${hex},marker:${hex},spinner:${hex},prompt:${hex},header:${hex},hl:${hex},hl+:${hex}"
+  fi
+
+  # qt
+  if [[ -n "$hex" ]]; then
+    set_qt_accent "$hex" "$previous_hex"
   fi
 
   # kitty workaround: dark theme does not update accent

@@ -10,6 +10,9 @@ readonly DRAWER_CSS="$HOME/dotfiles/nwg-drawer/.config/nwg-drawer/drawer.css"
 readonly KITTY_DIR="$HOME/dotfiles/kitty/.config/kitty"
 readonly VICINAE_THEME="$HOME/dotfiles/vicinae/.local/share/vicinae/themes/adwaita-dynamic.toml"
 readonly HYPRTOOLKIT_CONF="$HOME/dotfiles/hypr/.config/hypr/hyprtoolkit.conf"
+readonly KVANTUM_CONF="$HOME/dotfiles/qt/.config/Kvantum/kvantum.kvconfig"
+readonly QT6CT_CONF="$HOME/dotfiles/qt/.config/qt6ct/qt6ct.conf"
+readonly QT5CT_CONF="$HOME/dotfiles/qt/.config/qt5ct/qt5ct.conf"
 readonly BOLD=$'\033[1m'
 readonly RESET=$'\033[0m'
 
@@ -78,6 +81,26 @@ set_hyprtoolkit_theme() {
   set_line "$HYPRTOOLKIT_CONF" '^alternate_base = ' "alternate_base = $alternate_base" || true
 
   systemctl --user restart hyprpolkitagent.service 2>/dev/null || true
+}
+
+set_qt_theme() {
+  local theme="$1" kv_theme icon_theme conf
+
+  [[ -f "$KVANTUM_CONF" ]] || return 0
+
+  if [[ "$theme" == "dark" ]]; then
+    kv_theme="KvLibadwaitaDark"
+    icon_theme="breeze-dark"
+  else
+    kv_theme="KvLibadwaita"
+    icon_theme="breeze"
+  fi
+
+  set_line "$KVANTUM_CONF" '^theme=' "theme=$kv_theme" || true
+
+  for conf in "$QT6CT_CONF" "$QT5CT_CONF"; do
+    set_line "$conf" '^icon_theme=' "icon_theme=$icon_theme" || true
+  done
 }
 
 theme_now() {
@@ -178,6 +201,9 @@ cmd_toggle() {
 
   # hyprtoolkit
   set_hyprtoolkit_theme "$theme"
+
+  # qt
+  set_qt_theme "$theme"
 }
 
 main() {
