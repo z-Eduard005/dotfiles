@@ -150,6 +150,12 @@ hl.animation({
   bezier = "linear"
 })
 
+-- Popups
+hl.animation({
+  leaf = "fadePopups",
+  enabled = false,
+})
+
 
 -- Config
 hl.config({

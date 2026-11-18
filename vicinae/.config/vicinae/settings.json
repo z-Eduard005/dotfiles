@@ -22,18 +22,18 @@
   "font": {
     "rendering": "native",
     "normal": {
-      "family": "SF Pro Display",
+      "family": "SF Pro Rounded",
       "size": 18
     }
   },
   "theme": {
     "light": {
       "name": "adwaita-dynamic",
-      "icon_theme": "Adwaita-orange"
+      "icon_theme": "Adwaita-slate"
     },
     "dark": {
       "name": "adwaita-dynamic",
-      "icon_theme": "Adwaita-orange"
+      "icon_theme": "Adwaita-slate"
     }
   },
   "telemetry": {

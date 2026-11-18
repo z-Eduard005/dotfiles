@@ -246,4 +246,5 @@
   "installation-corrupt-remover.enabled": true,
   "window.menuBarVisibility": "compact",
   "git.openRepositoryInParentFolders": "never",
+  "clangd.path": "/home/eduard/.config/Cursor/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/23.1.0/clangd_23.1.0/bin/clangd",
 }

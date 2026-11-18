@@ -1,17 +1,17 @@
 @import "../accents/accent-active.css";
 
-@define-color module-bg #ebebed;
+@define-color module-bg alpha(#ebebed, 0.8);
 @define-color center-bg #ebebed;
 @define-color background #ebebed;
 @define-color background-alt #d7d9de;
-@define-color tooltip-bg @module-bg;
+@define-color tooltip-bg @background;
 @define-color fg #2f2f34;
 @define-color text #2f2f34;
 @define-color workspace-fg @fg;
 @define-color text-alt #707280;
 @define-color inactive #a7a6a6;
-@define-color selected alpha(@text-alt, .4);
-@define-color hover alpha(@selected, .4);
+@define-color selected alpha(@text-alt, 0.4);
+@define-color hover alpha(@selected, 0.4);
 @define-color urgent #ff355a;
 @define-color red #8c4351;
 @define-color blue #0f4b6e;
